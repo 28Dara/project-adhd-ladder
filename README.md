@@ -1,75 +1,33 @@
-# React + TypeScript + Vite
+# ADHD Ladder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web para organizar hábitos y tareas en pasos pequeños y visualizar el progreso. Proyecto final de desarrollo web de TripleTen, Etapa 1. La base actual incluye las páginas públicas de inicio y acerca del proyecto.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Vite, React, TypeScript y React Router en modo declarativo. Los estilos usan CSS, Normalize.css y fuentes locales empaquetadas por Fontsource. ESLint revisa el código y Prettier aplica el formato compartido.
 
-## React Compiler
+## Instalación y ejecución
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Usa Node.js 24.x con npm. Esta es la versión mayor elegida para el proyecto y es compatible con Vite, ESLint y React Router. La versión utilizada para verificar la instalación es Node.js 24.15.0.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm ci
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+- `npm run build` comprueba los tipos y genera la versión de producción.
+- `npm run lint` revisa el código con ESLint.
+- `npm run format` aplica el formato y `npm run format:check` lo verifica.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Formato en VS Code
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Con la extensión Prettier - Code formatter, ejecuta **Format Document With...** y selecciona **Prettier**. Puedes elegirlo como formateador predeterminado para TypeScript y TSX. La extensión usa la versión local instalada con `npm ci` y lee la configuración de `.prettierrc`.
 
-```
+## Tipografía
+
+Durante la maquetación, usa `var(--font-body)` con Patrick Hand 400 para el texto de cuerpo y `var(--font-heading)` con Kalam 400 o 700 para los títulos según los mockups. Ambas familias incluyen una alternativa del sistema. Las páginas temporales conservan la tipografía del sistema.
+
+## Pendientes de la Etapa 1
+
+- URL de producción.
+- Configuración de Supabase.
