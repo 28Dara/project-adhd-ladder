@@ -1,0 +1,216 @@
+.landing {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.landing__hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  flex: 1;
+  grid-template-areas: 'artwork';
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  justify-items: center;
+  padding-block: clamp(0.75rem, 2vw, 1rem) clamp(2rem, 6vw, 4rem);
+  background:
+    radial-gradient(
+      ellipse clamp(5rem, 13vw, 13rem) 6rem at 1% 100%,
+      var(--color-cloud) 98%,
+      transparent
+    ),
+    radial-gradient(
+      ellipse clamp(4rem, 11vw, 10rem) 4rem at 13% 103%,
+      var(--color-cloud) 98%,
+      transparent
+    ),
+    radial-gradient(
+      ellipse clamp(5rem, 12vw, 12rem) 5.5rem at 99% 100%,
+      var(--color-cloud) 98%,
+      transparent
+    ),
+    radial-gradient(
+      ellipse clamp(4rem, 11vw, 10rem) 4rem at 87% 103%,
+      var(--color-cloud) 98%,
+      transparent
+    ),
+    radial-gradient(
+      ellipse at 42% 38%,
+      var(--color-text-inverse),
+      transparent 75%
+    ),
+    var(--color-background);
+}
+
+.landing__artwork {
+  grid-area: artwork;
+  z-index: -1;
+  display: flex;
+  align-self: start;
+  justify-content: center;
+  width: 100%;
+  overflow: clip;
+  opacity: 0.28;
+  /* Bring the artwork to full opacity as the title moves below it. */
+  opacity: clamp(0.28, (100vw - 45rem) / 3rem, 1);
+}
+
+.landing__illustration {
+  display: block;
+  flex: none;
+  width: clamp(40rem, 165vw, 42rem);
+  height: auto;
+  margin-block: -3.5rem;
+}
+
+.landing__content {
+  grid-area: artwork;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 36rem;
+  margin-block-start: clamp(5.5rem, 50vw - 4.5rem, 19.5rem);
+  padding-inline: 1rem;
+  text-align: center;
+}
+
+.landing__title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(2.55rem, 10vw, 3.875rem);
+  font-weight: 700;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.landing__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  min-width: min(100%, 39vw, 19rem);
+  min-height: 2.75rem;
+  padding: 0.45em 0.85em;
+  border: 0;
+  border-radius: 0.7em;
+  background-color: var(--color-text-muted);
+  color: var(--color-text-inverse);
+  font-family: var(--font-body);
+  font-size: clamp(1.5rem, 3.35vw, 3rem);
+  line-height: 1.1;
+  cursor: not-allowed;
+}
+
+.landing__cta span {
+  font-size: 1.2em;
+}
+
+.landing__cta:enabled {
+  background-color: var(--color-primary-dark);
+  cursor: pointer;
+}
+
+.landing__cta:enabled:hover {
+  background-color: var(--color-primary);
+}
+
+.landing__cta:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+@media (min-width: 48rem) {
+  .landing__hero {
+    grid-template-areas:
+      'artwork'
+      'content';
+    grid-template-rows: max-content max-content;
+    padding: 0 0 clamp(2.75rem, 4vw, 3.625rem);
+    background: radial-gradient(
+        ellipse at 50% 36%,
+        var(--color-text-inverse),
+        transparent 74%
+      )
+      var(--color-surface);
+  }
+
+  .landing__hero::before,
+  .landing__hero::after {
+    --cloud-color: color-mix(
+      in srgb,
+      var(--color-sand) 48%,
+      var(--color-surface)
+    );
+
+    position: absolute;
+    z-index: -1;
+    bottom: clamp(2rem, 4.75vw, 4.25rem);
+    width: min(31%, 28rem);
+    height: clamp(5rem, 10.5vw, 9.5rem);
+    background:
+      radial-gradient(
+        ellipse 23% 100% at 20% 100%,
+        var(--cloud-color) 98%,
+        transparent
+      ),
+      radial-gradient(
+        ellipse 27% 61% at 47% 100%,
+        var(--cloud-color) 98%,
+        transparent
+      ),
+      radial-gradient(
+        ellipse 33% 16% at 67% 103%,
+        var(--cloud-color) 98%,
+        transparent
+      );
+    content: '';
+  }
+
+  .landing__hero::before {
+    left: 0;
+  }
+
+  .landing__hero::after {
+    right: 0;
+    width: min(23%, 22rem);
+    transform: scaleX(-1);
+  }
+
+  .landing__artwork {
+    z-index: auto;
+    display: block;
+    width: min(87.5%, 82rem);
+    opacity: 1;
+  }
+
+  .landing__illustration {
+    width: 100%;
+    /* The WebP includes transparent space above and below the visible artwork. */
+    margin-block: -9.5% -9%;
+  }
+
+  .landing__content {
+    grid-area: content;
+    max-width: none;
+    margin-block-start: 0;
+    gap: clamp(1.2rem, 2.2vw, 2rem);
+  }
+
+  .landing__title {
+    font-size: clamp(3.25rem, 8vw, 7.375rem);
+    letter-spacing: 0.012em;
+  }
+
+  .landing__cta {
+    width: min(100%, clamp(19rem, 39vw, 35rem));
+    min-height: clamp(3.75rem, 6.75vw, 6.125rem);
+    padding: 0.35em 0.65em;
+    border-radius: 0.78em;
+    font-size: clamp(1.875rem, 3.45vw, 3.125rem);
+    line-height: 1;
+  }
+}
