@@ -7,17 +7,10 @@
 }
 
 body {
-  margin: 0;
   background-color: var(--color-background);
   color: var(--color-text);
   font-family: system-ui, sans-serif;
   line-height: 1.5;
-}
-
-main {
-  max-width: 65ch;
-  margin-inline: auto;
-  padding: 1rem;
 }
 
 a {
