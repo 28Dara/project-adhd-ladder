@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="ADHD Ladder AL">
+<rect width="512" height="512" rx="105" fill="#005C3C"/>
+<ellipse cx="257" cy="423" rx="216" ry="18" fill="#004B32" opacity=".55"/>
+<!-- Three rising steps, cream tops and sage-green sides -->
+<path d="M31 315 Q31 303 43 303 H155 V421 H48 Q31 421 31 402Z" fill="#296A4A"/>
+<path d="M31 315 Q34 298 54 291 H155 V315Z" fill="#EDE2C9"/>
+<path d="M105 238 Q105 227 118 227 H256 V421 H105Z" fill="#296A4A"/>
+<path d="M105 238 Q111 224 136 217 H256 V238Z" fill="#EDE2C9"/>
+<path d="M237 158 Q237 146 251 146 H420 Q438 146 438 163 V410 Q438 421 426 421 H237Z" fill="#296A4A"/>
+<path d="M237 158 Q250 126 297 120 H415 Q436 120 438 144 L405 160 H237Z" fill="#EDE2C9"/>
+<path d="M405 160 L438 144 V410 Q438 421 426 421 H405Z" fill="#6D9670"/>
+<!-- Single tiny two-leaf sprout -->
+<path d="M392 128 Q394 109 405 88" fill="none" stroke="#FF891C" stroke-width="6" stroke-linecap="round"/>
+<path d="M404 96 Q400 70 424 64 Q426 85 404 96Z" fill="#FF891C"/>
+<path d="M397 109 Q374 108 370 87 Q390 87 397 109Z" fill="#FF891C"/>
+<!-- Wide, tall, medium-light lettering -->
+<text x="258" y="421" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="330" font-weight="500" letter-spacing="-14" textLength="382" lengthAdjust="spacingAndGlyphs" fill="#FCF5EA" stroke="#005C3C" stroke-width="7" paint-order="stroke fill">AL</text>
+</svg>

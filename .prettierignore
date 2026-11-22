@@ -1,0 +1,6 @@
+docs/
+dist/
+coverage/
+src/vendors/
+package-lock.json
+*.md

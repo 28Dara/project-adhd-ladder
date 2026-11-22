@@ -1,0 +1,63 @@
+.brand-logo {
+  position: relative;
+  display: inline-block;
+  padding-block: 0.16em 0.13em;
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: clamp(2rem, 3.5vw, 3.35rem);
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand-logo::after {
+  position: absolute;
+  inset: auto 0.04em 0;
+  height: 0.23em;
+  border-top: 0.085em solid var(--color-accent);
+  border-radius: 55% 55% 0 0;
+  content: '';
+  transform: rotate(-1.5deg);
+}
+
+.brand-logo:hover {
+  color: var(--color-primary-dark);
+}
+
+.brand-logo span {
+  display: inline-block;
+  color: var(--color-accent);
+}
+
+.brand-logo span:nth-of-type(1) {
+  transform: translateY(-0.04em) rotate(-7deg);
+}
+
+.brand-logo span:nth-of-type(2) {
+  transform: translateY(0.03em) rotate(6deg);
+}
+
+.brand-logo span:nth-of-type(3) {
+  transform: translateY(-0.025em) rotate(-8deg);
+}
+
+.brand-logo span:nth-of-type(4) {
+  transform: translateY(0.035em) rotate(7deg);
+}
+
+@media (min-width: 48rem) {
+  .brand-logo {
+    font-size: clamp(2.4rem, 4.1vw, 3.75rem);
+    letter-spacing: -0.018em;
+  }
+
+  .brand-logo::after {
+    inset: auto 0.02em -0.06em 0.07em;
+    height: 0.24em;
+    border-top: 0.09em solid
+      color-mix(in srgb, var(--color-accent) 74%, var(--color-text-secondary));
+    border-radius: 56% 49% 0 0 / 64% 67% 0 0;
+    transform: rotate(-1.3deg);
+  }
+}
