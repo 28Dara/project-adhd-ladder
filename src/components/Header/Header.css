@@ -10,6 +10,8 @@
 
 .site-header__nav {
   display: flex;
+  min-width: 0;
+  max-width: 100%;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -17,6 +19,41 @@
   font-family: var(--font-body);
   font-size: clamp(1.25rem, 2.2vw, 2rem);
   line-height: 1.15;
+}
+
+.site-header__account {
+  min-width: 0;
+  max-width: 100%;
+  text-align: center;
+}
+
+.site-header__identity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-header__email {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.site-header__edit:disabled {
+  flex: none;
+  min-width: 2.75rem;
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.site-header__edit svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.site-header__edit-hint {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
 }
 
 .site-header__control {

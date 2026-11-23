@@ -34,9 +34,15 @@ export default function Landing() {
         </div>
         <div className="landing__content">
           <h1 className="landing__title">Welcome to the Ladder</h1>
-          <Link className="landing__cta" to="/signup">
-            Take your first step <span aria-hidden="true">↑</span>
-          </Link>
+          <div className="landing__actions">
+            <Link className="landing__cta" to="/signup">
+              Take your first step <span aria-hidden="true">↑</span>
+            </Link>
+            <p className="landing__actions-separator">or</p>
+            <Link className="landing__cta landing__cta--secondary" to="/login">
+              Log in to your ladder
+            </Link>
+          </div>
         </div>
       </main>
     </div>

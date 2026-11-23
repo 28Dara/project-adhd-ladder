@@ -45,13 +45,22 @@ interface SessionState {
   sessionError: string | null
 }
 
+const initialSessionState: SessionState = {
+  session: null,
+  isLoading: true,
+  sessionError: null,
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const authInProgress = useRef(false)
-  const [state, setState] = useState<SessionState>({
-    session: null,
-    isLoading: true,
-    sessionError: null,
-  })
+  const [state, setState] = useState(initialSessionState)
+  const [restoreAttempt, setRestoreAttempt] = useState(0)
+
+  function retrySession() {
+    if (!state.sessionError) return
+    setState(initialSessionState)
+    setRestoreAttempt((attempt) => attempt + 1)
+  }
 
   async function authenticate(
     method: 'signUp' | 'signInWithPassword',
@@ -119,13 +128,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       active = false
       unsubscribe?.()
     }
-  }, [])
+  }, [restoreAttempt])
 
   return (
     <AuthContext.Provider
       value={{
         ...state,
         user: state.session?.user ?? null,
+        retrySession,
         signUp: (credentials) => authenticate('signUp', credentials),
         signInWithPassword: (credentials) =>
           authenticate('signInWithPassword', credentials),

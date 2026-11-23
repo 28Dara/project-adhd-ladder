@@ -16,6 +16,7 @@ interface AuthContextValue {
   user: User | null
   isLoading: boolean
   sessionError: string | null
+  retrySession: () => void
   signUp: (credentials: AuthCredentials) => Promise<AuthResult>
   signInWithPassword: (credentials: AuthCredentials) => Promise<AuthResult>
   signOut: () => Promise<string | null>

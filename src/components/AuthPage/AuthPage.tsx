@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type SubmitEvent } from 'react'
-import { Link, Navigate } from 'react-router'
+import { Link } from 'react-router'
 import { useAuth } from '../../hooks/useAuth'
 import Header from '../Header/Header'
 import './AuthPage.css'
@@ -50,7 +50,7 @@ function PasswordVisibilityButton({
 }
 
 export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
-  const { isLoading, sessionError, signUp, signInWithPassword } = useAuth()
+  const { signUp, signInWithPassword } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     useState(false)
@@ -60,7 +60,6 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
     text: string
     field?: 'passwordConfirmation'
   } | null>(null)
-  const [completed, setCompleted] = useState(false)
   const mounted = useRef(false)
   const isSignUp = mode === 'signup'
 
@@ -73,7 +72,7 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (isLoading || isSubmitting) return
+    if (isSubmitting) return
 
     try {
       const fields = new FormData(event.currentTarget)
@@ -104,9 +103,7 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
 
       if (error) {
         setFeedback({ error: true, text: error })
-      } else if (session) {
-        setCompleted(true)
-      } else {
+      } else if (!session) {
         setFeedback({
           error: !isSignUp,
           text: isSignUp
@@ -125,8 +122,6 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
       if (mounted.current) setIsSubmitting(false)
     }
   }
-
-  if (completed) return <Navigate to="/life" replace />
 
   return (
     <div className="auth-page">
@@ -239,7 +234,7 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
               )}
             </fieldset>
 
-            {feedback ? (
+            {feedback && (
               <p
                 id="auth-feedback"
                 className={`auth-page__message${feedback.error ? ' auth-page__message--error' : ''}`}
@@ -247,21 +242,12 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
               >
                 {feedback.text}
               </p>
-            ) : (
-              sessionError && (
-                <p
-                  className="auth-page__message auth-page__message--error"
-                  role="alert"
-                >
-                  {sessionError}
-                </p>
-              )
             )}
 
             <button
               className="auth-page__submit"
               type="submit"
-              disabled={isLoading || isSubmitting}
+              disabled={isSubmitting}
             >
               {isSubmitting
                 ? isSignUp

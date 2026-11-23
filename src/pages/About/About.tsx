@@ -1,8 +1,12 @@
 import { Link } from 'react-router'
 import Header from '../../components/Header/Header'
+import { useAuth } from '../../hooks/useAuth'
 import './About.css'
 
 export default function About() {
+  const { isLoading, session, sessionError } = useAuth()
+  const canGoBackToLanding = !isLoading && !session && !sessionError
+
   return (
     <>
       <Header />
@@ -41,9 +45,11 @@ export default function About() {
             development program. The creator’s bio is pending approval.
           </p>
         </section>
-        <Link className="about__home-link" to="/">
-          Back to home
-        </Link>
+        {canGoBackToLanding && (
+          <Link className="about__home-link" to="/">
+            Back to home
+          </Link>
+        )}
       </main>
     </>
   )
