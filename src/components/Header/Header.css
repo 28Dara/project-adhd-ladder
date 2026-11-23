@@ -39,14 +39,18 @@ a.site-header__control:hover {
   text-underline-offset: 0.2em;
 }
 
-.site-header__control:disabled {
+.site-header__control--login {
   color: var(--color-text-muted);
-  cursor: not-allowed;
 }
 
-.site-header__control--filled:disabled {
+.site-header__control--filled {
   padding-inline: 0.9em;
   background-color: var(--color-text-muted);
+  color: var(--color-text-inverse);
+}
+
+a.site-header__control--filled:hover {
+  background-color: var(--color-primary);
   color: var(--color-text-inverse);
 }
 
@@ -76,4 +80,21 @@ a.site-header__control:hover {
   .site-header__control--filled {
     border-radius: 0.7em;
   }
+}
+
+.site-header--back {
+  flex-direction: row;
+  justify-content: space-between;
+  min-height: 0;
+  padding-block: clamp(0.5rem, 1.2vw, 0.9rem);
+}
+
+.site-header--back .brand-logo {
+  font-size: clamp(1.85rem, 3.6vw, 3.45rem);
+}
+
+.site-header__back {
+  gap: 0.4em;
+  padding-inline-end: 0;
+  white-space: nowrap;
 }
