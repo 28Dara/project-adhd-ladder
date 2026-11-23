@@ -19,6 +19,13 @@ npm run dev
 - `npm run lint` revisa el código con ESLint.
 - `npm run format` aplica el formato y `npm run format:check` lo verifica.
 
+## Configuración local de Supabase
+
+1. Crea un proyecto en el [panel de Supabase](https://supabase.com/dashboard).
+2. Abre **Connect** en el proyecto y copia la URL del proyecto y la clave **Publishable**. También puedes encontrar la clave en **Settings → API Keys**.
+3. Copia `.env.example` como `.env.local` en la raíz del repositorio. Reemplaza los valores de ejemplo de `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` con los de tu proyecto. Usa solo la clave publicable, ya que Vite expone las variables `VITE_` al navegador.
+4. Ejecuta `npm run dev`. Si Vite ya estaba en ejecución, reinícialo para que lea `.env.local`.
+
 ## Formato en VS Code
 
 Con la extensión Prettier - Code formatter, ejecuta **Format Document With...** y selecciona **Prettier**. Puedes elegirlo como formateador predeterminado para TypeScript y TSX. La extensión usa la versión local instalada con `npm ci` y lee la configuración de `.prettierrc`.
