@@ -1,6 +1,8 @@
 import { Route, Routes } from 'react-router'
 import RoutePanel from '../components/RoutePanel/RoutePanel'
+import { ladderPreviews } from '../config/ladderPreviews'
 import About from '../pages/About/About'
+import LadderPage from '../pages/LadderPage/LadderPage'
 import Landing from '../pages/Landing/Landing'
 import Life from '../pages/Life/Life'
 import LogIn from '../pages/LogIn/LogIn'
@@ -25,11 +27,11 @@ export default function App() {
           />
           <Route
             path="/activities"
-            element={<RoutePanel title="Activities is coming soon" />}
+            element={<LadderPage preview={ladderPreviews.activities} />}
           />
           <Route
             path="/learning"
-            element={<RoutePanel title="Learning is coming soon" />}
+            element={<LadderPage preview={ladderPreviews.learning} />}
           />
         </Route>
       </Route>

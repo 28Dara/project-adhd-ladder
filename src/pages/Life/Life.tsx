@@ -2,6 +2,7 @@ import { Link } from 'react-router'
 import { lifePreview } from '../../config/lifePreview'
 import ladderIllustration from '../../images/ladder-illustration.webp'
 import mobileIllustration from '../../images/tab-cel-illustration.webp'
+import '../../styles/ladder-cards.css'
 import './Life.css'
 
 export default function Life() {
@@ -19,10 +20,10 @@ export default function Life() {
       <div className="life__layout">
         <div className="life__summary">
           <section
-            className="life__card life__today"
+            className="ladder-card life__card life__today"
             aria-labelledby="life-today"
           >
-            <h1 id="life-today" className="life__title">
+            <h1 id="life-today" className="ladder-card__title">
               Your steps today
             </h1>
             <div className="life__today-count">
@@ -34,21 +35,25 @@ export default function Life() {
                 <path d="M9 16 27 5M17 32h20M13 48l15 11" />
               </svg>
             </div>
-            <p className="life__pill">You have a {streakDays}-day streak</p>
+            <p className="ladder-card__pill">
+              You have a {streakDays}-day streak
+            </p>
           </section>
 
           <section
-            className="life__card life__total"
+            className="ladder-card life__card life__total"
             aria-labelledby="life-total"
           >
             <div>
-              <h2 id="life-total" className="life__title">
+              <h2 id="life-total" className="ladder-card__title">
                 Your total steps
               </h2>
               <p className="life__since">
                 Since <time dateTime={joinedOn.date}>{joinedOn.label}</time>
               </p>
-              <p className="life__pill">Days in the ladder: {daysOnLadder}</p>
+              <p className="ladder-card__pill">
+                Days in the ladder: {daysOnLadder}
+              </p>
             </div>
             <p className="life__total-count">{totalSteps}</p>
           </section>
@@ -59,7 +64,7 @@ export default function Life() {
             <ul className="life__ladders">
               {ladders.map(({ path, label, badge, caption }) => (
                 <li key={path}>
-                  <Link className="life__card life__ladder" to={path}>
+                  <Link className="ladder-card life__ladder" to={path}>
                     <span className="life__ladder-badge" aria-hidden="true">
                       {badge}
                     </span>
@@ -80,10 +85,10 @@ export default function Life() {
           </nav>
 
           <section
-            className="life__card life__quote"
+            className="ladder-card life__card life__quote"
             aria-labelledby="life-quote"
           >
-            <h2 id="life-quote" className="life__title">
+            <h2 id="life-quote" className="ladder-card__title">
               Motivational quote
             </h2>
             <p>Coming soon</p>

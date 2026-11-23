@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Navigate, Outlet } from 'react-router'
 import Header from '../components/Header/Header'
+import LadderSelector from '../components/LadderSelector/LadderSelector'
 import RoutePanel from '../components/RoutePanel/RoutePanel'
 import { useAuth } from '../hooks/useAuth'
 import './AuthRoutes.css'
@@ -65,6 +66,7 @@ export function ProtectedRoute() {
   return (
     <div className="private-route">
       <Header
+        sectionNavigation={<LadderSelector />}
         navigation={
           <button
             className="site-header__control site-header__control--filled private-route__logout"

@@ -6,9 +6,11 @@ import './Header.css'
 
 export default function Header({
   showBackLink = false,
+  sectionNavigation,
   navigation,
 }: {
   showBackLink?: boolean
+  sectionNavigation?: ReactNode
   navigation?: ReactNode
 }) {
   const { isLoading, session, sessionError, user } = useAuth()
@@ -19,6 +21,7 @@ export default function Header({
       className={`site-header${showBackLink ? ' site-header--back' : ''}`}
     >
       <BrandLogo />
+      {sectionNavigation}
       {!isLoading && !sessionError && (
         <nav className="site-header__nav" aria-label="Main navigation">
           {session && (
