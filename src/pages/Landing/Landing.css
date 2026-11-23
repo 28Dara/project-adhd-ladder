@@ -64,6 +64,26 @@
   margin-block: -3.5rem;
 }
 
+.landing__artwork--fallback {
+  opacity: 1;
+}
+
+.landing__illustration--fallback {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  aspect-ratio: 3 / 2;
+  padding-block-start: 5.5rem;
+}
+
+.landing__illustration--fallback span {
+  padding: 0.35rem 0.75rem;
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+  font-family: var(--font-body);
+}
+
 .landing__content {
   grid-area: artwork;
   display: flex;
@@ -102,19 +122,14 @@
   font-family: var(--font-body);
   font-size: clamp(1.5rem, 3.35vw, 3rem);
   line-height: 1.1;
-  cursor: not-allowed;
+  text-decoration: none;
 }
 
 .landing__cta span {
   font-size: 1.2em;
 }
 
-.landing__cta:enabled {
-  background-color: var(--color-primary-dark);
-  cursor: pointer;
-}
-
-.landing__cta:enabled:hover {
+.landing__cta:hover {
   background-color: var(--color-primary);
 }
 
@@ -191,6 +206,11 @@
     width: 100%;
     /* The WebP includes transparent space above and below the visible artwork. */
     margin-block: -9.5% -9%;
+  }
+
+  .landing__illustration--fallback {
+    align-items: center;
+    padding-block-start: 0;
   }
 
   .landing__content {

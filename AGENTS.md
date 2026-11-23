@@ -18,6 +18,12 @@
 - Do not make UI components query Supabase directly. Use typed hooks/utilities. Keep progress, dates, Health and streak calculations in testable pure functions.
 - Reuse task components for Activities and Learning. Use unique stable IDs as React keys; do not use array indices.
 
+## Architecture consistency
+- Use `.agents/skills/architecture-guardian/SKILL.md` when planning and reviewing changes to logic, state, data access, routing, or architecture.
+- Identify the owner of each responsibility, distinguish local UI state from shared resources, and look for reusable code before creating an equivalent implementation.
+- Check relevant async operations for races, stale responses, and cleanup. Keep dependencies explicit and add abstractions only when the current task demonstrates a need.
+- Limit the review to affected modules and their dependencies. Follow approved dossier decisions and the scope authorized by the project owner.
+
 ## Approved business rules — do not change implicitly
 - Health has three fixed daily checks: Good Nutrition, Good Sleep and Daily Movement. Health does **not** add steps to Life.
 - Life today = completed Activities tasks today + completed Learning tasks today; lifetime Life total combines completions from these two ladders. Each ladder also has its own daily and lifetime total.
