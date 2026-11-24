@@ -11,6 +11,14 @@ description: >-
 
 Sigue la precedencia de `AGENTS.md`: instrucción explícita más reciente del propietario > reglas `[DECIDIDO]` del `docs/dossier.md` v2.2 > plan de trabajo > propuestas `[PROP]`. **No decidas unilateralmente puntos `[ABIERTO]`.** Lee las secciones pertinentes, no todo el proyecto indiscriminadamente. El trabajo local no subido puede ser más reciente que GitHub.
 
+## Coordinación y no regresión
+
+Esta skill conserva la metodología vigente de ADHD Ladder. `ub-mode` aporta técnicas de implementación y verificación; `ciber-security` aporta controles de seguridad generales. Ninguna sustituye AGENTS.md, el dossier ni el plan autorizado. No presupongas que otra skill se ha cargado: consulta sus instrucciones cuando corresponda y estén disponibles.
+
+La incorporación de skills no constituye una tarea de refactorización, auditoría integral ni cambio de arquitectura. Conserva contratos, tecnologías, diseño y comportamiento aprobados; limita los cambios al objetivo solicitado y sus dependencias necesarias. Reporta hallazgos fuera de alcance como recomendaciones separadas. Ante un riesgo material, detén únicamente la parte afectada y solicita decisión. Respeta las fases, roles y permisos del flujo existente. Si falta una fuente necesaria para decidir, no supongas su contenido.
+
+Las invariantes siguientes corresponden al dossier v2.2 y se conservan como referencia operativa; verifica la versión aprobada vigente antes de tocar el dominio. Si existe discrepancia, aplica la precedencia indicada arriba y reporta la desactualización, sin modificar el dossier por iniciativa propia.
+
 ## Antes de implementar
 
 1. Define el comportamiento aprobado y sus criterios de aceptación; identifica archivos y consumidores afectados.
@@ -74,6 +82,8 @@ El alcance de cualquier coordinación debe coincidir con el del recurso que prot
 
 ## Seguridad y persistencia
 
+Conserva aquí los requisitos específicos de ADHD Ladder; utiliza `ciber-security` para la revisión general proporcional al riesgo.
+
 - RLS en todas las tablas personales; probar con dos cuentas que ninguna lee, actualiza, crea referencias cruzadas ni borra datos ajenos.
 - Cumplir unicidad `(task_id, completed_date)` y protección de referencias usuario-tarea. Verificar políticas y claves foráneas antes de modificar migraciones.
 - **No ejecutar** migraciones, operaciones destructivas ni cambios de esquema sin aprobación. Una modificación documental no implica que SQL ya se haya actualizado.
@@ -86,11 +96,13 @@ Conservar mockups, tokens, ilustraciones y comportamiento responsive existente. 
 
 ## Limpieza de código y dependencias
 
+Aplica la metodología de `ub-mode` sin ampliar el alcance ni imponer métricas como obligación de rediseño.
+
 **No confundas código muerto con código futuro aprobado.** Revisa referencias, imports, clases CSS, puntos de entrada y consumidores reales, incluidos usos dinámicos. Elimina código muerto verificado **solo dentro del alcance** y después de comprobar regresiones. Ante consumidores inciertos, informa; ante refactors amplios, crea una recomendación en vez de ampliar silenciosamente la tarea.
 
 ## Verificación y prioridades
 
-Revisa el diff, archivos afectados, reutilización y corrección. Ejecuta checks adecuados a la tarea; para carreras, reproduce el orden de eventos relevante. Reporta exclusivamente las pruebas ejecutadas.
+Revisa el diff, archivos afectados, reutilización y corrección. Ejecuta checks adecuados a la tarea; para carreras, reproduce el orden de eventos relevante. Reporta las pruebas realmente ejecutadas, sus resultados y las verificaciones pendientes o no disponibles. No declares una garantía de no regresión sin evidencia.
 
 - **P0:** filtración de datos, pérdida de historial, duplicación de pasos, contadores con hoy dentro del total, mutaciones que mezclan usuarios u otros defectos que impiden el MVP.
 - **P1:** funcionalidad, accesibilidad y casos de negocio requeridos en la tarea correspondiente.
