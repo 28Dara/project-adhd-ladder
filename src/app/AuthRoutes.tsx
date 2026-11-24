@@ -1,9 +1,13 @@
 import { useState } from 'react'
+import type { Session } from '@supabase/supabase-js'
 import { Navigate, Outlet } from 'react-router'
 import Header from '../components/Header/Header'
 import LadderSelector from '../components/LadderSelector/LadderSelector'
 import RoutePanel from '../components/RoutePanel/RoutePanel'
+import { EXAMPLE_QUOTES } from '../config/exampleQuotes'
 import { useAuth } from '../hooks/useAuth'
+import type { LadderSession } from '../hooks/useLadderSession'
+import { getLocalDateKey } from '../utils/dates'
 import './AuthRoutes.css'
 
 export function AuthSessionBoundary() {
@@ -64,15 +68,55 @@ export function ProtectedRoute() {
   }
 
   return (
+    <PrivateLayout
+      key={session.user.id}
+      user={session.user}
+      logout={logout}
+      onLogout={handleLogout}
+    />
+  )
+}
+
+function PrivateLayout({
+  user,
+  logout,
+  onLogout,
+}: {
+  user: Session['user']
+  logout: LogoutState
+  onLogout: () => void
+}) {
+  const [displayName, setDisplayName] = useState<string>()
+  const [taskNames, setTaskNames] = useState<LadderSession['taskNames']>({})
+  const [dailyQuote, setDailyQuote] = useState<LadderSession['dailyQuote']>()
+  const isSigningOut = logout.status === 'pending'
+
+  const ladderSession: LadderSession = {
+    taskNames,
+    updateTaskName: (id, edit) =>
+      setTaskNames((names) => ({ ...names, [id]: edit })),
+    dailyQuote,
+    revealQuote: () => {
+      const date = getLocalDateKey(new Date())
+      if (date === dailyQuote?.date) return
+      const quote =
+        EXAMPLE_QUOTES[Math.floor(Math.random() * EXAMPLE_QUOTES.length)]
+      setDailyQuote({ date, quote })
+    },
+  }
+
+  return (
     <div className="private-route">
       <Header
         sectionNavigation={<LadderSelector />}
+        displayName={displayName ?? user.email}
+        onDisplayNameChange={setDisplayName}
         navigation={
           <button
             className="site-header__control site-header__control--filled private-route__logout"
             type="button"
             disabled={isSigningOut}
-            onClick={handleLogout}
+            onClick={onLogout}
           >
             {isSigningOut ? 'Logging out…' : 'Log out'}
           </button>
@@ -83,7 +127,7 @@ export function ProtectedRoute() {
           {logout.message}
         </p>
       )}
-      <Outlet />
+      <Outlet context={ladderSession} />
     </div>
   )
 }

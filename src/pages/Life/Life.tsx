@@ -1,11 +1,16 @@
 import { Link } from 'react-router'
+import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
+import LadderTooltip from '../../components/LadderPopup/LadderTooltip'
 import { lifePreview } from '../../config/lifePreview'
-import ladderIllustration from '../../images/ladder-illustration.webp'
-import mobileIllustration from '../../images/tab-cel-illustration.webp'
+import { useLadderSession } from '../../hooks/useLadderSession'
+import { useLocalDateKey } from '../../hooks/useLocalDateKey'
 import '../../styles/ladder-cards.css'
 import './Life.css'
 
 export default function Life() {
+  const { dailyQuote, revealQuote } = useLadderSession()
+  const date = useLocalDateKey()
+  const quote = dailyQuote?.date === date ? dailyQuote.quote : undefined
   const {
     todaySteps,
     totalSteps,
@@ -62,54 +67,69 @@ export default function Life() {
         <div className="life__side">
           <nav aria-label="Ladders">
             <ul className="life__ladders">
-              {ladders.map(({ path, label, badge, caption }) => (
-                <li key={path}>
-                  <Link className="ladder-card life__ladder" to={path}>
-                    <span className="life__ladder-badge" aria-hidden="true">
-                      {badge}
-                    </span>
-                    <span className="life__ladder-info">
-                      <span className="life__ladder-name">{label}</span>
-                      <span className="life__ladder-caption">
-                        {typeof badge === 'number' ? `${badge} ` : ''}
-                        {caption}
+              {ladders.map((ladder) => {
+                const { path, label, caption } = ladder
+                return (
+                  <li key={path}>
+                    <Link
+                      className="ladder-card life__ladder ladder-tooltip__anchor"
+                      to={path}
+                    >
+                      {ladder.path === '/health' ? (
+                        <span
+                          className={`life__ladder-badge life__health-badge ladder-health-tone--${ladder.tone}`}
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <span className="life__ladder-badge" aria-hidden="true">
+                          {ladder.badge}
+                        </span>
+                      )}
+                      <span className="life__ladder-info">
+                        <span className="life__ladder-name">{label}</span>
+                        <span className="life__ladder-caption">
+                          {'badge' in ladder ? `${ladder.badge} ` : ''}
+                          {caption}
+                        </span>
                       </span>
-                    </span>
-                    <span className="life__ladder-arrow" aria-hidden="true">
-                      →
-                    </span>
-                  </Link>
-                </li>
-              ))}
+                      <span className="life__ladder-arrow" aria-hidden="true">
+                        →
+                      </span>
+                      <LadderTooltip className="life__ladder-hint">
+                        {`Go to ${label}`}
+                      </LadderTooltip>
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </nav>
 
           <section
             className="ladder-card life__card life__quote"
-            aria-labelledby="life-quote"
+            aria-label="Motivational quote"
+            aria-live="polite"
           >
-            <h2 id="life-quote" className="ladder-card__title">
-              Motivational quote
-            </h2>
-            <p>Coming soon</p>
+            {quote ? (
+              <p>{quote.text}</p>
+            ) : (
+              <>
+                <h2 className="ladder-card__title">
+                  Today's quote for you is...
+                </h2>
+                <button
+                  className="life__quote-reveal"
+                  type="button"
+                  onClick={revealQuote}
+                >
+                  Click to reveal
+                </button>
+              </>
+            )}
           </section>
         </div>
 
-        <picture className="life__artwork">
-          <source
-            media="(min-width: 64rem)"
-            srcSet={ladderIllustration}
-            width={966}
-            height={1445}
-          />
-          <img
-            src={mobileIllustration}
-            alt=""
-            width={2088}
-            height={2048}
-            loading="lazy"
-          />
-        </picture>
+        <LadderArtwork />
       </div>
     </main>
   )

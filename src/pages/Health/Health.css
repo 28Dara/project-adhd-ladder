@@ -60,21 +60,6 @@
   content: '';
 }
 
-.health__tone--success {
-  --health-light: var(--color-success);
-  --health-label: var(--color-success-bg);
-}
-
-.health__tone--warning {
-  --health-light: var(--color-warning);
-  --health-label: var(--color-warning-bg);
-}
-
-.health__tone--danger {
-  --health-light: var(--color-danger);
-  --health-label: var(--color-danger-bg);
-}
-
 .health__light {
   width: clamp(1.5rem, 3.4vw, 3.25rem);
   aspect-ratio: 1;
@@ -147,23 +132,30 @@
 
 .health__goal {
   display: grid;
-  min-height: clamp(4.5rem, 7.4vw, 7rem);
-  padding: clamp(0.65rem, 1.15vw, 1.15rem) clamp(0.8rem, 1.5vw, 1.5rem);
 }
 
-.health__goal label {
+.health__goal-label {
   display: grid;
+  min-height: clamp(4.5rem, 7.4vw, 7rem);
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: clamp(0.7rem, 1.35vw, 1.35rem);
+  padding: clamp(0.65rem, 1.15vw, 1.15rem) clamp(0.8rem, 1.5vw, 1.5rem);
   font-size: clamp(1.5rem, 2.6vw, 2.65rem);
   font-weight: 700;
   line-height: 1.15;
+  cursor: pointer;
 }
 
-.health__goal label span {
-  padding-inline-start: 0.6em;
+.health__goal-label span {
+  padding-inline: 0.6em;
   border-inline-start: 1px solid var(--color-sage);
+  text-align: center;
+}
+
+.health__goal input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
 .health__goal input:not(:checked)::before {

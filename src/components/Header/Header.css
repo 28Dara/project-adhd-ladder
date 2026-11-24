@@ -41,27 +41,24 @@
   justify-content: center;
 }
 
-.site-header__email {
+.site-header__name {
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
-.site-header__edit:disabled {
+.site-header__edit-anchor {
   flex: none;
+}
+
+.site-header__edit.site-header__control {
   min-width: 2.75rem;
-  color: var(--color-text-muted);
-  cursor: not-allowed;
+  color: var(--color-primary);
+  cursor: pointer;
 }
 
 .site-header__edit svg {
   width: 1.2rem;
   height: 1.2rem;
-}
-
-.site-header__edit-hint {
-  margin: 0;
-  color: var(--color-text-secondary);
-  font-size: 0.875rem;
 }
 
 .site-header__control {

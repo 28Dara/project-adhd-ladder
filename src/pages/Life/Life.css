@@ -14,14 +14,8 @@
   margin-inline: auto;
 }
 
-.life__artwork {
-  grid-area: artwork;
-}
-
-.life__artwork img {
-  display: block;
-  width: 100%;
-  height: auto;
+.life__layout > .ladder-artwork {
+  margin-block-start: 0;
 }
 
 .life__summary,
@@ -138,6 +132,11 @@
   line-height: 1;
 }
 
+.life__health-badge {
+  border: 0.125rem solid var(--color-text);
+  background: var(--health-light);
+}
+
 .life__ladder-info {
   display: grid;
   gap: 0.15rem;
@@ -163,7 +162,18 @@
   line-height: 1;
 }
 
+.life__ladder-hint {
+  --bubble-tip: calc(100% - 0.8rem);
+
+  inset-inline-end: clamp(0.7rem, 1.4vw, 1.35rem);
+  max-width: calc(100% - 2rem);
+}
+
 .life__quote {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.55rem;
   text-align: center;
 }
 
@@ -172,7 +182,29 @@
 }
 
 .life__quote p {
-  margin: 0.45rem 0 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.life__quote-reveal {
+  min-height: 2.75rem;
+  padding: 0.35em 0.9em;
+  border: 1px solid var(--color-primary);
+  border-radius: 0.65em;
+  background: var(--color-success-bg);
+  color: var(--color-primary);
+  font: inherit;
+  font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+  cursor: pointer;
+}
+
+.life__quote-reveal:hover {
+  background: var(--color-highlight);
+}
+
+.life__quote-reveal:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
 }
 
 @media (min-width: 40rem) {
@@ -188,11 +220,6 @@
 
   .life__side {
     grid-template-rows: auto 1fr;
-  }
-
-  .life__quote {
-    display: grid;
-    align-content: center;
   }
 }
 
@@ -227,16 +254,5 @@
     grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.16fr) minmax(0, 1fr);
     width: 100%;
     margin-block: auto;
-  }
-
-  .life__artwork {
-    position: relative;
-  }
-
-  .life__artwork img {
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    object-fit: contain;
   }
 }

@@ -23,6 +23,21 @@
   line-height: 1.25;
 }
 
+.ladder-health-tone--success {
+  --health-light: var(--color-success);
+  --health-label: var(--color-success-bg);
+}
+
+.ladder-health-tone--warning {
+  --health-light: var(--color-warning);
+  --health-label: var(--color-warning-bg);
+}
+
+.ladder-health-tone--danger {
+  --health-light: var(--color-danger);
+  --health-label: var(--color-danger-bg);
+}
+
 .ladder-check {
   display: grid;
   width: clamp(2.75rem, 4.2vw, 4rem);

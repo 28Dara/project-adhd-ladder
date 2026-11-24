@@ -122,9 +122,13 @@
   justify-items: center;
 }
 
-.ladder-page__add {
+.ladder-page__add-control {
   display: grid;
   width: 30%;
+}
+
+.ladder-page__add {
+  display: grid;
   min-height: 2.75rem;
   place-items: center;
   padding: 0;
@@ -137,6 +141,13 @@
 
 .ladder-page__add svg {
   width: min(55%, 3.5rem);
+}
+
+.ladder-page__add-hint {
+  --bubble-tip: 50%;
+
+  inset-inline-end: 50%;
+  transform: translateX(50%);
 }
 
 .ladder-page__back {

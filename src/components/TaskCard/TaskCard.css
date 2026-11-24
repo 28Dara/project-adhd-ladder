@@ -30,11 +30,39 @@
   padding: 0.35rem;
   border: 0;
   background: transparent;
-  color: var(--color-text-muted);
-  cursor: not-allowed;
+  color: var(--color-primary);
+  cursor: pointer;
 }
 
 .task-card__settings svg {
   width: 85%;
   height: auto;
+}
+
+.task-card__options button {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-inline: 0.8rem;
+  background: var(--color-success-bg);
+  text-align: start;
+}
+
+.task-card__options button + button {
+  background: var(--color-danger-bg);
+}
+
+.task-card__options svg {
+  width: 1.35rem;
+  flex: none;
+}
+
+.task-card__archive h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  overflow-wrap: anywhere;
+}
+
+.task-card__archive p {
+  margin: 0.45rem 0 0.65rem;
 }

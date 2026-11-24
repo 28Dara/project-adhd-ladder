@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { Link } from 'react-router'
 import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
-import TaskCard from '../../components/TaskCard/TaskCard'
+import LadderTooltip from '../../components/LadderPopup/LadderTooltip'
+import TaskCard, { type TaskPopup } from '../../components/TaskCard/TaskCard'
 import type { LadderPreview } from '../../config/ladderPreviews'
+import { useLadderSession } from '../../hooks/useLadderSession'
 import '../../styles/ladder-cards.css'
 import './LadderPage.css'
 
@@ -9,6 +12,8 @@ const MAX_ACTIVE_TASKS = 4
 
 export default function LadderPage({ preview }: { preview: LadderPreview }) {
   const { todaySteps, totalSteps, daysOnLadder, joinedOn, tasks } = preview
+  const { taskNames, updateTaskName } = useLadderSession()
+  const [popup, setPopup] = useState<{ taskId: string; mode: TaskPopup }>()
 
   return (
     <main className="ladder-page">
@@ -57,28 +62,47 @@ export default function LadderPage({ preview }: { preview: LadderPreview }) {
         <section className="ladder-page__tasks" aria-label="Tasks">
           <ul className="ladder-page__task-list">
             {tasks.map((task) => (
-              <TaskCard key={task.id} task={task} />
+              <TaskCard
+                key={task.id}
+                task={task}
+                nameEdit={taskNames[task.id]}
+                canArchive={tasks.length > 1}
+                popup={popup?.taskId === task.id ? popup.mode : undefined}
+                onOpenPopup={(mode) => setPopup({ taskId: task.id, mode })}
+                onClosePopup={(mode) =>
+                  setPopup((current) =>
+                    current?.taskId === task.id && current.mode === mode
+                      ? undefined
+                      : current,
+                  )
+                }
+                onNameEdit={(edit) => updateTaskName(task.id, edit)}
+              />
             ))}
             {tasks.length < MAX_ACTIVE_TASKS && (
               <li className="ladder-page__add-slot" role="presentation">
-                <button
-                  className="ladder-page__add"
-                  type="button"
-                  aria-label="Add task (coming soon)"
-                  title="Adding tasks coming soon"
-                  disabled
-                >
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
+                <div className="ladder-page__add-control ladder-tooltip__anchor">
+                  <button
+                    className="ladder-page__add"
+                    type="button"
+                    aria-label="Add task (coming soon)"
+                    aria-disabled="true"
                   >
-                    <path d="M12 4v16M4 12h16" />
-                  </svg>
-                </button>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                    >
+                      <path d="M12 4v16M4 12h16" />
+                    </svg>
+                  </button>
+                  <LadderTooltip className="ladder-page__add-hint">
+                    Add task (coming soon)
+                  </LadderTooltip>
+                </div>
               </li>
             )}
           </ul>

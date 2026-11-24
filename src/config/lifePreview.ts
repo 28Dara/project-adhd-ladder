@@ -1,9 +1,9 @@
-interface LifeLadderPreview {
-  path: '/health' | '/activities' | '/learning'
-  label: string
-  badge: string | number
-  caption: string
-}
+import { HEALTH_PREVIEW_STATUS } from './healthPreview'
+
+type LifeLadderPreview = { label: string; caption: string } & (
+  | { path: '/health'; tone: typeof HEALTH_PREVIEW_STATUS.tone }
+  | { path: '/activities' | '/learning'; badge: number }
+)
 
 interface LifePreview {
   todaySteps: number
@@ -24,8 +24,8 @@ export const lifePreview: LifePreview = {
     {
       path: '/health',
       label: 'Health',
-      badge: '✓',
-      caption: '3 of 3 goals completed',
+      tone: HEALTH_PREVIEW_STATUS.tone,
+      caption: HEALTH_PREVIEW_STATUS.message,
     },
     {
       path: '/activities',
