@@ -4,9 +4,9 @@ import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
 import EditBubble from '../../components/LadderPopup/EditBubble'
 import LadderTooltip from '../../components/LadderPopup/LadderTooltip'
 import TaskCard, { type TaskPopup } from '../../components/TaskCard/TaskCard'
-import { ladderSummaryPreview } from '../../config/ladderPreviews'
 import { useLadderSession } from '../../hooks/useLadderSession'
 import { useLocalDateKey } from '../../hooks/useLocalDateKey'
+import { useRegistrationDate } from '../../hooks/useRegistrationDate'
 import { useTasks } from '../../hooks/useTasks'
 import type { TaskLadder } from '../../types/task'
 import { getLadderProgress } from '../../utils/progress'
@@ -19,7 +19,6 @@ type LadderPopupState =
   { mode: 'create'; ladder: TaskLadder } | { mode: TaskPopup; taskId: string }
 
 export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
-  const { daysOnLadder, joinedOn } = ladderSummaryPreview
   const {
     tasks,
     completions,
@@ -30,6 +29,7 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
   } = useTasks()
   const { taskDrafts, setTaskDraft } = useLadderSession()
   const today = useLocalDateKey()
+  const joinedOn = useRegistrationDate(today)
   const { todaySteps, totalSteps } = getLadderProgress(
     { tasks, completions },
     today,
@@ -94,9 +94,7 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
               <p className="ladder-page__since">
                 Since <time dateTime={joinedOn.date}>{joinedOn.label}</time>
               </p>
-              <p className="ladder-card__pill">
-                Days in the ladder: {daysOnLadder}
-              </p>
+              <p className="ladder-card__pill">Days in the ladder: —</p>
             </div>
             <p className="ladder-page__total-count">{totalSteps}</p>
           </section>

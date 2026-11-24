@@ -1,6 +1,4 @@
 import type { Task, TaskData } from '../types/task'
-import { getLocalDateKey } from '../utils/dates'
-import { createTaskCompletion } from '../utils/taskCompletions'
 
 const examples = {
   gym: { ladder: 'activities', title: 'Gym' },
@@ -11,16 +9,9 @@ const examples = {
   'study-music-theory': { ladder: 'learning', title: 'Studied music theory' },
 } as const satisfies Record<string, Pick<Task, 'ladder' | 'title'>>
 
-const completedExamples: readonly (keyof typeof examples)[] = [
-  'gym',
-  'learn-something',
-  'study-language',
-]
-
 export function createExampleTaskData(userId: string, now: Date): TaskData {
   const taskId = (key: string) => `${userId}:${key}`
   const createdAt = now.toISOString()
-  const completedDate = getLocalDateKey(now)
 
   return {
     tasks: Object.entries(examples).map(([key, example]) => ({
@@ -30,8 +21,6 @@ export function createExampleTaskData(userId: string, now: Date): TaskData {
       created_at: createdAt,
       archived_at: null,
     })),
-    completions: completedExamples.map((key) =>
-      createTaskCompletion(userId, taskId(key), completedDate),
-    ),
+    completions: [],
   }
 }

@@ -11,10 +11,9 @@ import './Life.css'
 
 export default function Life() {
   const { dailyQuote, revealQuote } = useLadderSession()
-  const { today: date, status: healthStatus } = useHealth()
+  const { today: date, status: healthStatus, joinedOn } = useHealth()
   const taskData = useTasks()
   const quote = dailyQuote?.date === date ? dailyQuote.quote : undefined
-  const { streakDays, daysOnLadder, joinedOn } = lifePreview
   const progress = getLadderProgress(taskData, date)
   const { todaySteps, totalSteps } = progress.life
   const ladders = lifePreview.ladders.map((section) => {
@@ -55,9 +54,7 @@ export default function Life() {
                 <path d="M9 16 27 5M17 32h20M13 48l15 11" />
               </svg>
             </div>
-            <p className="ladder-card__pill">
-              You have a {streakDays}-day streak
-            </p>
+            <p className="ladder-card__pill">You have a 0-day streak</p>
           </section>
 
           <section
@@ -71,9 +68,7 @@ export default function Life() {
               <p className="life__since">
                 Since <time dateTime={joinedOn.date}>{joinedOn.label}</time>
               </p>
-              <p className="ladder-card__pill">
-                Days in the ladder: {daysOnLadder}
-              </p>
+              <p className="ladder-card__pill">Days in the ladder: —</p>
             </div>
             <p className="life__total-count">{totalSteps}</p>
           </section>

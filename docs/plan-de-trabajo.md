@@ -166,12 +166,21 @@ lifeTotal       = activitiesTotal + learningTotal
 
 #### 06B-06B · Semáforo de Health mediante regla B (P1)
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado y commiteado por el propietario.
 - **Objetivo y alcance** — Derivar el semáforo compartido de Health y Life a partir de los registros diarios de 06B-06A y la fecha de alta de Auth. Aplicar la regla B del dossier §02.7 con fechas calendario locales.
 - **Aceptación** — Ambas rutas muestran el mismo color y texto, incluso al entrar directamente a Life. Los checks y el cambio de fecha actualizan el resultado. El estado queda derivado y separado de los pasos. El diseño conserva el indicador circular.
 - **Skills** — `architecture-guardian` y `ub-mode`.
 - **Verificación técnica** — Pasaron build, lint y formato. Las pruebas del cálculo cubrieron 162 combinaciones y límites del calendario local. Edge sin interfaz verificó acceso directo a Life, marcación y desmarcación, navegación, cambio de fecha, historial, aislamiento de cuentas e independencia de los pasos. La revisión visual corresponde al propietario.
 - **Commit propuesto** — `feat(health): derive daily health status`.
+
+#### 06B-RESET-01 · Inicio sin progreso simulado
+
+- **Estado** — En revisión del propietario, antes de 06B-07.
+- **Objetivo y alcance** — Conservar las seis tareas predeterminadas, iniciar sin completaciones ni registros de Health y retirar los valores de demostración de racha, antigüedad y fecha de alta.
+- **Aceptación** — Today, Total y Streak comienzan en cero. Tareas y objetivos de Health comienzan desmarcados. La fecha visible usa `created_at` de Auth y, si falta, muestra la fecha local como simulada. Days in the ladder muestra un guion hasta 06B-07. La regla B y las interacciones siguen funcionando.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — En Edge sin interfaz se comprobaron inicio vacío, tareas predeterminadas, contadores al marcar y desmarcar, cambio de día, fecha real y simulada, cambio de cuenta y regla B. La revisión visual corresponde al propietario.
+- **Commit propuesto** — `fix(previews): remove simulated progress records`.
 
 #### Racha y días desde alta
 - [ ] Racha de **días cerrados** conforme a la sección 02.8 del dossier; no derivarla de `lifeTotal`. Días desde alta es otra métrica.
