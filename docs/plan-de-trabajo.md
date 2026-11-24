@@ -23,7 +23,7 @@
 | Supabase, SQL y RLS | Migraciones planeadas/escritas; aplicación y pruebas cruzadas no certificadas | Revisar esquema y RLS, aplicar con autorización, probar dos cuentas |
 | CRUD de tareas y checks persistidos | Pendiente por verificar/implementar | Crear, renombrar, retirar, marcar y desmarcar con persistencia |
 | Contadores v2.2 | 06B-03 aprobado y commiteado por el propietario | QA con persistencia cuando corresponda |
-| API externa de frases | **No conectada** en 06A; frases de ejemplo | API real por `fetch`, tipado, carga/error/reintento y vacío |
+| 06B y API externa de frases | Cerradas y aprobadas. DummyJSON verificado en navegador local | Verificar desde el origen de producción |
 | Deploy / README / PR | Pendiente de verificación | URL pública, sin 404 al recargar, README y PR a tiempo |
 
 No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del proyecto.
@@ -54,7 +54,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06A.1-ADD-CARD-01 · Dimensiones del botón de alta tras el retiro (P1)
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado por el propietario.
 - **Commit local verificado** — `5e3c814`.
 - **Objetivo y alcance** — Centrar el botón de alta en su espacio y conservar su ancho y altura responsive base en el CSS compartido de Activities y Learning.
 - **Aceptación** — De cero a tres tarjetas, el botón conserva sus dimensiones a cada ancho y queda centrado en ambos ejes. Con cuatro tarjetas se mantiene oculto. Las tarjetas y los popups conservan su geometría y comportamiento.
@@ -64,16 +64,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 ### B. Decisiones aprobadas sobre el retiro de tareas
 
-**Completado por decisión del propietario.** `Delete Card` archiva mediante `archived_at` y elimina solo la completación de hoy. La regla vigente y la conservación del histórico están en el dossier §02.6. El cierre de la decisión habilita 06B-05 en memoria. La revisión de RLS, claves foráneas e integridad en la base de datos corresponde al apartado C.
-
-### C. Datos y seguridad Supabase (P0)
-
-- [ ] Revisar migraciones existentes contra dossier v2.2, especialmente `tasks`, `task_completions`, `health_checks`, unicidad `(task_id, completed_date)`, FK compuesta y **ausencia de cascada destructiva de historial**.
-- [ ] Revisar políticas RLS de SELECT, INSERT, UPDATE, DELETE por propietario en cada tabla personal, incluyendo referencias cruzadas.
-- [ ] Aplicar migraciones **solo después de autorización**, comprobar esquema real, probar aislamiento con dos cuentas y errores de red.
-- [ ] Definir/verificar siembra de las seis tareas de ejemplo **una sola vez** para cada cuenta. No resembrar si el usuario retira tareas.
-
-**Cierre:** persistencia real y RLS comprobadas en dos cuentas, sin pérdida de historial.
+**Completado por decisión del propietario.** `Delete Card` archiva mediante `archived_at` y elimina solo la completación de hoy. La regla vigente y la conservación del histórico están en el dossier §02.6. El cierre de la decisión habilita 06B-05 en memoria. La revisión de RLS, claves foráneas e integridad en la base de datos corresponde a 07A.
 
 ### D. 06B — Frontend funcional y persistencia (P0/P1)
 
@@ -122,15 +113,6 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 - **Verificación técnica** — Pasaron build, lint y formato. Las pruebas del dominio y de Edge sin interfaz cubrieron el retiro de tarjetas marcadas y desmarcadas, la fecha local, el histórico, ambos límites, solicitudes consecutivas, reemplazo con el mismo nombre, navegación, aislamiento entre cuentas y separación de Health. Pasaron las comprobaciones de regresión de alta, renombrado y contadores. La revisión visual corresponde al propietario.
 - **Commit propuesto** — `feat(tasks): enable task archival`.
 
-#### CRUD y casillas persistentes
-
-- [ ] Conectar el alta y el renombrado de 06B-04 a la persistencia por cuenta. Verificar el límite de cuatro activas, la normalización del título y la aplicación conjunta del renombrado y la desmarcación de hoy conforme al dossier §02.6.
-- [ ] Implementar marcación y desmarcación por **fecha local**; una completación por tarea por día; gestionar errores y rollback de operaciones optimistas.
-- [ ] Conectar el retiro de 06B-05 a la persistencia según el dossier §02.6. Verificar que el archivo y la desmarcación de hoy se apliquen juntos y que el historial permanezca disponible.
-- [ ] Mantener Health en sus tres metas fijas, con datos fechados independientes de tareas Activities/Learning.
-
-**Cierre:** operaciones correctas tras navegación, recarga y cambio de cuenta; no duplicados; estados vacío/carga/error accesibles.
-
 ### E. 06B — Contadores y fechas v2.2 (P0)
 
 #### 06B-03 · Contadores derivados de pasos (P0)
@@ -176,7 +158,7 @@ lifeTotal       = activitiesTotal + learningTotal
 
 #### 06B-RESET-01 · Inicio sin progreso simulado
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado por el propietario.
 - **Commit local verificado** — `773523b`.
 - **Objetivo y alcance** — Conservar las seis tareas predeterminadas, iniciar sin completaciones ni registros de Health y retirar los valores de demostración de racha, antigüedad y fecha de alta.
 - **Aceptación** — Today, Total y Streak comienzan en cero. Tareas y objetivos de Health comienzan desmarcados. La fecha visible usa `created_at` de Auth y, si falta, muestra la fecha local como simulada. Days in the ladder muestra un guion hasta 06B-07. La regla B y las interacciones siguen funcionando.
@@ -210,7 +192,8 @@ lifeTotal       = activitiesTotal + learningTotal
 
 #### 06B-08 · Frase diaria externa con DummyJSON (P0)
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado por el propietario.
+- **Commit local verificado** — `16ad597`.
 - **Objetivo y alcance** — Conectar Life a DummyJSON mediante `fetch()`, validar el resultado y gestionar la frase diaria en el estado compartido. Aplicar la prevención de repeticiones según el dossier §02.10.
 - **Aceptación** — Revelación bajo demanda, conservación durante el día, carga, éxito, error, vacío y reintento. Máximo de cinco solicitudes por intento si se reciben duplicados. Descartar respuestas obsoletas al cambiar de día o cuenta. Historial provisional en memoria y proveedor documentado en README.
 - **Skills** — `architecture-guardian`, `ub-mode` y `ciber-security`.
@@ -219,7 +202,39 @@ lifeTotal       = activitiesTotal + learningTotal
 
 **Cierre:** frase real visible en navegador y estados de fallo comprobados.
 
-### H. QA, deploy y entrega (P0)
+### Cierre de la fase 06
+
+**06A y 06B cerradas por aprobación del propietario.** Incluye ADD-CARD-01, RESET-01 y 06B-08. El dossier §02.10 recoge DummyJSON y la ventana de hoy más los seis días anteriores. Tareas, completaciones y Health siguen en memoria durante la sesión privada. La frase y su historial también se reinician al recargar, cerrar sesión o cambiar de cuenta.
+
+### Fase 07 — Persistencia, seguridad y entrega
+
+**Estado** — Pendiente. El primer objetivo es revisar el contrato de fechas, las migraciones y las garantías de escritura antes de conectar datos o aplicar cambios en Supabase.
+
+#### 07A. Datos y seguridad Supabase (P0)
+
+- [ ] Revisar migraciones existentes contra dossier v2.2, especialmente `tasks`, `task_completions`, `health_checks`, unicidad `(task_id, completed_date)`, FK compuesta y **ausencia de cascada destructiva de historial**.
+- [ ] Revisar políticas RLS de SELECT, INSERT, UPDATE, DELETE por propietario en cada tabla personal, incluyendo referencias cruzadas.
+- [ ] Aplicar migraciones **solo después de autorización**, comprobar esquema real, probar aislamiento con dos cuentas y errores de red.
+- [ ] Definir/verificar siembra de las seis tareas de ejemplo **una sola vez** para cada cuenta. No resembrar si el usuario retira tareas.
+
+**Cierre:** persistencia real y RLS comprobadas en dos cuentas, sin pérdida de historial.
+
+**Hallazgos AUD-02 indispensables para el MVP (producto mínimo viable)**
+
+- **04 y 05:** proteger días cerrados y aplicar juntos renombrado o retiro y desmarcación de hoy. Hacer cumplir máximo de cuatro, protección de la última y estado activo aun con escrituras concurrentes.
+- **06:** validar fechas al incorporar datos. Confirmar con el propietario el tratamiento de registros anteriores al alta y de diferencias de día local entre dispositivos antes de habilitar escrituras. El ajuste de etiqueta por cambio de zona queda para después del MVP.
+- **02, 07 y 08:** impedir que un cierre tardío afecte a otra sesión, conservar datos y borradores ante fallos, sembrar una vez por cuenta y verificar el flujo real de alta. Corregir los mensajes de confirmación y privacidad si la configuración desplegada expone los problemas identificados.
+
+#### CRUD y casillas persistentes
+
+- [ ] Conectar el alta y el renombrado de 06B-04 a la persistencia por cuenta. Verificar el límite de cuatro activas, la normalización del título y la aplicación conjunta del renombrado y la desmarcación de hoy conforme al dossier §02.6.
+- [ ] Implementar marcación y desmarcación por **fecha local**; una completación por tarea por día; gestionar errores y rollback de operaciones optimistas.
+- [ ] Conectar el retiro de 06B-05 a la persistencia según el dossier §02.6. Verificar que el archivo y la desmarcación de hoy se apliquen juntos y que el historial permanezca disponible.
+- [ ] Mantener Health en sus tres metas fijas, con datos fechados independientes de tareas Activities/Learning.
+
+**Cierre:** operaciones correctas tras navegación, recarga y cambio de cuenta; no duplicados; estados vacío/carga/error accesibles.
+
+#### 07B. QA, despliegue y entrega (P0)
 
 - [ ] Verificar todas las rutas, formularios, menús, teclado/focus, accesibilidad y responsive >=320 px sin scroll horizontal.
 - [ ] Probar Auth real y RLS con dos cuentas en entorno de despliegue; recarga SPA sin 404; verificación de errores y estados vacíos.
@@ -229,6 +244,13 @@ lifeTotal       = activitiesTotal + learningTotal
 
 **Cierre:** release desplegado, verificado y PR enviado antes de 30/11.
 
+### Mejoras posteriores al MVP
+
+- **AUD-02-01** está resuelto y verificado en la fase 06.
+- **03 y 12:** reapertura del popup por historial y foco de confirmación de contraseña. Mantener las comprobaciones de teclado y accesibilidad exigidas para la entrega.
+- **09 y 10:** ampliar las reglas de exclusión para variantes de entorno y medir rendimiento antes de optimizar. La exclusión de secretos de la entrega sigue siendo obligatoria.
+- **11:** actualizar la referencia obsoleta de Architecture Guardian sobre retiro. El README final y la URL pública forman parte de 07B.
+
 ## 4. Calendario objetivo y contingencias
 
 | Fecha (2026) | Enfoque prioritario | Nota |
@@ -236,7 +258,7 @@ lifeTotal       = activitiesTotal + learningTotal
 | Mar 24 | Sincronizar documentos y revisar el retiro en memoria según la regla aprobada | No confundir edición documental con aplicación de SQL |
 | Mié 25 | Datos, RLS, CRUD y contadores v2.2 según estado real | Concentrar tiempo en P0; dividir en cambios revisables |
 | Jue 26 | Cerrar CRUD, Health/racha y pruebas de fechas | Resolver los casos críticos antes del pulido |
-| Vie 27 | Quotes API externa real, errores y README | No dejar API obligatoria como fallback local |
+| Vie 27 | Verificar persistencia y preparar el README final | La frase externa quedó aprobada en 06B-08 |
 | Sáb 28 | QA, deploy, revisión en producción y PR | Meta principal de entrega |
 | Dom 29 | Correcciones y envío del PR si aún falta | Evitar funciones nuevas |
 | Lun 30 | Margen de evaluación | No dejar entregables obligatorios pendientes |
