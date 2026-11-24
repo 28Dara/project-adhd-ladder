@@ -9,8 +9,10 @@ import { createExampleTaskData } from '../config/exampleTasks'
 import { useAuth } from '../hooks/useAuth'
 import type { LadderSession } from '../hooks/useLadderSession'
 import type { HealthCheck } from '../types/health'
+import type { Task } from '../types/task'
 import { getLocalDateKey } from '../utils/dates'
 import { updateTaskCompletion } from '../utils/taskCompletions'
+import { addTask, renameTaskTitle } from '../utils/tasks'
 import './AuthRoutes.css'
 
 export function AuthSessionBoundary() {
@@ -93,20 +95,37 @@ function PrivateLayout({
   const [taskData, setTaskData] = useState(() =>
     createExampleTaskData(user.id, new Date()),
   )
-  const [taskNames, setTaskNames] = useState<LadderSession['taskNames']>({})
+  const [taskDrafts, setTaskDrafts] = useState<LadderSession['taskDrafts']>({})
   const [healthChecks, setHealthChecks] = useState<readonly HealthCheck[]>([])
   const [dailyQuote, setDailyQuote] = useState<LadderSession['dailyQuote']>()
   const isSigningOut = logout.status === 'pending'
 
   const ladderSession: LadderSession = {
     taskData,
+    createTask: (ladder, title) => {
+      const task: Task = {
+        id: crypto.randomUUID(),
+        user_id: user.id,
+        ladder,
+        title,
+        created_at: new Date().toISOString(),
+        archived_at: null,
+      }
+      setTaskData((data) => addTask(data, task))
+    },
+    renameTask: (taskId, title) => {
+      const today = getLocalDateKey(new Date())
+      setTaskData((data) =>
+        renameTaskTitle(data, user.id, taskId, title, today),
+      )
+    },
     setTaskCompleted: (taskId, checked) => {
       const date = getLocalDateKey(new Date())
       setTaskData((data) => updateTaskCompletion(data, taskId, date, checked))
     },
-    taskNames,
-    updateTaskName: (id, edit) =>
-      setTaskNames((names) => ({ ...names, [id]: edit })),
+    taskDrafts,
+    setTaskDraft: (key, draft) =>
+      setTaskDrafts((drafts) => ({ ...drafts, [key]: draft })),
     healthChecks,
     setHealthGoal: (goalId, checked) => {
       const date = getLocalDateKey(new Date())

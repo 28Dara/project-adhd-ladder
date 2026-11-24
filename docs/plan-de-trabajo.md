@@ -22,7 +22,7 @@
 | 06A.1 visual | Páginas actuales aprobadas visualmente por el propietario | Cerrado por el propietario |
 | Supabase, SQL y RLS | Migraciones planeadas/escritas; aplicación y pruebas cruzadas no certificadas | Revisar esquema y RLS, aplicar con autorización, probar dos cuentas |
 | CRUD de tareas y checks persistidos | Pendiente por verificar/implementar | Crear, renombrar, retirar, marcar y desmarcar con persistencia |
-| Contadores v2.2 | 06B-03 implementado y verificado con datos en memoria | Revisión del propietario y QA con persistencia cuando corresponda |
+| Contadores v2.2 | 06B-03 aprobado y commiteado por el propietario | QA con persistencia cuando corresponda |
 | API externa de frases | **No conectada** en 06A; frases de ejemplo | API real por `fetch`, tipado, carga/error/reintento y vacío |
 | Deploy / README / PR | Pendiente de verificación | URL pública, sin 404 al recargar, README y PR a tiempo |
 
@@ -98,10 +98,18 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 - **Verificación técnica** — Edge sin interfaz reprodujo la pérdida de checks del código anterior. Con el ajuste se verificaron marcación, desmarcación, navegación, cambios consecutivos, cambio de día, conservación del historial, aislamiento por cuenta y separación de las completaciones de tareas.
 - **Commit propuesto** — `feat(health): establish shared daily health state`.
 
+#### 06B-04 · Creación y renombrado de tareas en memoria (P0)
+
+- **Estado** — En revisión del propietario. Se inició después del cierre aprobado de 06B-03.
+- **Objetivo y alcance** — Habilitar el alta y renombrado de tarjetas en Activities y Learning con los formularios aprobados. El título confirmado vive en la tarea. Los borradores se conservan durante la navegación privada hasta que se confirman o se cancelan.
+- **Aceptación** — El límite de cuatro tarjetas activas se aplica por escalera en la interfaz y en la operación. Se puede crear desde una lista vacía. El alta genera un ID estable y la tarjeta aparece desmarcada. Submit normaliza el nombre según el dossier §02.6. Un renombrado efectivo conserva la identidad y el histórico, y elimina solo la completación de hoy si existe. El mismo nombre normalizado conserva la marca. Escape y clic exterior conservan los borradores. Cancel los descarta. Se verifica el aislamiento por cuenta y el funcionamiento de los contadores.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Pasaron build, lint y formato. Las pruebas de las mutaciones y de Edge sin interfaz cubrieron el alta desde cero y hasta el límite, los borradores, el foco, la navegación y el cambio de cuenta. También se verificaron la normalización al confirmar, la desmarcación por renombrado efectivo, la conservación del check ante un nombre equivalente, las operaciones consecutivas, el efecto en Today y Total y la independencia de Health. La revisión visual corresponde al propietario.
+- **Commit propuesto** — `feat(tasks): enable task creation and renaming`.
+
 #### CRUD y casillas persistentes
 
-- [ ] Crear tareas hasta cuatro activas por escalera; reutilizar TaskCard y componentes de Activities/Learning; validar título.
-- [ ] Renombrar tareas y conservar identidad; la interfaz React 06A no equivale a una mutación persistente.
+- [ ] Conectar el alta y el renombrado de 06B-04 a la persistencia por cuenta. Verificar el límite de cuatro activas, la normalización del título y la aplicación conjunta del renombrado y la desmarcación de hoy conforme al dossier §02.6.
 - [ ] Implementar marcación y desmarcación por **fecha local**; una completación por tarea por día; gestionar errores y rollback de operaciones optimistas.
 - [ ] Implementar retiro/`Delete Card` **solo después** de cerrar el caso del apartado B; conservar historial.
 - [ ] Mantener Health en sus tres metas fijas, con datos fechados independientes de tareas Activities/Learning.
@@ -112,7 +120,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06B-03 · Contadores derivados de pasos (P0)
 
-- **Estado** — En revisión del propietario. Se inició después del cierre aprobado de 06B-06A.
+- **Estado** — Completado, aprobado y commiteado por el propietario después del cierre de 06B-06A.
 - **Objetivo y alcance** — Derivar los contadores de Life, Activities y Learning y los indicadores de sus tarjetas desde las completaciones en memoria. El historial conserva la escalera de las tareas archivadas. La mutación de retiro sigue sujeta a la decisión del apartado B.
 - **Aceptación** — Today y Total usan la fecha local y los cortes del dossier v2.2. Las escaleras se calculan de forma independiente y Life las suma. Los registros futuros y duplicados quedan fuera del conteo. Health no aporta pasos. Se admite acceso directo a cada ruta. Build, lint y formato pasan. La revisión visual corresponde al propietario.
 - **Skills** — `architecture-guardian` y `ub-mode`.

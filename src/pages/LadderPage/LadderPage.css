@@ -136,7 +136,7 @@
   border-radius: clamp(1rem, 2.3vw, 2.5rem);
   background: var(--color-surface);
   color: var(--color-text-muted);
-  cursor: not-allowed;
+  cursor: pointer;
 }
 
 .ladder-page__add svg {

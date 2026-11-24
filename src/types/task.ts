@@ -20,8 +20,3 @@ export interface TaskData {
   readonly tasks: readonly Task[]
   readonly completions: readonly TaskCompletion[]
 }
-
-export interface TaskNameEdit {
-  title?: string
-  draft?: string
-}

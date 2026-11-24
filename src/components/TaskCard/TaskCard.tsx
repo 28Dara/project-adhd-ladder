@@ -1,6 +1,5 @@
 import { useId, useRef } from 'react'
 import '../../styles/ladder-cards.css'
-import type { TaskNameEdit } from '../../types/task'
 import EditBubble from '../LadderPopup/EditBubble'
 import LadderPopup from '../LadderPopup/LadderPopup'
 import LadderTooltip from '../LadderPopup/LadderTooltip'
@@ -12,30 +11,31 @@ interface TaskCardProps {
   title: string
   completed: boolean
   onCompletedChange: (checked: boolean) => void
-  nameEdit?: TaskNameEdit
+  renameDraft?: string
   canArchive: boolean
   popup?: TaskPopup
   onOpenPopup: (mode: TaskPopup) => void
   onClosePopup: (mode: TaskPopup) => void
-  onNameEdit: (edit: TaskNameEdit | undefined) => void
+  onRenameDraftChange: (draft: string | undefined) => void
+  onRename: (title: string) => void
 }
 
 export default function TaskCard({
-  title: taskTitle,
+  title,
   completed,
   onCompletedChange,
-  nameEdit,
+  renameDraft,
   canArchive,
   popup,
   onOpenPopup,
   onClosePopup,
-  onNameEdit,
+  onRenameDraftChange,
+  onRename,
 }: TaskCardProps) {
   const popupId = useId()
   const archiveTitleId = useId()
   const archiveDescriptionId = useId()
   const settingsTrigger = useRef<HTMLButtonElement>(null)
-  const title = nameEdit?.title ?? taskTitle
 
   function closePopup() {
     if (popup) onClosePopup(popup)
@@ -127,16 +127,15 @@ export default function TaskCard({
             {...popupProps}
             label="Enter a new task name"
             placeholder="Task name"
-            draft={nameEdit?.draft ?? title}
-            onDraftChange={(draft) => onNameEdit({ ...nameEdit, draft })}
+            draft={renameDraft ?? title}
+            onDraftChange={onRenameDraftChange}
             onCancel={() => {
-              onNameEdit(
-                nameEdit?.title ? { title: nameEdit.title } : undefined,
-              )
+              onRenameDraftChange(undefined)
               closePopup()
             }}
             onSubmit={(value) => {
-              onNameEdit({ title: value })
+              onRename(value)
+              onRenameDraftChange(undefined)
               closePopup()
             }}
           />

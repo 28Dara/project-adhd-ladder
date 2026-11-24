@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router'
 import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
+import EditBubble from '../../components/LadderPopup/EditBubble'
 import LadderTooltip from '../../components/LadderPopup/LadderTooltip'
 import TaskCard, { type TaskPopup } from '../../components/TaskCard/TaskCard'
 import { ladderSummaryPreview } from '../../config/ladderPreviews'
@@ -10,24 +11,46 @@ import { useTasks } from '../../hooks/useTasks'
 import type { TaskLadder } from '../../types/task'
 import { getLadderProgress } from '../../utils/progress'
 import { matchesTaskCompletion } from '../../utils/taskCompletions'
+import { getActiveTasks, MAX_ACTIVE_TASKS } from '../../utils/tasks'
 import '../../styles/ladder-cards.css'
 import './LadderPage.css'
 
-const MAX_ACTIVE_TASKS = 4
+type LadderPopupState =
+  { mode: 'create'; ladder: TaskLadder } | { mode: TaskPopup; taskId: string }
 
 export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
   const { daysOnLadder, joinedOn } = ladderSummaryPreview
-  const { tasks, completions, setTaskCompleted } = useTasks()
-  const { taskNames, updateTaskName } = useLadderSession()
+  const { tasks, completions, createTask, renameTask, setTaskCompleted } =
+    useTasks()
+  const { taskDrafts, setTaskDraft } = useLadderSession()
   const today = useLocalDateKey()
   const { todaySteps, totalSteps } = getLadderProgress(
     { tasks, completions },
     today,
   )[ladder]
-  const [popup, setPopup] = useState<{ taskId: string; mode: TaskPopup }>()
-  const activeTasks = tasks.filter(
-    (task) => task.ladder === ladder && task.archived_at === null,
-  )
+  const [popup, setPopup] = useState<LadderPopupState>()
+  const addPopupId = useId()
+  const addTrigger = useRef<HTMLButtonElement>(null)
+  const taskList = useRef<HTMLUListElement>(null)
+  const restoreTaskListFocus = useRef(false)
+  const activeTasks = getActiveTasks(tasks, ladder)
+  const canAddTask = activeTasks.length < MAX_ACTIVE_TASKS
+  const isCreateOpen = popup?.mode === 'create' && popup.ladder === ladder
+  const createDraftKey = `create:${ladder}` as const
+
+  useLayoutEffect(() => {
+    if (!restoreTaskListFocus.current) return
+    restoreTaskListFocus.current = false
+    if (!addTrigger.current) taskList.current?.focus()
+  }, [canAddTask, isCreateOpen])
+
+  function closeCreatePopup() {
+    setPopup((current) =>
+      current?.mode === 'create' && current.ladder === ladder
+        ? undefined
+        : current,
+    )
+  }
 
   return (
     <main className="ladder-page">
@@ -74,7 +97,7 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
         </div>
 
         <section className="ladder-page__tasks" aria-label="Tasks">
-          <ul className="ladder-page__task-list">
+          <ul className="ladder-page__task-list" ref={taskList} tabIndex={-1}>
             {activeTasks.map((task) => (
               <TaskCard
                 key={task.id}
@@ -85,28 +108,42 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
                 onCompletedChange={(checked) =>
                   setTaskCompleted(task.id, checked)
                 }
-                nameEdit={taskNames[task.id]}
+                renameDraft={taskDrafts[`rename:${task.id}`]}
                 canArchive={activeTasks.length > 1}
-                popup={popup?.taskId === task.id ? popup.mode : undefined}
+                popup={
+                  popup && popup.mode !== 'create' && popup.taskId === task.id
+                    ? popup.mode
+                    : undefined
+                }
                 onOpenPopup={(mode) => setPopup({ taskId: task.id, mode })}
                 onClosePopup={(mode) =>
                   setPopup((current) =>
-                    current?.taskId === task.id && current.mode === mode
+                    current?.mode === mode && current.taskId === task.id
                       ? undefined
                       : current,
                   )
                 }
-                onNameEdit={(edit) => updateTaskName(task.id, edit)}
+                onRenameDraftChange={(draft) =>
+                  setTaskDraft(`rename:${task.id}`, draft)
+                }
+                onRename={(title) => renameTask(task.id, title)}
               />
             ))}
-            {activeTasks.length < MAX_ACTIVE_TASKS && (
+            {canAddTask && (
               <li className="ladder-page__add-slot" role="presentation">
                 <div className="ladder-page__add-control ladder-tooltip__anchor">
                   <button
+                    ref={addTrigger}
                     className="ladder-page__add"
                     type="button"
-                    aria-label="Add task (coming soon)"
-                    aria-disabled="true"
+                    aria-label="Add task"
+                    aria-expanded={isCreateOpen}
+                    aria-controls={isCreateOpen ? addPopupId : undefined}
+                    onClick={() =>
+                      isCreateOpen
+                        ? closeCreatePopup()
+                        : setPopup({ mode: 'create', ladder })
+                    }
                   >
                     <svg
                       aria-hidden="true"
@@ -120,8 +157,31 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
                     </svg>
                   </button>
                   <LadderTooltip className="ladder-page__add-hint">
-                    Add task (coming soon)
+                    Add task
                   </LadderTooltip>
+                  {isCreateOpen && (
+                    <EditBubble
+                      id={addPopupId}
+                      trigger={addTrigger}
+                      label="Enter a new task name"
+                      placeholder="Task name"
+                      draft={taskDrafts[createDraftKey] ?? ''}
+                      onDraftChange={(draft) =>
+                        setTaskDraft(createDraftKey, draft)
+                      }
+                      onDismiss={closeCreatePopup}
+                      onCancel={() => {
+                        setTaskDraft(createDraftKey, undefined)
+                        closeCreatePopup()
+                      }}
+                      onSubmit={(title) => {
+                        restoreTaskListFocus.current = true
+                        createTask(ladder, title)
+                        setTaskDraft(createDraftKey, undefined)
+                        closeCreatePopup()
+                      }}
+                    />
+                  )}
                 </div>
               </li>
             )}

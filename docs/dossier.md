@@ -127,7 +127,9 @@ Histórico anterior al lunes: Activities 8, Learning 12, Life 20.
 
 ### 02.6 Integridad del historial y gestión de tareas [DECIDIDO / ABIERTO]
 
-- Una tarea pertenece a una escalera (Activities o Learning), conserva su `id` al renombrarse y puede completarse una vez por día.
+- Una tarea pertenece a una escalera (Activities o Learning) y puede completarse una vez por día.
+- **[DECIDIDO] Nombre al confirmar:** al crear o renombrar con Submit, se aplica `trim()` y se convierte el primer carácter a mayúscula conservando el resto del texto tal como se escribió. Se rechaza un nombre que quede vacío. El borrador conserva el texto escrito.
+- **[DECIDIDO] Renombrado efectivo:** si el nombre normalizado cambia respecto del confirmado, se conservan el ID, la escalera y el propietario. En la misma operación se elimina solo la completación de esa tarea para la fecha local actual, si existe. En ese caso, Today disminuye un paso en la escalera correspondiente y en Life. El histórico permanece intacto. Si se confirma el mismo nombre normalizado o la tarea ya está desmarcada, los contadores se mantienen. Cancel, Escape, clic exterior y envíos inválidos dejan intactas las completaciones.
 - Cuentas nuevas reciben **una sola vez** las tareas de ejemplo: Activities — Gym, Read my Book, Guitar Practice; Learning — Learned something new, Studied a language, Studied music theory. No recrearlas automáticamente si el usuario las retira.
 - Se permiten hasta **cuatro tareas activas por escalera**. Con una única tarea activa, el menú Settings **no ofrece Delete Card**, conforme a la interfaz de 06A. **Un estado vacío (0 tareas) aún debe poder representarse** si ocurre por carga, error, importación o datos preexistentes; no equivale a permitir borrar la última desde Settings.
 - La acción visible puede llamarse **Delete Card**; esto **no autoriza** a borrar el historial de pasos. El modelo v2.1 propone `archived_at` como mecanismo interno para ocultar una tarea preservando sus completaciones. Mostrar o no la palabra «Archive» en UI es independiente de esa decisión técnica.
@@ -273,7 +275,8 @@ La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos 
 - [ ] Los tres contadores históricos excluyen `todayLocalDate`; marcar/desmarcar hoy no los cambia.
 - [ ] Tras cambiar de lunes a martes, pasos de lunes figuran en histórico **una sola vez** y hoy empieza en cero.
 - [ ] Cerrar la app y volver días después no duplica ni pierde pasos; un día con cero no aumenta totales.
-- [ ] Renombrar o retirar una tarjeta activa no destruye pasos históricos; **resolver antes del CRUD** el caso de tarjeta marcada y eliminada el mismo día.
+- [ ] Verificar la normalización al confirmar y la desmarcación de hoy al renombrar según §02.6, con el histórico intacto.
+- [ ] Verificar que retirar una tarjeta activa conserva los pasos históricos. Resolver antes de implementar el retiro el caso de una tarjeta marcada hoy.
 - [ ] Health mantiene tres checks por fecha; reinicio visual no fuerza rojo; tabla de semáforo B completa.
 - [ ] Racha de días cerrados conforme a su regla; no confundir con pasos totales ni días desde alta.
 - [ ] Pruebas adversariales RLS con dos usuarios y FK cruzada de completaciones; bloqueo de lecturas/mutaciones ajenas.
