@@ -181,9 +181,13 @@ Las fechas se almacenan como días calendario `YYYY-MM-DD` según fecha local de
 
 Supabase guarda cuentas y datos personales, pero **no sustituye** la API de frases de terceros. Una API pública real debe consumirse mediante `fetch()` en `src/utils/quotesApi.ts`, con respuesta verificada y tipada, transformación al tipo interno `Quote`, carga, error con reintento y estado vacío.
 
-**Proveedor [ABIERTO]:** DummyJSON (`/quotes/random`) fue candidato no verificado, no proveedor aprobado. Comprobar disponibilidad y CORS desde el navegador; documentar proveedor y límites en README. Ningún fallback local puede presentarse como respuesta real. Las variables `VITE_` son públicas.
+**Proveedor [DECIDIDO]** — DummyJSON, mediante `https://dummyjson.com/quotes/random`. Se consulta directamente desde el navegador, sin credenciales ni datos de cuenta. La respuesta debe contener `id` numérico, `quote` y `author` de texto. La aplicación conserva el texto original y lo muestra como texto plano. Se verifica CORS (intercambio de recursos entre orígenes) desde el navegador.
 
-**Interacción 06A aprobada:** tarjeta inicial «Today's quote for you is...» y botón «Click to reveal»; al revelar desaparecen ambos y se muestra solo la frase sobre la tarjeta exterior. La frase es aleatoria por fecha local y se mantiene durante la sesión al navegar; una nueva fecha puede seleccionar otra. **06A usa frases provisionales locales; aún queda pendiente sustituir su fuente por la API real sin romper esta interacción.**
+**Interacción aprobada** — Life conserva la tarjeta inicial «Today's quote for you is...» y el botón «Click to reveal». Solo se solicita una frase al pulsar el botón. Al recibirla, desaparecen el título y el botón y se muestra solo la frase. Una revelación exitosa permanece al navegar por la sesión privada durante ese día calendario local. El siguiente día comienza en el estado inicial. Un error o respuesta vacía o inválida permite reintentar. Las respuestas de un día o cuenta que ya no estén activos se descartan.
+
+**Prevención de repeticiones [DECIDIDO]** — Al revelar, se compara cada frase recibida con las reveladas exitosamente durante los seis días calendario locales anteriores. Se considera repetición si coincide su identificador o su texto al ignorar mayúsculas, minúsculas y espacios redundantes. La comparación no modifica el texto que se muestra. Se solicitan alternativas de forma secuencial y se mantiene el indicador de carga hasta obtener una respuesta válida y diferente o alcanzar cinco solicitudes totales por intento. Si las cinco frases se repiten, se informa y se permite reintentar manualmente. El historial registra solo revelaciones exitosas. Una frase revelada hace siete días o más vuelve a ser elegible.
+
+**Límite temporal** — Se conservan como máximo las revelaciones de hoy y los seis días anteriores en el estado compartido en memoria de la cuenta activa. Se eliminan las entradas que salen de esa ventana. El historial dura mientras esa sesión privada permanezca montada y se reinicia al recargar, cerrar sesión o cambiar de cuenta.
 
 ### 02.11 Estado, persistencia y accesibilidad
 

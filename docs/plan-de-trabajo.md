@@ -196,7 +196,8 @@ lifeTotal       = activitiesTotal + learningTotal
 
 #### AUD-02-01 · Sincronización de las acciones con el día local (P1)
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado por el propietario.
+- **Commit local verificado** — `2752f95`.
 - **Objetivo y alcance** — Compartir la referencia de fecha del layout privado entre las vistas y las acciones diarias. Resolver cada pulsación con los registros del día vigente, incluso si el temporizador se retrasa.
 - **Aceptación** — La primera pulsación después de medianoche funciona en ambas escaleras y en Health. Las acciones conservan el historial, los indicadores siguen las reglas del dossier y la fecha se actualiza al recuperar foco o visibilidad.
 - **Skills** — `architecture-guardian` y `ub-mode`.
@@ -207,10 +208,14 @@ lifeTotal       = activitiesTotal + learningTotal
 
 ### G. API third-party de frases (P0)
 
-- [ ] Verificar un proveedor público desde navegador (respuesta real, CORS, límites, sin exponer claves); no asumir que DummyJSON fue aprobado.
-- [ ] Implementar `src/utils/quotesApi.ts` con `fetch`, tipos del payload **real** y adaptación al tipo interno Quote.
-- [ ] Life: `Today's quote for you is...` + `Click to reveal`; mostrar frase real, una aleatoria por fecha local durante la sesión; carga, error, reintento y vacío sin fingir que un fallback viene de API.
-- [ ] Mantener quote separada de Supabase y documentar proveedor y limitaciones en README.
+#### 06B-08 · Frase diaria externa con DummyJSON (P0)
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Conectar Life a DummyJSON mediante `fetch()`, validar el resultado y gestionar la frase diaria en el estado compartido. Aplicar la prevención de repeticiones según el dossier §02.10.
+- **Aceptación** — Revelación bajo demanda, conservación durante el día, carga, éxito, error, vacío y reintento. Máximo de cinco solicitudes por intento si se reciben duplicados. Descartar respuestas obsoletas al cambiar de día o cuenta. Historial provisional en memoria y proveedor documentado en README.
+- **Skills** — `architecture-guardian`, `ub-mode` y `ciber-security`.
+- **Verificación técnica** — Edge mostró una frase real desde un origen local con HTTP 200 y respuesta CORS. Pasaron las pruebas aisladas de errores, reintento, duplicados por identificador y texto, límite de cinco, ventana de calendario, cambios de fecha y cuenta, y regresión de pasos. Pasaron build, lint, formato y `git diff --check`. La aprobación visual corresponde al propietario.
+- **Commit propuesto** — `feat(quotes): integrate external daily quotes API`.
 
 **Cierre:** frase real visible en navegador y estados de fallo comprobados.
 

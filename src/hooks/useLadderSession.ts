@@ -1,6 +1,6 @@
 import { useOutletContext } from 'react-router'
 import type { HealthCheck, HealthGoalId } from '../types/health'
-import type { Quote } from '../types/quote'
+import type { DailyQuoteState } from '../types/quote'
 import type { TaskData, TaskLadder } from '../types/task'
 
 type TaskDraftKey = `create:${TaskLadder}` | `rename:${string}`
@@ -17,8 +17,8 @@ export interface LadderSession {
   setTaskDraft: (key: TaskDraftKey, draft: string | undefined) => void
   healthChecks: readonly HealthCheck[]
   toggleHealthGoal: (goalId: HealthGoalId) => void
-  dailyQuote: { date: string; quote: Quote } | undefined
-  revealQuote: () => void
+  quoteState: DailyQuoteState
+  revealQuote: () => Promise<void>
 }
 
 export function useLadderSession() {

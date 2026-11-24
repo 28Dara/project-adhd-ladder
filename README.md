@@ -19,6 +19,12 @@ npm run dev
 - `npm run lint` revisa el código con ESLint.
 - `npm run format` aplica el formato y `npm run format:check` lo verifica.
 
+## Frase diaria de Life
+
+Life consulta el [endpoint de frases aleatorias de DummyJSON](https://dummyjson.com/quotes/random) mediante `fetch()` al pulsar **Click to reveal**. La [documentación de DummyJSON](https://dummyjson.com/docs/quotes) describe los campos `id`, `quote` y `author`. El navegador realiza la consulta sin claves ni datos de cuenta.
+
+La frase revelada se conserva durante el día local al navegar. La aplicación evita frases reveladas en los seis días anteriores mediante un máximo de cinco solicitudes por intento y permite reintentar manualmente. El historial se guarda solo en memoria durante la sesión privada y se reinicia al recargar, cerrar sesión o cambiar de cuenta.
+
 ## Configuración local de Supabase
 
 1. Crea un proyecto en el [panel de Supabase](https://supabase.com/dashboard).

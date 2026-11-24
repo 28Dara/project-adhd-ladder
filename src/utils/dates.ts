@@ -4,9 +4,9 @@ export function getLocalDateKey(date: Date): string {
   return `${date.getFullYear()}-${month}-${day}`
 }
 
-export function getPreviousLocalDateKey(date: string): string {
+export function getPreviousLocalDateKey(date: string, days = 1): string {
   const [year, month, day] = date.split('-').map(Number)
-  return getLocalDateKey(new Date(year, month - 1, day - 1, 12))
+  return getLocalDateKey(new Date(year, month - 1, day - days, 12))
 }
 
 export function getDaysInLadder(firstDay: string, today: string): number {

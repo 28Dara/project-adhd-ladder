@@ -11,7 +11,7 @@ import '../../styles/ladder-cards.css'
 import './Life.css'
 
 export default function Life() {
-  const { dailyQuote, revealQuote } = useLadderSession()
+  const { quoteState, revealQuote } = useLadderSession()
   const {
     today: date,
     status: healthStatus,
@@ -19,7 +19,7 @@ export default function Life() {
     healthChecks,
   } = useHealth()
   const taskData = useTasks()
-  const quote = dailyQuote?.date === date ? dailyQuote.quote : undefined
+  const isQuoteLoading = quoteState.status === 'loading'
   const progress = getLadderProgress(taskData, date)
   const daysInLadder = getDaysInLadder(joinedOn.date, date)
   const streak = getStreakDays(
@@ -132,19 +132,25 @@ export default function Life() {
             aria-label="Motivational quote"
             aria-live="polite"
           >
-            {quote ? (
-              <p>{quote.text}</p>
+            {quoteState.status === 'success' ? (
+              <p>{quoteState.quote.text}</p>
             ) : (
               <>
                 <h2 className="ladder-card__title">
                   Today's quote for you is...
                 </h2>
+                {quoteState.status === 'error' && <p>{quoteState.message}</p>}
                 <button
                   className="life__quote-reveal"
                   type="button"
+                  disabled={isQuoteLoading}
                   onClick={revealQuote}
                 >
-                  Click to reveal
+                  {isQuoteLoading
+                    ? 'Loading quote...'
+                    : quoteState.status === 'error'
+                      ? 'Retry'
+                      : 'Click to reveal'}
                 </button>
               </>
             )}

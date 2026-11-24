@@ -4,9 +4,9 @@ import { Navigate, Outlet } from 'react-router'
 import Header from '../components/Header/Header'
 import LadderSelector from '../components/LadderSelector/LadderSelector'
 import RoutePanel from '../components/RoutePanel/RoutePanel'
-import { EXAMPLE_QUOTES } from '../config/exampleQuotes'
 import { createExampleTaskData } from '../config/exampleTasks'
 import { useAuth } from '../hooks/useAuth'
+import { useDailyQuote } from '../hooks/useDailyQuote'
 import type { LadderSession } from '../hooks/useLadderSession'
 import { useLocalDateKey } from '../hooks/useLocalDateKey'
 import type { HealthCheck } from '../types/health'
@@ -99,7 +99,7 @@ function PrivateLayout({
   )
   const [taskDrafts, setTaskDrafts] = useState<LadderSession['taskDrafts']>({})
   const [healthChecks, setHealthChecks] = useState<readonly HealthCheck[]>([])
-  const [dailyQuote, setDailyQuote] = useState<LadderSession['dailyQuote']>()
+  const { quoteState, revealQuote } = useDailyQuote(today, syncDate)
   const isSigningOut = logout.status === 'pending'
 
   const ladderSession: LadderSession = {
@@ -165,15 +165,8 @@ function PrivateLayout({
         return [...checks, newCheck]
       })
     },
-    dailyQuote,
-    revealQuote: () => {
-      const date = syncDate()
-      const quote =
-        EXAMPLE_QUOTES[Math.floor(Math.random() * EXAMPLE_QUOTES.length)]
-      setDailyQuote((current) =>
-        current?.date === date ? current : { date, quote },
-      )
-    },
+    quoteState,
+    revealQuote,
   }
 
   return (
