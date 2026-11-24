@@ -105,8 +105,8 @@ export default function Life() {
           <img
             src={mobileIllustration}
             alt=""
-            width={1481}
-            height={1062}
+            width={2088}
+            height={2048}
             loading="lazy"
           />
         </picture>

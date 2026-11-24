@@ -202,6 +202,7 @@
     flex: 1;
     flex-direction: column;
     padding-block: clamp(1rem, 2svh, 2rem);
+    padding-inline-start: clamp(0.75rem, 1vw, 1.25rem);
     background:
       radial-gradient(
         ellipse 30% 20% at 0 100%,

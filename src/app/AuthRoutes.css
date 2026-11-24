@@ -1,11 +1,7 @@
 .private-route {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  min-height: 100svh;
-}
-
-.private-route .route-panel {
-  min-height: auto;
 }
 
 .private-route__logout:not(:disabled) {

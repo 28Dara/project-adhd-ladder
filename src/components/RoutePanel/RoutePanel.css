@@ -1,7 +1,6 @@
 .route-panel {
   display: grid;
   flex: 1;
-  min-height: 100svh;
   place-items: center;
   padding: 1rem;
   font-family: var(--font-body);

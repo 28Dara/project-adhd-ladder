@@ -13,6 +13,12 @@ body {
   line-height: 1.5;
 }
 
+#root {
+  display: flex;
+  min-height: 100svh;
+  flex-direction: column;
+}
+
 a {
   color: var(--color-primary);
 }

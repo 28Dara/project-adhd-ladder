@@ -22,3 +22,30 @@
   font-size: clamp(1.05rem, 1.65vw, 1.55rem);
   line-height: 1.25;
 }
+
+.ladder-check {
+  display: grid;
+  width: clamp(2.75rem, 4.2vw, 4rem);
+  aspect-ratio: 1;
+  place-items: center;
+  margin: 0;
+  border: 0.15rem solid var(--color-primary);
+  border-radius: 0.95rem;
+  background: transparent;
+  color: var(--color-text-inverse);
+  appearance: none;
+}
+
+.ladder-check:checked {
+  border-color: var(--color-ladder);
+  background: var(--color-ladder);
+}
+
+.ladder-check:checked::before {
+  width: 50%;
+  height: 28%;
+  border: solid currentColor;
+  border-width: 0 0 0.23rem 0.23rem;
+  transform: translateY(-0.1rem) rotate(-45deg);
+  content: '';
+}

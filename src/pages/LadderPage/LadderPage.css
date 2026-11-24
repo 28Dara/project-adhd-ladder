@@ -164,26 +164,19 @@
   flex: none;
 }
 
-.ladder-page__artwork {
-  grid-area: artwork;
-  margin-block-start: 1rem;
-}
-
-.ladder-page__artwork img {
-  display: block;
-  width: 100%;
-  height: auto;
-  /* Crop the transparent bands in tab-cel-illustration.webp. */
-  aspect-ratio: 2088 / 1440;
-  object-fit: cover;
-  object-position: center 45%;
-}
-
 @media (min-width: 40rem) {
+  .ladder-page {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
   .ladder-page__layout {
     grid-template-areas: 'summary tasks' 'artwork artwork';
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     align-items: stretch;
+    width: 100%;
+    margin-block: auto;
   }
 
   .ladder-page__summary {
@@ -194,10 +187,8 @@
 
 @media (min-width: 64rem) {
   .ladder-page {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
     padding-block: clamp(1rem, 2svh, 2rem);
+    padding-inline-start: clamp(0.75rem, 1vw, 1.25rem);
     background:
       radial-gradient(
         ellipse 35% 20% at 0 100%,
@@ -220,26 +211,9 @@
   .ladder-page__layout {
     grid-template-areas: 'artwork summary tasks';
     grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.1fr) minmax(0, 1.05fr);
-    width: 100%;
-    margin-block: auto;
   }
 
   .ladder-page__tasks {
     row-gap: var(--ladder-gap);
-  }
-
-  .ladder-page__artwork {
-    position: relative;
-    align-self: stretch;
-    margin-block-start: 0;
-  }
-
-  .ladder-page__artwork img {
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    aspect-ratio: auto;
-    object-fit: contain;
-    object-position: center;
   }
 }

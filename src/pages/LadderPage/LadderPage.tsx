@@ -1,8 +1,7 @@
 import { Link } from 'react-router'
+import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
 import TaskCard from '../../components/TaskCard/TaskCard'
 import type { LadderPreview } from '../../config/ladderPreviews'
-import ladderIllustration from '../../images/ladder-illustration.webp'
-import mobileIllustration from '../../images/tab-cel-illustration.webp'
 import '../../styles/ladder-cards.css'
 import './LadderPage.css'
 
@@ -99,21 +98,7 @@ export default function LadderPage({ preview }: { preview: LadderPreview }) {
           </Link>
         </section>
 
-        <picture className="ladder-page__artwork">
-          <source
-            media="(min-width: 64rem)"
-            srcSet={ladderIllustration}
-            width={966}
-            height={1445}
-          />
-          <img
-            src={mobileIllustration}
-            alt=""
-            width={2088}
-            height={2048}
-            loading="lazy"
-          />
-        </picture>
+        <LadderArtwork />
       </div>
     </main>
   )

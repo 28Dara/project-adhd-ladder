@@ -12,7 +12,12 @@ export default function LadderSelector() {
   const match = useMatch('/:ladder')
   const slug = match?.params.ladder?.toLowerCase()
 
-  if (slug !== 'life' && slug !== 'activities' && slug !== 'learning')
+  if (
+    slug !== 'life' &&
+    slug !== 'health' &&
+    slug !== 'activities' &&
+    slug !== 'learning'
+  )
     return null
 
   return (

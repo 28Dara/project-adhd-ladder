@@ -7,7 +7,7 @@ export default function TaskCard({ task }: { task: TaskPreview }) {
     <li className="ladder-card task-card">
       <label className="task-card__label">
         <input
-          className="task-card__checkbox"
+          className="ladder-check"
           type="checkbox"
           checked={task.completed}
           disabled
