@@ -1,5 +1,6 @@
 import { useLadderSession } from './useLadderSession'
 
 export function useTasks() {
-  return useLadderSession().taskData
+  const { taskData, setTaskCompleted } = useLadderSession()
+  return { ...taskData, setTaskCompleted }
 }

@@ -9,6 +9,7 @@ import { createExampleTaskData } from '../config/exampleTasks'
 import { useAuth } from '../hooks/useAuth'
 import type { LadderSession } from '../hooks/useLadderSession'
 import { getLocalDateKey } from '../utils/dates'
+import { updateTaskCompletion } from '../utils/taskCompletions'
 import './AuthRoutes.css'
 
 export function AuthSessionBoundary() {
@@ -88,13 +89,19 @@ function PrivateLayout({
   onLogout: () => void
 }) {
   const [displayName, setDisplayName] = useState<string>()
-  const [taskData] = useState(() => createExampleTaskData(user.id, new Date()))
+  const [taskData, setTaskData] = useState(() =>
+    createExampleTaskData(user.id, new Date()),
+  )
   const [taskNames, setTaskNames] = useState<LadderSession['taskNames']>({})
   const [dailyQuote, setDailyQuote] = useState<LadderSession['dailyQuote']>()
   const isSigningOut = logout.status === 'pending'
 
   const ladderSession: LadderSession = {
     taskData,
+    setTaskCompleted: (taskId, checked) => {
+      const date = getLocalDateKey(new Date())
+      setTaskData((data) => updateTaskCompletion(data, taskId, date, checked))
+    },
     taskNames,
     updateTaskName: (id, edit) =>
       setTaskNames((names) => ({ ...names, [id]: edit })),

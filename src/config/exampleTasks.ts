@@ -1,5 +1,6 @@
 import type { Task, TaskData } from '../types/task'
 import { getLocalDateKey } from '../utils/dates'
+import { createTaskCompletion } from '../utils/taskCompletions'
 
 const examples = {
   gym: { ladder: 'activities', title: 'Gym' },
@@ -29,11 +30,8 @@ export function createExampleTaskData(userId: string, now: Date): TaskData {
       created_at: createdAt,
       archived_at: null,
     })),
-    completions: completedExamples.map((key) => ({
-      id: `${taskId(key)}:${completedDate}`,
-      user_id: userId,
-      task_id: taskId(key),
-      completed_date: completedDate,
-    })),
+    completions: completedExamples.map((key) =>
+      createTaskCompletion(userId, taskId(key), completedDate),
+    ),
   }
 }

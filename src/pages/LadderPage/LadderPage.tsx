@@ -8,6 +8,7 @@ import { useLadderSession } from '../../hooks/useLadderSession'
 import { useLocalDateKey } from '../../hooks/useLocalDateKey'
 import { useTasks } from '../../hooks/useTasks'
 import type { TaskLadder } from '../../types/task'
+import { matchesTaskCompletion } from '../../utils/taskCompletions'
 import '../../styles/ladder-cards.css'
 import './LadderPage.css'
 
@@ -16,7 +17,7 @@ const MAX_ACTIVE_TASKS = 4
 export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
   const { todaySteps, totalSteps, daysOnLadder, joinedOn } =
     ladderSummaryPreviews[ladder]
-  const { tasks, completions } = useTasks()
+  const { tasks, completions, setTaskCompleted } = useTasks()
   const { taskNames, updateTaskName } = useLadderSession()
   const today = useLocalDateKey()
   const [popup, setPopup] = useState<{ taskId: string; mode: TaskPopup }>()
@@ -74,10 +75,12 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
               <TaskCard
                 key={task.id}
                 title={task.title}
-                completed={completions.some(
-                  ({ task_id, completed_date }) =>
-                    task_id === task.id && completed_date === today,
+                completed={completions.some((completion) =>
+                  matchesTaskCompletion(completion, task.id, today),
                 )}
+                onCompletedChange={(checked) =>
+                  setTaskCompleted(task.id, checked)
+                }
                 nameEdit={taskNames[task.id]}
                 canArchive={activeTasks.length > 1}
                 popup={popup?.taskId === task.id ? popup.mode : undefined}

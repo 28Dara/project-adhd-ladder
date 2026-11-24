@@ -36,12 +36,21 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06A.1-DROPDOWN-01 · Cierre del selector de escaleras por clic exterior
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado y commiteado por el propietario.
 - **Objetivo y alcance** — Cerrar `LadderSelector` al hacer clic fuera y conservar el comportamiento del selector y de los popups existentes.
 - **Aceptación** — El mouse y el toque exterior cierran el selector. Escape, pulsar de nuevo el control y elegir una opción conservan su comportamiento. Un clic interior sin selección mantiene el menú abierto. El listener se retira al desmontar. Build, lint y formato pasan. La verificación visual corresponde al propietario.
 - **Skills** — `architecture-guardian` y `ub-mode`.
-- **Verificación técnica** — Build, lint y formato pasaron. En Edge sin interfaz, el código anterior reprodujo el fallo de clic exterior y el ajuste pasó las comprobaciones de cierre, selección y retirada del listener con eventos simulados. Quedan pendientes la revisión visual y la comprobación en pantalla táctil física.
+- **Verificación técnica** — Build, lint y formato pasaron. En Edge sin interfaz, el código anterior reprodujo el fallo de clic exterior y el ajuste pasó las comprobaciones de cierre, selección y retirada del listener con eventos simulados. El propietario aprobó el resultado y confirmó que la prueba en un dispositivo físico no es un requisito del proyecto.
 - **Commit propuesto** — `fix(navigation): close ladder dropdown on outside click`.
+
+#### 06A.1-HEALTH-01 · Estados visuales de las casillas de Health (P1)
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Reutilizar la apariencia compartida de `.ladder-check` en Health y conservar el área clicable y el foco visible.
+- **Aceptación** — Casilla desmarcada vacía, casilla marcada verde con palomita y dimensiones y posición conservadas. Build, lint y formato pasan. La revisión visual corresponde al propietario.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Build, lint y formato pasaron. En Edge sin interfaz se reprodujo la X anterior y se comprobaron los estilos de ambos estados, las dimensiones y la posición al marcar, el foco visible y el clic en la etiqueta.
+- **Commit propuesto** — `fix(health): simplify checkbox visual states`.
 
 ### B. Cierre de la decisión abierta que bloquea CRUD destructivo
 
@@ -64,12 +73,21 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06B-01 · Fuente compartida de tareas y completaciones
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado y commiteado por el propietario.
 - **Objetivo y alcance** — Dar a Activities y Learning acceso al mismo estado de tareas y completaciones provisionales tipadas, disponible para Life en un objetivo posterior. El frontend provisional de este objetivo precede a la conexión con Supabase.
 - **Aceptación** — Cada ruta puede leer los datos al entrar directamente. Cada tarea tiene identidad estable por cuenta y una escalera. Cada completación identifica su tarea y fecha local. Diseño 06A conservado, estado en memoria y contrato reutilizable con Supabase. Build, lint y formato pasan.
 - **Skills** — `architecture-guardian` y `ub-mode`.
 - **Verificación técnica** — Build, lint y formato pasaron. Una prueba de renderizado de rutas directas y de los datos provisionales comprobó los checks deshabilitados, las identidades estables, la separación por cuenta y la fecha local. La revisión visual corresponde al propietario.
 - **Commit propuesto** — `feat(ladders): establish shared task state`.
+
+#### 06B-02 · Marcación diaria de tareas en memoria (P0)
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Habilitar la marcación y desmarcación en Activities y Learning desde `useTasks()` y el estado del layout privado. Las completaciones son la fuente del estado de las casillas.
+- **Aceptación** — Una completación por tarea y fecha local. Desmarcar elimina solo la del día actual. Los registros históricos permanecen intactos. Las casillas reflejan los datos al navegar y al cambiar de fecha. El estado está aislado por cuenta. Build, lint y formato pasan. La revisión visual corresponde al propietario.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Build, lint y formato pasaron. En Edge sin interfaz se verificaron marcación, desmarcación, actualizaciones consecutivas sin duplicados, historial intacto, navegación privada, cambio de fecha y aislamiento al cambiar de cuenta.
+- **Commit propuesto** — `feat(tasks): enable daily task completion`.
 
 #### CRUD y casillas persistentes
 
@@ -106,6 +124,7 @@ lifeTotal       = activitiesTotal + learningTotal
 
 ### F. Health, racha y días desde alta (P0/P1 según dossier)
 
+- [ ] **06B-06 · Conservar los checks de Health entre rutas — Pendiente.** Actualmente los checks se reinician al volver a Health. El objetivo se acepta cuando los cambios del día se conservan al salir y volver por rutas privadas sin mezclar cuentas. Skills: `architecture-guardian` y `ub-mode`. Commit propuesto: `feat(health): retain daily checks across routes`.
 - [ ] Health: tres casillas fechadas; verde 3, amarillo 1–2, amarillo 0 si ayer tuvo checks, rojo 0 si ayer tuvo cero, amarillo primer día con cero.
 - [ ] Health no aporta pasos a Life. Semáforo de Health en Life = círculo de color con texto accesible; no marca de tarea.
 - [ ] Racha de **días cerrados** conforme a la sección 02.8 del dossier; no derivarla de `lifeTotal`. Días desde alta es otra métrica.

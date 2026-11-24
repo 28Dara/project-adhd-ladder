@@ -158,14 +158,6 @@
   outline-offset: 3px;
 }
 
-.health__goal input:not(:checked)::before {
-  color: var(--color-primary);
-  font-family: system-ui, sans-serif;
-  font-size: 1.25em;
-  line-height: 1;
-  content: '×';
-}
-
 .health__back {
   display: flex;
   min-height: clamp(2.75rem, 4.8vw, 4.5rem);
