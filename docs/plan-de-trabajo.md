@@ -45,7 +45,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06A.1-HEALTH-01 · Estados visuales de las casillas de Health (P1)
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado y commiteado por el propietario.
 - **Objetivo y alcance** — Reutilizar la apariencia compartida de `.ladder-check` en Health y conservar el área clicable y el foco visible.
 - **Aceptación** — Casilla desmarcada vacía, casilla marcada verde con palomita y dimensiones y posición conservadas. Build, lint y formato pasan. La revisión visual corresponde al propietario.
 - **Skills** — `architecture-guardian` y `ub-mode`.
@@ -69,7 +69,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 **Cierre:** persistencia real y RLS comprobadas en dos cuentas, sin pérdida de historial.
 
-### D. 06B — Frontend funcional y persistencia (P0)
+### D. 06B — Frontend funcional y persistencia (P0/P1)
 
 #### 06B-01 · Fuente compartida de tareas y completaciones
 
@@ -82,12 +82,21 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06B-02 · Marcación diaria de tareas en memoria (P0)
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado y commiteado por el propietario.
 - **Objetivo y alcance** — Habilitar la marcación y desmarcación en Activities y Learning desde `useTasks()` y el estado del layout privado. Las completaciones son la fuente del estado de las casillas.
 - **Aceptación** — Una completación por tarea y fecha local. Desmarcar elimina solo la del día actual. Los registros históricos permanecen intactos. Las casillas reflejan los datos al navegar y al cambiar de fecha. El estado está aislado por cuenta. Build, lint y formato pasan. La revisión visual corresponde al propietario.
 - **Skills** — `architecture-guardian` y `ub-mode`.
 - **Verificación técnica** — Build, lint y formato pasaron. En Edge sin interfaz se verificaron marcación, desmarcación, actualizaciones consecutivas sin duplicados, historial intacto, navegación privada, cambio de fecha y aislamiento al cambiar de cuenta.
 - **Commit propuesto** — `feat(tasks): enable daily task completion`.
+
+#### 06B-06A · Estado compartido y marcación diaria de Health (P1)
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Conservar en memoria los tres objetivos de Health por cuenta y fecha local durante la navegación privada. Este objetivo se adelanta a los contadores del apartado E y resuelve la pérdida de checks al volver a Health. El semáforo se aborda en 06B-06B.
+- **Aceptación** — Las tres casillas se marcan y desmarcan de forma independiente. Un día sin registros empieza vacío. La navegación, las actualizaciones consecutivas y el cambio de fecha conservan los valores que correspondan sin mezclar cuentas ni generar pasos. El contrato coincide con `health_checks`. Build, lint y formato pasan. La revisión visual corresponde al propietario.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Edge sin interfaz reprodujo la pérdida de checks del código anterior. Con el ajuste se verificaron marcación, desmarcación, navegación, cambios consecutivos, cambio de día, conservación del historial, aislamiento por cuenta y separación de las completaciones de tareas.
+- **Commit propuesto** — `feat(health): establish shared daily health state`.
 
 #### CRUD y casillas persistentes
 
@@ -100,6 +109,8 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 **Cierre:** operaciones correctas tras navegación, recarga y cambio de cuenta; no duplicados; estados vacío/carga/error accesibles.
 
 ### E. 06B — Contadores y fechas v2.2 (P0)
+
+**Orden operativo:** revisar y cerrar 06B-06A antes de iniciar los contadores.
 
 Fórmulas únicas de aceptación:
 
@@ -124,8 +135,7 @@ lifeTotal       = activitiesTotal + learningTotal
 
 ### F. Health, racha y días desde alta (P0/P1 según dossier)
 
-- [ ] **06B-06 · Conservar los checks de Health entre rutas — Pendiente.** Actualmente los checks se reinician al volver a Health. El objetivo se acepta cuando los cambios del día se conservan al salir y volver por rutas privadas sin mezclar cuentas. Skills: `architecture-guardian` y `ub-mode`. Commit propuesto: `feat(health): retain daily checks across routes`.
-- [ ] Health: tres casillas fechadas; verde 3, amarillo 1–2, amarillo 0 si ayer tuvo checks, rojo 0 si ayer tuvo cero, amarillo primer día con cero.
+- [ ] **06B-06B · Semáforo de Health mediante regla B (P1) — Pendiente.** Derivar el semáforo de los registros de 06B-06A y verificar los casos de hoy, ayer y primer día según el dossier §02.7. Skills: `architecture-guardian` y `ub-mode`. Commit propuesto: `feat(health): derive status from daily checks`.
 - [ ] Health no aporta pasos a Life. Semáforo de Health en Life = círculo de color con texto accesible; no marca de tarea.
 - [ ] Racha de **días cerrados** conforme a la sección 02.8 del dossier; no derivarla de `lifeTotal`. Días desde alta es otra métrica.
 - [ ] Casos de cero pasos, dos días consecutivos, primer día y retorno después de varios días.

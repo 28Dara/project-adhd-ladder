@@ -8,6 +8,7 @@ import { EXAMPLE_QUOTES } from '../config/exampleQuotes'
 import { createExampleTaskData } from '../config/exampleTasks'
 import { useAuth } from '../hooks/useAuth'
 import type { LadderSession } from '../hooks/useLadderSession'
+import type { HealthCheck } from '../types/health'
 import { getLocalDateKey } from '../utils/dates'
 import { updateTaskCompletion } from '../utils/taskCompletions'
 import './AuthRoutes.css'
@@ -93,6 +94,7 @@ function PrivateLayout({
     createExampleTaskData(user.id, new Date()),
   )
   const [taskNames, setTaskNames] = useState<LadderSession['taskNames']>({})
+  const [healthChecks, setHealthChecks] = useState<readonly HealthCheck[]>([])
   const [dailyQuote, setDailyQuote] = useState<LadderSession['dailyQuote']>()
   const isSigningOut = logout.status === 'pending'
 
@@ -105,6 +107,30 @@ function PrivateLayout({
     taskNames,
     updateTaskName: (id, edit) =>
       setTaskNames((names) => ({ ...names, [id]: edit })),
+    healthChecks,
+    setHealthGoal: (goalId, checked) => {
+      const date = getLocalDateKey(new Date())
+      setHealthChecks((checks) => {
+        const current = checks.find((check) => check.date === date)
+        if ((current?.[goalId] ?? false) === checked) return checks
+
+        if (current) {
+          return checks.map((check) =>
+            check === current ? { ...check, [goalId]: checked } : check,
+          )
+        }
+
+        const newCheck = {
+          user_id: user.id,
+          date,
+          nutrition: false,
+          sleep: false,
+          movement: false,
+          [goalId]: checked,
+        }
+        return [...checks, newCheck]
+      })
+    },
     dailyQuote,
     revealQuote: () => {
       const date = getLocalDateKey(new Date())

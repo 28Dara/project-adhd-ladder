@@ -1,16 +1,16 @@
-import { useState } from 'react'
 import { Link } from 'react-router'
 import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
 import {
-  HEALTH_PREVIEW_GOALS,
+  HEALTH_GOALS,
   HEALTH_PREVIEW_STATUS,
   HEALTH_PREVIEW_STATUSES,
 } from '../../config/healthPreview'
+import { useHealth } from '../../hooks/useHealth'
 import '../../styles/ladder-cards.css'
 import './Health.css'
 
 export default function Health() {
-  const [goals, setGoals] = useState(HEALTH_PREVIEW_GOALS)
+  const { todayCheck, setHealthGoal } = useHealth()
 
   return (
     <main className="health">
@@ -60,23 +60,16 @@ export default function Health() {
             Mark today’s goals!
           </h2>
           <ul className="health__goal-list">
-            {goals.map(({ id, label, checked }) => (
+            {HEALTH_GOALS.map(({ id, label }) => (
               <li className="health__goal" key={id}>
                 <label className="ladder-card health__goal-label">
                   <input
                     className="ladder-check"
                     type="checkbox"
-                    checked={checked}
-                    onChange={(event) => {
-                      const nextChecked = event.currentTarget.checked
-                      setGoals((items) =>
-                        items.map((goal) =>
-                          goal.id === id
-                            ? { ...goal, checked: nextChecked }
-                            : goal,
-                        ),
-                      )
-                    }}
+                    checked={todayCheck?.[id] ?? false}
+                    onChange={(event) =>
+                      setHealthGoal(id, event.currentTarget.checked)
+                    }
                   />
                   <span>{label}</span>
                 </label>
