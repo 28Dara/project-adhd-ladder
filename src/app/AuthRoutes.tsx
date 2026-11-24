@@ -92,6 +92,7 @@ function PrivateLayout({
   onLogout: () => void
 }) {
   const [displayName, setDisplayName] = useState<string>()
+  const [sessionStartedOn] = useState(() => getLocalDateKey(new Date()))
   const [taskData, setTaskData] = useState(() =>
     createExampleTaskData(user.id, new Date()),
   )
@@ -101,6 +102,7 @@ function PrivateLayout({
   const isSigningOut = logout.status === 'pending'
 
   const ladderSession: LadderSession = {
+    sessionStartedOn,
     taskData,
     createTask: (ladder, title) => {
       const task: Task = {

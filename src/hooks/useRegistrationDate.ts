@@ -1,5 +1,6 @@
 import { getLocalDateKey } from '../utils/dates'
 import { useAuth } from './useAuth'
+import { useLadderSession } from './useLadderSession'
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', {
   month: 'short',
@@ -7,8 +8,9 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
 })
 
-export function useRegistrationDate(today: string) {
+export function useRegistrationDate() {
   const { session } = useAuth()
+  const { sessionStartedOn } = useLadderSession()
   const createdAt = session?.user.created_at
   const registeredAt = createdAt ? new Date(createdAt) : undefined
 
@@ -20,10 +22,10 @@ export function useRegistrationDate(today: string) {
     }
   }
 
-  const localToday = new Date(`${today}T12:00:00`)
+  const localDate = new Date(`${sessionStartedOn}T12:00:00`)
   return {
-    date: today,
-    label: `${dateFormatter.format(localToday)} (simulated)`,
+    date: sessionStartedOn,
+    label: `${dateFormatter.format(localDate)} (simulated)`,
     isSimulated: true,
   }
 }

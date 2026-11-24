@@ -6,6 +6,7 @@ import type { TaskData, TaskLadder } from '../types/task'
 type TaskDraftKey = `create:${TaskLadder}` | `rename:${string}`
 
 export interface LadderSession {
+  sessionStartedOn: string
   taskData: TaskData
   createTask: (ladder: TaskLadder, title: string) => void
   renameTask: (taskId: string, title: string) => void

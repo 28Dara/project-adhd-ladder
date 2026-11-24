@@ -9,6 +9,7 @@ import { useLocalDateKey } from '../../hooks/useLocalDateKey'
 import { useRegistrationDate } from '../../hooks/useRegistrationDate'
 import { useTasks } from '../../hooks/useTasks'
 import type { TaskLadder } from '../../types/task'
+import { getDaysInLadder } from '../../utils/dates'
 import { getLadderProgress } from '../../utils/progress'
 import { matchesTaskCompletion } from '../../utils/taskCompletions'
 import { getActiveTasks, MAX_ACTIVE_TASKS } from '../../utils/tasks'
@@ -29,7 +30,8 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
   } = useTasks()
   const { taskDrafts, setTaskDraft } = useLadderSession()
   const today = useLocalDateKey()
-  const joinedOn = useRegistrationDate(today)
+  const joinedOn = useRegistrationDate()
+  const daysInLadder = getDaysInLadder(joinedOn.date, today)
   const { todaySteps, totalSteps } = getLadderProgress(
     { tasks, completions },
     today,
@@ -94,7 +96,9 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
               <p className="ladder-page__since">
                 Since <time dateTime={joinedOn.date}>{joinedOn.label}</time>
               </p>
-              <p className="ladder-card__pill">Days in the ladder: —</p>
+              <p className="ladder-card__pill">
+                Days in the ladder: {daysInLadder}
+              </p>
             </div>
             <p className="ladder-page__total-count">{totalSteps}</p>
           </section>

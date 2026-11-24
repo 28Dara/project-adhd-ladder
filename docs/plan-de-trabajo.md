@@ -55,6 +55,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 #### 06A.1-ADD-CARD-01 · Dimensiones del botón de alta tras el retiro (P1)
 
 - **Estado** — En revisión del propietario.
+- **Commit local verificado** — `5e3c814`.
 - **Objetivo y alcance** — Centrar el botón de alta en su espacio y conservar su ancho y altura responsive base en el CSS compartido de Activities y Learning.
 - **Aceptación** — De cero a tres tarjetas, el botón conserva sus dimensiones a cada ancho y queda centrado en ambos ejes. Con cuatro tarjetas se mantiene oculto. Las tarjetas y los popups conservan su geometría y comportamiento.
 - **Skills** — `architecture-guardian` y `ub-mode`.
@@ -175,16 +176,22 @@ lifeTotal       = activitiesTotal + learningTotal
 
 #### 06B-RESET-01 · Inicio sin progreso simulado
 
-- **Estado** — En revisión del propietario, antes de 06B-07.
+- **Estado** — En revisión del propietario.
+- **Commit local verificado** — `773523b`.
 - **Objetivo y alcance** — Conservar las seis tareas predeterminadas, iniciar sin completaciones ni registros de Health y retirar los valores de demostración de racha, antigüedad y fecha de alta.
 - **Aceptación** — Today, Total y Streak comienzan en cero. Tareas y objetivos de Health comienzan desmarcados. La fecha visible usa `created_at` de Auth y, si falta, muestra la fecha local como simulada. Days in the ladder muestra un guion hasta 06B-07. La regla B y las interacciones siguen funcionando.
 - **Skills** — `architecture-guardian` y `ub-mode`.
 - **Verificación técnica** — En Edge sin interfaz se comprobaron inicio vacío, tareas predeterminadas, contadores al marcar y desmarcar, cambio de día, fecha real y simulada, cambio de cuenta y regla B. La revisión visual corresponde al propietario.
 - **Commit propuesto** — `fix(previews): remove simulated progress records`.
 
-#### Racha y días desde alta
-- [ ] Racha de **días cerrados** conforme a la sección 02.8 del dossier; no derivarla de `lifeTotal`. Días desde alta es otra métrica.
-- [ ] Casos de cero pasos, dos días consecutivos, primer día y retorno después de varios días.
+#### 06B-07 · Racha y días desde el alta (P1)
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Derivar la racha de Life y la antigüedad de Life, Activities y Learning según el dossier §02.8. Reutilizar las completaciones, la regla B y la fecha de registro disponible en Auth.
+- **Aceptación** — La racha excluye hoy y respeta los incrementos, descansos y reinicios. El historial incluye tareas archivadas. La antigüedad cuenta días calendario locales e incluye el alta. Cuando falta el alta real, la fecha simulada queda identificada y es estable durante la sesión.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Pasaron build, lint y formato. Se comprobaron 12 escenarios de racha, seis casos de calendario y la regresión de contadores. Edge sin interfaz verificó inicio vacío, navegación, cambio de día, aislamiento entre cuentas y fecha simulada estable. La revisión visual corresponde al propietario.
+- **Commit propuesto** — `feat(progress): derive streak and ladder days`.
 
 **Cierre:** reglas Health B y racha probadas de forma independiente de contadores históricos.
 

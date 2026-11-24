@@ -5,16 +5,29 @@ import { lifePreview } from '../../config/lifePreview'
 import { useHealth } from '../../hooks/useHealth'
 import { useLadderSession } from '../../hooks/useLadderSession'
 import { useTasks } from '../../hooks/useTasks'
-import { getLadderProgress } from '../../utils/progress'
+import { getDaysInLadder } from '../../utils/dates'
+import { getLadderProgress, getStreakDays } from '../../utils/progress'
 import '../../styles/ladder-cards.css'
 import './Life.css'
 
 export default function Life() {
   const { dailyQuote, revealQuote } = useLadderSession()
-  const { today: date, status: healthStatus, joinedOn } = useHealth()
+  const {
+    today: date,
+    status: healthStatus,
+    joinedOn,
+    healthChecks,
+  } = useHealth()
   const taskData = useTasks()
   const quote = dailyQuote?.date === date ? dailyQuote.quote : undefined
   const progress = getLadderProgress(taskData, date)
+  const daysInLadder = getDaysInLadder(joinedOn.date, date)
+  const streak = getStreakDays(
+    taskData,
+    healthChecks,
+    date,
+    joinedOn.isSimulated ? undefined : joinedOn.date,
+  )
   const { todaySteps, totalSteps } = progress.life
   const ladders = lifePreview.ladders.map((section) => {
     if ('path' in section) {
@@ -54,7 +67,7 @@ export default function Life() {
                 <path d="M9 16 27 5M17 32h20M13 48l15 11" />
               </svg>
             </div>
-            <p className="ladder-card__pill">You have a 0-day streak</p>
+            <p className="ladder-card__pill">You have a {streak}-day streak</p>
           </section>
 
           <section
@@ -68,7 +81,9 @@ export default function Life() {
               <p className="life__since">
                 Since <time dateTime={joinedOn.date}>{joinedOn.label}</time>
               </p>
-              <p className="ladder-card__pill">Days in the ladder: —</p>
+              <p className="ladder-card__pill">
+                Days in the ladder: {daysInLadder}
+              </p>
             </div>
             <p className="life__total-count">{totalSteps}</p>
           </section>

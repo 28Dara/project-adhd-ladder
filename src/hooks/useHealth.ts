@@ -8,7 +8,7 @@ import { useRegistrationDate } from './useRegistrationDate'
 export function useHealth() {
   const { healthChecks, setHealthGoal } = useLadderSession()
   const today = useLocalDateKey()
-  const joinedOn = useRegistrationDate(today)
+  const joinedOn = useRegistrationDate()
   const todayCheck = healthChecks.find((check) => check.date === today)
   const yesterday = getPreviousLocalDateKey(today)
   const yesterdayCheck = healthChecks.find((check) => check.date === yesterday)
