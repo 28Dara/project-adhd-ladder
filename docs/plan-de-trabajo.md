@@ -22,7 +22,7 @@
 | 06A.1 visual | Páginas actuales aprobadas visualmente por el propietario | Cerrado por el propietario |
 | Supabase, SQL y RLS | Migraciones planeadas/escritas; aplicación y pruebas cruzadas no certificadas | Revisar esquema y RLS, aplicar con autorización, probar dos cuentas |
 | CRUD de tareas y checks persistidos | Pendiente por verificar/implementar | Crear, renombrar, retirar, marcar y desmarcar con persistencia |
-| Contadores v2.2 | Nueva regla documental aprobada; no asumir código actualizado | Implementar y probar hoy vs días cerrados sin duplicados |
+| Contadores v2.2 | 06B-03 implementado y verificado con datos en memoria | Revisión del propietario y QA con persistencia cuando corresponda |
 | API externa de frases | **No conectada** en 06A; frases de ejemplo | API real por `fetch`, tipado, carga/error/reintento y vacío |
 | Deploy / README / PR | Pendiente de verificación | URL pública, sin 404 al recargar, README y PR a tiempo |
 
@@ -91,7 +91,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06B-06A · Estado compartido y marcación diaria de Health (P1)
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado y commiteado por el propietario.
 - **Objetivo y alcance** — Conservar en memoria los tres objetivos de Health por cuenta y fecha local durante la navegación privada. Este objetivo se adelanta a los contadores del apartado E y resuelve la pérdida de checks al volver a Health. El semáforo se aborda en 06B-06B.
 - **Aceptación** — Las tres casillas se marcan y desmarcan de forma independiente. Un día sin registros empieza vacío. La navegación, las actualizaciones consecutivas y el cambio de fecha conservan los valores que correspondan sin mezclar cuentas ni generar pasos. El contrato coincide con `health_checks`. Build, lint y formato pasan. La revisión visual corresponde al propietario.
 - **Skills** — `architecture-guardian` y `ub-mode`.
@@ -110,7 +110,14 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 ### E. 06B — Contadores y fechas v2.2 (P0)
 
-**Orden operativo:** revisar y cerrar 06B-06A antes de iniciar los contadores.
+#### 06B-03 · Contadores derivados de pasos (P0)
+
+- **Estado** — En revisión del propietario. Se inició después del cierre aprobado de 06B-06A.
+- **Objetivo y alcance** — Derivar los contadores de Life, Activities y Learning y los indicadores de sus tarjetas desde las completaciones en memoria. El historial conserva la escalera de las tareas archivadas. La mutación de retiro sigue sujeta a la decisión del apartado B.
+- **Aceptación** — Today y Total usan la fecha local y los cortes del dossier v2.2. Las escaleras se calculan de forma independiente y Life las suma. Los registros futuros y duplicados quedan fuera del conteo. Health no aporta pasos. Se admite acceso directo a cada ruta. Build, lint y formato pasan. La revisión visual corresponde al propietario.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Pasaron las pruebas del cálculo puro, incluido el ejemplo lunes a martes con histórico Life de 20 a 23. En Edge sin interfaz se verificaron acceso directo, checks, contadores, indicadores, navegación, día nuevo, ausencia de completaciones, independencia de Health y cambio de cuenta. Build, lint y formato pasaron.
+- **Commit propuesto** — `feat(progress): derive ladder step counters`.
 
 Fórmulas únicas de aceptación:
 
@@ -124,11 +131,11 @@ learningTotal   = completaciones de Learning con completed_date < hoyLocal
 lifeTotal       = activitiesTotal + learningTotal
 ```
 
-- [ ] Actualizar `utils/progress.ts` o el módulo puro existente, reutilizando el servicio de fechas local. Todos los contadores derivados de completaciones válidas por cuenta.
-- [ ] Marcar suma hoy +1, desmarcar resta hoy −1; hoy no altera totales históricos. Life suma los **números**, no el número de SectionCards.
-- [ ] Cambio de día: nuevo día inicia sin checks y diarios cero si aún no hay completaciones; los registros anteriores **ya** entran al histórico, sin moverlos ni borrar datos, ni cron de medianoche.
+- [x] Derivar los contadores en `utils/progress.ts` y reutilizar el servicio de fecha local.
+- [x] Marcar suma hoy +1, desmarcar resta hoy −1; hoy no altera totales históricos. Life suma los **números**, no el número de SectionCards.
+- [x] Cambio de día: nuevo día inicia sin checks y diarios cero si aún no hay completaciones; los registros anteriores **ya** entran al histórico, sin moverlos ni borrar datos, ni cron de medianoche.
 - [ ] Verificar retorno tras varios días sin abrir aplicación, zona horaria local coherente, cambio de ruta/cuenta, eventos duplicados.
-- [ ] Prueba de referencia: lunes histórico Activities 8, Learning 12, Life 20; Learning marca tres -> Life hoy 3, Life total 20. Martes sin nuevos checks -> Life hoy 0, Learning total 15, Life total 23.
+- [x] Prueba de referencia: lunes histórico Activities 8, Learning 12, Life 20; Learning marca tres -> Life hoy 3, Life total 20. Martes sin nuevos checks -> Life hoy 0, Learning total 15, Life total 23.
 - [ ] Probar renombrado/retiro sin pérdida de pasos históricos; no resolver caso de retiro marcado hoy por intuición.
 
 **Cierre:** coinciden todas las vistas y pruebas de días cerrados sin duplicación.

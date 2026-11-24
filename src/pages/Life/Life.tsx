@@ -4,21 +4,30 @@ import LadderTooltip from '../../components/LadderPopup/LadderTooltip'
 import { lifePreview } from '../../config/lifePreview'
 import { useLadderSession } from '../../hooks/useLadderSession'
 import { useLocalDateKey } from '../../hooks/useLocalDateKey'
+import { useTasks } from '../../hooks/useTasks'
+import { getLadderProgress } from '../../utils/progress'
 import '../../styles/ladder-cards.css'
 import './Life.css'
 
 export default function Life() {
   const { dailyQuote, revealQuote } = useLadderSession()
   const date = useLocalDateKey()
+  const taskData = useTasks()
   const quote = dailyQuote?.date === date ? dailyQuote.quote : undefined
-  const {
-    todaySteps,
-    totalSteps,
-    streakDays,
-    daysOnLadder,
-    joinedOn,
-    ladders,
-  } = lifePreview
+  const { streakDays, daysOnLadder, joinedOn } = lifePreview
+  const progress = getLadderProgress(taskData, date)
+  const { todaySteps, totalSteps } = progress.life
+  const ladders = lifePreview.ladders.map((section) => {
+    if ('path' in section) return section
+
+    const steps = progress[section.ladder].todaySteps
+    return {
+      path: `/${section.ladder}`,
+      label: section.label,
+      badge: steps,
+      caption: `${steps} ${steps === 1 ? 'step' : 'steps'} today`,
+    }
+  })
 
   return (
     <main className="life">
@@ -75,7 +84,7 @@ export default function Life() {
                       className="ladder-card life__ladder ladder-tooltip__anchor"
                       to={path}
                     >
-                      {ladder.path === '/health' ? (
+                      {'tone' in ladder ? (
                         <span
                           className={`life__ladder-badge life__health-badge ladder-health-tone--${ladder.tone}`}
                           aria-hidden="true"
@@ -87,10 +96,7 @@ export default function Life() {
                       )}
                       <span className="life__ladder-info">
                         <span className="life__ladder-name">{label}</span>
-                        <span className="life__ladder-caption">
-                          {'badge' in ladder ? `${ladder.badge} ` : ''}
-                          {caption}
-                        </span>
+                        <span className="life__ladder-caption">{caption}</span>
                       </span>
                       <span className="life__ladder-arrow" aria-hidden="true">
                         →

@@ -3,11 +3,12 @@ import { Link } from 'react-router'
 import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
 import LadderTooltip from '../../components/LadderPopup/LadderTooltip'
 import TaskCard, { type TaskPopup } from '../../components/TaskCard/TaskCard'
-import { ladderSummaryPreviews } from '../../config/ladderPreviews'
+import { ladderSummaryPreview } from '../../config/ladderPreviews'
 import { useLadderSession } from '../../hooks/useLadderSession'
 import { useLocalDateKey } from '../../hooks/useLocalDateKey'
 import { useTasks } from '../../hooks/useTasks'
 import type { TaskLadder } from '../../types/task'
+import { getLadderProgress } from '../../utils/progress'
 import { matchesTaskCompletion } from '../../utils/taskCompletions'
 import '../../styles/ladder-cards.css'
 import './LadderPage.css'
@@ -15,11 +16,14 @@ import './LadderPage.css'
 const MAX_ACTIVE_TASKS = 4
 
 export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
-  const { todaySteps, totalSteps, daysOnLadder, joinedOn } =
-    ladderSummaryPreviews[ladder]
+  const { daysOnLadder, joinedOn } = ladderSummaryPreview
   const { tasks, completions, setTaskCompleted } = useTasks()
   const { taskNames, updateTaskName } = useLadderSession()
   const today = useLocalDateKey()
+  const { todaySteps, totalSteps } = getLadderProgress(
+    { tasks, completions },
+    today,
+  )[ladder]
   const [popup, setPopup] = useState<{ taskId: string; mode: TaskPopup }>()
   const activeTasks = tasks.filter(
     (task) => task.ladder === ladder && task.archived_at === null,
