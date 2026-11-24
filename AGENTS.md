@@ -10,7 +10,7 @@
 ## Stack and delivery scope
 - Vite, React, TypeScript, React Router, semantic HTML, CSS Grid/Flex and responsive design from 320px.
 - Supabase Auth + PostgreSQL with RLS for user data. **Stage 1 only**; no custom Express/Node server, MongoDB or home-built JWT system.
-- A **separate third-party quotes API** must be called using `fetch()` in `src/utils/quotesApi.ts`; type its verified response and handle loading, empty, error and retry states. The current local sample quotes do not satisfy this requirement; provider selection remains open until verified.
+- The **separate third-party quotes API** uses DummyJSON via `fetch()` in `src/utils/quotesApi.ts`. Real requests have verified the integration. Preserve response validation and loading, empty, error and retry states. The daily quote and seven-day history remain in private-session memory pending a separately approved persistence contract under dossier §02.10.
 - Target: deployed usable application with README and PR from `stage-frontend` to `main` before November 30, 2026; aim for November 28–29.
 
 ## Development order
@@ -45,7 +45,7 @@ Plan for Supabase architecture, data integrity and security constraints during f
 
 ## Commit-oriented planning and task lifecycle
 - Preserve the existing project → phase → section hierarchy. Subdivide remaining sections in `docs/plan-de-trabajo.md` into small, logical, measurable objectives suitable for atomic commits as work is planned. Do not split trivial changes artificially or rewrite completed history.
-- For each objective record a stable ID, objective, authorized scope, relevant skills, acceptance criteria, status and proposed commit message. Use `Pending`, `In development`, `In review`, `Completed` or `Blocked` (or their Spanish equivalents). Track implementation, owner approval, local commit, remote publication and integration as separate milestones. Record actual commit hashes only when available.
+- For each objective record a stable ID, objective, authorized scope, relevant skills, acceptance criteria, status and proposed commit message. Use `Pending`, `In development`, `In review`, `Completed` or `Blocked` (or their Spanish equivalents). Track implementation, technical verification, manual validation, owner approval, local commit, remote publication and integration as separate milestones. Record approval only when the owner confirms it, and record actual commit hashes only when available.
 - Plan one atomic commit for each logical objective with changes worth recording. Prefer Conventional Commits (`type(scope): description`) consistent with the repository. Include pertinent tests in the same change and explain why the change was made, what changed and how it was verified.
 - Keep the plan dynamic: add separately identified objectives for approved improvements or changes, reorder pending work according to dependencies and priorities, and keep unrelated findings as proposals until approved. A finding does not authorize implementation.
 - Before implementation, inspect current local code and Git status, consult relevant sources, identify scope and acceptance checks, and obtain any outstanding approvals. Implement one authorized objective, verify it, report results and stop for owner review before starting another. Do not mark objectives complete solely from a report or the presence of code.
@@ -74,7 +74,7 @@ Plan for Supabase architecture, data integrity and security constraints during f
 - Health has exactly three daily checks: Good Nutrition, Good Sleep, Daily Movement; new local day has no checks until recorded. **Rule B:** 3 today -> green; 1–2 -> yellow; 0 -> yellow if yesterday had any check, red if yesterday also had zero, yellow on first account day. Pair semaphoric colors with explanatory text; never imply medical assessment.
 - The Health indicator in Life is a colored semantic circle, not a step check.
 - Streak evaluates **closed days only**. A day with at least one Activities/Learning step increments; zero steps may hold if Health was green/yellow and previous day had steps; two consecutive zero-step days or zero steps with red Health reset. Consult the dossier's exact cases; don't conflate streak with historical total or days since signup.
-- Preserve popup behavior: Escape and outside clicks keep the draft, Cancel discards it, and valid Submit confirms it. Keep the approved responsive composition. Treat the sample daily quotes and in-memory frontend data as provisional until their approved integrations are verified.
+- Preserve popup behavior: Escape and outside clicks keep the draft, Cancel discards it, and valid Submit confirms it. Keep the approved responsive composition.
 
 ## Security, async behavior and correctness
 - RLS must protect every user-owned table. Test account A vs B, including completion foreign-key cross-user attempts and all relevant CRUD operations.
@@ -85,9 +85,9 @@ Plan for Supabase architecture, data integrity and security constraints during f
 
 ## UX, verification and delivery
 - Honor mockups, palette, typography, WebP illustrations and existing CSS. Use real accessible buttons/links/labels; keyboard, focus, responsive width >=320px. Do not hide horizontal overflow to mask layout defects.
-- The owner handles visual approval and manual acceptance checks. Scope manual verification to the objective and the behavior it directly affects. Physical touchscreen devices are optional.
+- The owner handles visual approval and manual acceptance checks. Codex provides a short checklist with steps, expected results and failure conditions scoped to the objective. The owner may use a browser, inspect Supabase data in the authorized environment or review the diff as appropriate. Manual checks complement technical verification. For cases covered by automation, the owner can repeat a representative subset. Physical touchscreen devices are optional.
 - Prefer the smallest safe change; no unrelated redesign, extra dependencies or broad refactoring. Review affected files and their direct consumers for regressions and dead code.
-- Before editing: identify goal, files, relevant rules and verification. After editing, Codex runs technical checks, behavior tests and relevant regression checks, including `npm run build`, `npm run lint`, `npm run format:check` and `git diff --check` where applicable. Report the checks actually run, their results and any pending checks. Record technical verification separately from the owner's acceptance and record approval only when the owner confirms it.
+- Before editing, identify the goal, files, relevant rules and verification. After editing, Codex runs the applicable functional, automated, regression and security checks, including `npm run build`, `npm run lint`, `npm run format:check` and `git diff --check` where applicable. Report the checks actually run, their results and any pending checks.
 - Verify checked-off work against the current local code. Local unpushed changes take precedence over remote snapshots for implementation.
-- Finish with changed files, behavior, verification and blockers. Stop before starting another feature.
+- Finish with changed files, behavior, verification and blockers. Stop for owner review before starting another objective or performing an unauthorized Git operation.
 - Non-negotiable final checks: real third-party quote via fetch, Supabase persistence, RLS isolation with two accounts, accessibility, deployment without SPA refresh 404, full README and a PR delivered by deadline.

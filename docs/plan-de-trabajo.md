@@ -204,45 +204,38 @@ lifeTotal       = activitiesTotal + learningTotal
 
 ### Cierre de la fase 06
 
-**06A y 06B cerradas por aprobación del propietario.** Incluye ADD-CARD-01, RESET-01 y 06B-08. El dossier §02.10 recoge DummyJSON y la ventana de hoy más los seis días anteriores. Tareas, completaciones y Health siguen en memoria durante la sesión privada. La frase y su historial también se reinician al recargar, cerrar sesión o cambiar de cuenta.
+**06A y 06B cerradas por aprobación del propietario.** Frontend visual y funcional completado, incluido ADD-CARD-01, RESET-01 y 06B-08. El commit de cierre es `3358eec`. 06-CLOSE superó la prueba de humo y el propietario aprobó el cierre. AUD-02 está completada y AUD-02-01 está corregido.
+
+Supabase Auth está implementado. Tareas, completaciones y Health funcionan en memoria. Contadores, rachas y antigüedad se derivan de los datos de la sesión. DummyJSON está integrado y verificado con solicitudes reales. La prevención de repeticiones abarca hoy y los seis días anteriores. La frase y su historial residen en memoria y se reinician al recargar, cerrar sesión o cambiar de cuenta. La persistencia real y la verificación de RLS siguen pendientes.
 
 ### Fase 07 — Persistencia, seguridad y entrega
 
-**Estado** — Pendiente. El primer objetivo es revisar el contrato de fechas, las migraciones y las garantías de escritura antes de conectar datos o aplicar cambios en Supabase.
+Solicitar aprobación antes de ejecutar migraciones, funciones SQL o cambios de esquema. Habilitar escrituras de la aplicación una vez verificadas la integridad y el aislamiento en el entorno autorizado. Los commits indicados son propuestas.
 
 #### 07A. Datos y seguridad Supabase (P0)
 
-- [ ] Revisar migraciones existentes contra dossier v2.2, especialmente `tasks`, `task_completions`, `health_checks`, unicidad `(task_id, completed_date)`, FK compuesta y **ausencia de cascada destructiva de historial**.
-- [ ] Revisar políticas RLS de SELECT, INSERT, UPDATE, DELETE por propietario en cada tabla personal, incluyendo referencias cruzadas.
-- [ ] Aplicar migraciones **solo después de autorización**, comprobar esquema real, probar aislamiento con dos cuentas y errores de red.
-- [ ] Definir/verificar siembra de las seis tareas de ejemplo **una sola vez** para cada cuenta. No resembrar si el usuario retira tareas.
-
-**Cierre:** persistencia real y RLS comprobadas en dos cuentas, sin pérdida de historial.
-
-**Hallazgos AUD-02 indispensables para el MVP (producto mínimo viable)**
-
-- **04 y 05:** proteger días cerrados y aplicar juntos renombrado o retiro y desmarcación de hoy. Hacer cumplir máximo de cuatro, protección de la última y estado activo aun con escrituras concurrentes.
-- **06:** validar fechas al incorporar datos. Confirmar con el propietario el tratamiento de registros anteriores al alta y de diferencias de día local entre dispositivos antes de habilitar escrituras. El ajuste de etiqueta por cambio de zona queda para después del MVP.
-- **02, 07 y 08:** impedir que un cierre tardío afecte a otra sesión, conservar datos y borradores ante fallos, sembrar una vez por cuenta y verificar el flujo real de alta. Corregir los mensajes de confirmación y privacidad si la configuración desplegada expone los problemas identificados.
-
-#### CRUD y casillas persistentes
-
-- [ ] Conectar el alta y el renombrado de 06B-04 a la persistencia por cuenta. Verificar el límite de cuatro activas, la normalización del título y la aplicación conjunta del renombrado y la desmarcación de hoy conforme al dossier §02.6.
-- [ ] Implementar marcación y desmarcación por **fecha local**; una completación por tarea por día; gestionar errores y rollback de operaciones optimistas.
-- [ ] Conectar el retiro de 06B-05 a la persistencia según el dossier §02.6. Verificar que el archivo y la desmarcación de hoy se apliquen juntos y que el historial permanezca disponible.
-- [ ] Mantener Health en sus tres metas fijas, con datos fechados independientes de tareas Activities/Learning.
-
-**Cierre:** operaciones correctas tras navegación, recarga y cambio de cuenta; no duplicados; estados vacío/carga/error accesibles.
+| ID y estado | Objetivo, alcance y dependencias | Skills | Aceptación y verificación técnica | Validación manual | Commit propuesto |
+|---|---|---|---|---|---|
+| **07-00 · En revisión** | Diagnóstico local de solo lectura entregado tras 06-CLOSE. Inventariar esquema, migraciones, fecha, permisos y contratos, y contrastar AUD-02-04, 05 y 07 con sus fuentes. | architecture-guardian, ub-mode, ciber-security | Revisión estática realizada. AUD-02-07 documentado en el informe de conversación como «Contratos provisionales ante errores de persistencia». Esquema remoto pendiente de verificar. | Revisar el diagnóstico y confirmar las decisiones que condicionan 07-01. | — |
+| **07-01 · Pendiente** | Garantías en PostgreSQL. Depende de la revisión de 07-00 y de acordar cómo validar hoy entre dispositivos y tratar registros anteriores al alta (AUD-02-06). | architecture-guardian, ub-mode, ciber-security | AUD-02-04 y 05. Conservar días cerrados, unicidad y estado activo. Renombrar o retirar y quitar la marca de hoy en una transacción según §02.6. Probar reversión ante fallos y concurrencia al llegar a cuatro activas o al quedar una. | Revisar el cambio de esquema y los resultados de historial y límites. | `fix(db): enforce task integrity and atomic writes` |
+| **07-02 · Pendiente** | Políticas RLS (seguridad por fila) y permisos mínimos para el esquema y las operaciones de 07-01. | architecture-guardian, ciber-security | Con dos cuentas verificar lectura y escrituras autorizadas, referencias cruzadas rechazadas y escrituras directas restringidas. Comprobar acceso anónimo y que los permisos no permitan saltar 07-01. | Revisar la evidencia de aislamiento y permisos efectivos en el entorno autorizado. | `fix(db): enforce account isolation for persistent writes` |
+| **07-03 · Pendiente** | Siembra inicial única de las seis tareas por cuenta. Depende de 07-01 y 07-02. Cubre la siembra de AUD-02-07. | architecture-guardian, ub-mode, ciber-security | Dos inicializaciones concurrentes producen tres tareas por escalera una sola vez. Reingreso y retiro previo no vuelven a sembrar. | Abrir una cuenta de prueba, recargar y confirmar que no aparecen duplicados. | `feat(data): seed default tasks once per account` |
+| **07-04 · Pendiente** | Cargar tareas, completaciones, Health y perfil donde corresponda. Depende de 07-02 y 07-03. Reutilizar el estado compartido. | architecture-guardian, ub-mode, ciber-security | AUD-02-02 y 07. Verificar carga, vacío, error y reintento. Las respuestas de lectura o cierre tardías no afectan otra cuenta. El historial incluye tareas archivadas y los datos se adaptan a tipos e identificadores persistidos. | Recargar y alternar cuentas, comprobando que cada una muestra sus datos. | `feat(data): hydrate private session from Supabase` |
+| **07-05 · Pendiente** | Conectar creación, renombrado y retiro a las operaciones de 07-01 y 07-02. Depende de 07-04. | architecture-guardian, ub-mode | Verificar §02.6, normalización, límites, conservación del histórico y borradores ante error (AUD-02-07). La aplicación refleja el resultado confirmado. | Crear, renombrar y retirar una tarjeta de prueba y comprobar el resultado tras recargar. | `feat(tasks): persist task creation rename and retirement` |
+| **07-06 · Pendiente** | Conectar completaciones por tarea y día local. Depende de 07-01, 07-02 y 07-04. | architecture-guardian, ub-mode, ciber-security | Marcar, desmarcar y reintentar sin duplicar ni alterar días cerrados. Comprobar cambio de día, fallo de red, respuestas tardías y totales derivados. | Marcar y desmarcar en cada escalera y comprobar Today y Total tras recargar. | `feat(tasks): persist daily task completions` |
+| **07-07 · Pendiente** | Persistir Health y verificar racha y antigüedad derivadas. Depende de 07-04 y 07-06 y de las garantías de fecha y acceso. | architecture-guardian, ub-mode, ciber-security | Los cambios independientes de objetivos no se sobrescriben. Verificar regla B, preservación de días cerrados, racha y antigüedad sin acumuladores. Health aporta cero pasos. | Marcar objetivos en Health y cotejar Life y la recarga. | `feat(health): persist daily health goals` |
+| **07-08 · Pendiente de decisión** | Planificar persistencia por cuenta de frase diaria e historial semanal. Depende de 07-01, 07-02 y 07-04, y de aprobar la ampliación de §02.10 y su almacenamiento. | architecture-guardian, ub-mode, ciber-security | Con el contrato aprobado, comprobar conservación tras recarga, ventana de hoy y seis días previos, aislamiento, respuestas tardías y máximo de cinco solicitudes de DummyJSON por intento. | Revelar, recargar y cambiar de cuenta para comprobar el alcance acordado. | `feat(quotes): persist daily quote history per account` |
+| **07-09 · Pendiente** | Cierre funcional y de seguridad tras 07-02 a 07-08. | architecture-guardian, ub-mode, ciber-security | Verificar con dos cuentas navegación, recarga, errores de red, historial, fechas y aislamiento. Comprobar alta, restauración y cierre con Auth real y revisar mensajes de confirmación y privacidad según la configuración (AUD-02-08). | Revisar el informe y repetir los escenarios de aceptación acordados. | — |
 
 #### 07B. QA, despliegue y entrega (P0)
 
-- [ ] Verificar todas las rutas, formularios, menús, teclado/focus, accesibilidad y responsive >=320 px sin scroll horizontal.
-- [ ] Probar Auth real y RLS con dos cuentas en entorno de despliegue; recarga SPA sin 404; verificación de errores y estados vacíos.
-- [ ] Ejecutar `npm run dev`, `npm run build`, `npm run lint`, `npm run format:check` y `git diff --check` donde apliquen; registrar resultados, no afirmarlos sin ejecutar.
-- [ ] README con propósito, stack, instalación, variables públicas, URL desplegada y proveedor de frases; `.env` y secretos fuera de repo.
-- [ ] Crear PR `stage-frontend` → `main`, compartir la **URL del PR**, no solo la del repositorio. Integrar únicamente con autorización del propietario.
+| ID y estado | Objetivo, alcance y dependencias | Skills | Aceptación y verificación técnica | Validación manual | Commit propuesto |
+|---|---|---|---|---|---|
+| **07-10 · Pendiente** | Verificación local de entrega tras 07-09. | architecture-guardian, ub-mode | Desarrollo, compilación, lint, formato y diff verificados. Rutas, formularios, teclado, foco y diseño adaptable desde 320 px. | Revisar los flujos representativos y la presentación. | — |
+| **07-11 · Pendiente** | Despliegue y README definitivo tras 07-10, con autorización de publicación. | architecture-guardian, ub-mode, ciber-security | Abrir y recargar rutas internas sin 404. Comprobar Auth y RLS con dos cuentas en el despliegue y DummyJSON desde el origen real. README con propósito, stack, instalación, variables públicas, proveedor y URL desplegada. | Abrir el enlace público, recargar Life y revelar una frase. | `docs(readme): document deployed application and setup` |
+| **07-12 · Pendiente** | Entrega tras 07-11 y con autorización para publicar y abrir la solicitud. | architecture-guardian | Revisar el diff final, abrir PR (solicitud de integración) de `stage-frontend` a `main` y compartir la URL del PR. | Revisar el PR y confirmar la entrega. | — |
 
-**Cierre:** release desplegado, verificado y PR enviado antes de 30/11.
+**Cierre de entrega** — Meta de despliegue y PR el 28–29 de noviembre de 2026. Plazo oficial el 30 de noviembre.
 
 ### Mejoras posteriores al MVP
 
@@ -255,10 +248,10 @@ lifeTotal       = activitiesTotal + learningTotal
 
 | Fecha (2026) | Enfoque prioritario | Nota |
 |---|---|---|
-| Mar 24 | Sincronizar documentos y revisar el retiro en memoria según la regla aprobada | No confundir edición documental con aplicación de SQL |
-| Mié 25 | Datos, RLS, CRUD y contadores v2.2 según estado real | Concentrar tiempo en P0; dividir en cambios revisables |
-| Jue 26 | Cerrar CRUD, Health/racha y pruebas de fechas | Resolver los casos críticos antes del pulido |
-| Vie 27 | Verificar persistencia y preparar el README final | La frase externa quedó aprobada en 06B-08 |
+| Mar 24 | Cierre 06 y DOC-02. Revisar el diagnóstico 07-00 | Confirmar fecha local, autorizaciones y dependencias |
+| Mié 25 | Integridad, atomicidad, límites, permisos, aislamiento y siembra | Validar garantías antes de habilitar escrituras |
+| Jue 26 | Lectura y escrituras de tareas, completaciones y Health | Verificar historial, cuentas y valores derivados |
+| Vie 27 | Historial de frases según decisión, cierre de persistencia y verificación de entrega | Completar comprobaciones obligatorias y preparar README |
 | Sáb 28 | QA, deploy, revisión en producción y PR | Meta principal de entrega |
 | Dom 29 | Correcciones y envío del PR si aún falta | Evitar funciones nuevas |
 | Lun 30 | Margen de evaluación | No dejar entregables obligatorios pendientes |
@@ -288,3 +281,13 @@ El calendario es una guía, **no una declaración de trabajo completado**, y deb
 - **Aceptación** — Diff documental limitado a `AGENTS.md`, con el flujo y las restricciones vigentes preservados. Se revisó el diff completo y pasó `git diff --check`.
 - **Skills** — `architecture-guardian` y `ub-mode`.
 - **Commit propuesto** — `docs(agents): update development and review workflow`.
+
+### DOC-02 · Preparación de la fase 07
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Sincronizar `AGENTS.md` y el plan tras el cierre de fase 06 y especificar dependencias y aceptación de 07A y 07B.
+- **Dependencias** — Cierre 06 y diagnóstico local 07-00 disponible para revisión.
+- **Aceptación y verificación** — Historial preservado, decisiones abiertas visibles, hallazgos vinculados y `git diff --check` sin errores.
+- **Validación manual** — Revisar el diff de ambos archivos y confirmar la correspondencia con el dossier y el alcance de 07.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Commit propuesto** — `docs(plan): prepare phase 07 persistence objectives`.
