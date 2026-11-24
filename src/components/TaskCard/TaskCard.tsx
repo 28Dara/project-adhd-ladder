@@ -10,7 +10,7 @@ export type TaskPopup = 'settings' | 'rename' | 'archive'
 interface TaskCardProps {
   title: string
   completed: boolean
-  onCompletedChange: (checked: boolean) => void
+  onToggleCompleted: () => void
   renameDraft?: string
   canArchive: boolean
   popup?: TaskPopup
@@ -24,7 +24,7 @@ interface TaskCardProps {
 export default function TaskCard({
   title,
   completed,
-  onCompletedChange,
+  onToggleCompleted,
   renameDraft,
   canArchive,
   popup,
@@ -56,7 +56,7 @@ export default function TaskCard({
           className="ladder-check"
           type="checkbox"
           checked={completed}
-          onChange={(event) => onCompletedChange(event.currentTarget.checked)}
+          onChange={onToggleCompleted}
         />
         <span className="task-card__title">{title}</span>
       </label>

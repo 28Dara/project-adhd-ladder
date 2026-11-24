@@ -8,10 +8,10 @@ import { EXAMPLE_QUOTES } from '../config/exampleQuotes'
 import { createExampleTaskData } from '../config/exampleTasks'
 import { useAuth } from '../hooks/useAuth'
 import type { LadderSession } from '../hooks/useLadderSession'
+import { useLocalDateKey } from '../hooks/useLocalDateKey'
 import type { HealthCheck } from '../types/health'
 import type { Task } from '../types/task'
-import { getLocalDateKey } from '../utils/dates'
-import { updateTaskCompletion } from '../utils/taskCompletions'
+import { isTaskCompleted, updateTaskCompletion } from '../utils/taskCompletions'
 import { addTask, archiveTask, renameTaskTitle } from '../utils/tasks'
 import './AuthRoutes.css'
 
@@ -92,7 +92,8 @@ function PrivateLayout({
   onLogout: () => void
 }) {
   const [displayName, setDisplayName] = useState<string>()
-  const [sessionStartedOn] = useState(() => getLocalDateKey(new Date()))
+  const { dateKey: today, syncDate } = useLocalDateKey()
+  const [sessionStartedOn] = useState(today)
   const [taskData, setTaskData] = useState(() =>
     createExampleTaskData(user.id, new Date()),
   )
@@ -102,6 +103,7 @@ function PrivateLayout({
   const isSigningOut = logout.status === 'pending'
 
   const ladderSession: LadderSession = {
+    today,
     sessionStartedOn,
     taskData,
     createTask: (ladder, title) => {
@@ -116,32 +118,39 @@ function PrivateLayout({
       setTaskData((data) => addTask(data, task))
     },
     renameTask: (taskId, title) => {
-      const today = getLocalDateKey(new Date())
-      setTaskData((data) =>
-        renameTaskTitle(data, user.id, taskId, title, today),
-      )
+      const date = syncDate()
+      setTaskData((data) => renameTaskTitle(data, user.id, taskId, title, date))
     },
     archiveTask: (taskId) => {
       const now = new Date()
+      syncDate(now)
       setTaskData((data) => archiveTask(data, user.id, taskId, now))
     },
-    setTaskCompleted: (taskId, checked) => {
-      const date = getLocalDateKey(new Date())
-      setTaskData((data) => updateTaskCompletion(data, taskId, date, checked))
+    toggleTaskCompleted: (taskId) => {
+      const date = syncDate()
+      setTaskData((data) =>
+        updateTaskCompletion(
+          data,
+          taskId,
+          date,
+          !isTaskCompleted(data.completions, taskId, date),
+        ),
+      )
     },
     taskDrafts,
     setTaskDraft: (key, draft) =>
       setTaskDrafts((drafts) => ({ ...drafts, [key]: draft })),
     healthChecks,
-    setHealthGoal: (goalId, checked) => {
-      const date = getLocalDateKey(new Date())
+    toggleHealthGoal: (goalId) => {
+      const date = syncDate()
       setHealthChecks((checks) => {
         const current = checks.find((check) => check.date === date)
-        if ((current?.[goalId] ?? false) === checked) return checks
 
         if (current) {
           return checks.map((check) =>
-            check === current ? { ...check, [goalId]: checked } : check,
+            check === current
+              ? { ...check, [goalId]: !current[goalId] }
+              : check,
           )
         }
 
@@ -151,18 +160,19 @@ function PrivateLayout({
           nutrition: false,
           sleep: false,
           movement: false,
-          [goalId]: checked,
+          [goalId]: true,
         }
         return [...checks, newCheck]
       })
     },
     dailyQuote,
     revealQuote: () => {
-      const date = getLocalDateKey(new Date())
-      if (date === dailyQuote?.date) return
+      const date = syncDate()
       const quote =
         EXAMPLE_QUOTES[Math.floor(Math.random() * EXAMPLE_QUOTES.length)]
-      setDailyQuote({ date, quote })
+      setDailyQuote((current) =>
+        current?.date === date ? current : { date, quote },
+      )
     },
   }
 

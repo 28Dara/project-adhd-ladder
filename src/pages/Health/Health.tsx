@@ -9,7 +9,7 @@ import '../../styles/ladder-cards.css'
 import './Health.css'
 
 export default function Health() {
-  const { todayCheck, setHealthGoal, status } = useHealth()
+  const { todayCheck, toggleHealthGoal, status } = useHealth()
 
   return (
     <main className="health">
@@ -64,9 +64,7 @@ export default function Health() {
                     className="ladder-check"
                     type="checkbox"
                     checked={todayCheck?.[id] ?? false}
-                    onChange={(event) =>
-                      setHealthGoal(id, event.currentTarget.checked)
-                    }
+                    onChange={() => toggleHealthGoal(id)}
                   />
                   <span>{label}</span>
                 </label>

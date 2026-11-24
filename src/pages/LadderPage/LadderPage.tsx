@@ -5,13 +5,12 @@ import EditBubble from '../../components/LadderPopup/EditBubble'
 import LadderTooltip from '../../components/LadderPopup/LadderTooltip'
 import TaskCard, { type TaskPopup } from '../../components/TaskCard/TaskCard'
 import { useLadderSession } from '../../hooks/useLadderSession'
-import { useLocalDateKey } from '../../hooks/useLocalDateKey'
 import { useRegistrationDate } from '../../hooks/useRegistrationDate'
 import { useTasks } from '../../hooks/useTasks'
 import type { TaskLadder } from '../../types/task'
 import { getDaysInLadder } from '../../utils/dates'
 import { getLadderProgress } from '../../utils/progress'
-import { matchesTaskCompletion } from '../../utils/taskCompletions'
+import { isTaskCompleted } from '../../utils/taskCompletions'
 import { getActiveTasks, MAX_ACTIVE_TASKS } from '../../utils/tasks'
 import '../../styles/ladder-cards.css'
 import './LadderPage.css'
@@ -26,10 +25,9 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
     createTask,
     renameTask,
     archiveTask,
-    setTaskCompleted,
+    toggleTaskCompleted,
   } = useTasks()
-  const { taskDrafts, setTaskDraft } = useLadderSession()
-  const today = useLocalDateKey()
+  const { taskDrafts, setTaskDraft, today } = useLadderSession()
   const joinedOn = useRegistrationDate()
   const daysInLadder = getDaysInLadder(joinedOn.date, today)
   const { todaySteps, totalSteps } = getLadderProgress(
@@ -110,12 +108,8 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
               <TaskCard
                 key={task.id}
                 title={task.title}
-                completed={completions.some((completion) =>
-                  matchesTaskCompletion(completion, task.id, today),
-                )}
-                onCompletedChange={(checked) =>
-                  setTaskCompleted(task.id, checked)
-                }
+                completed={isTaskCompleted(completions, task.id, today)}
+                onToggleCompleted={() => toggleTaskCompleted(task.id)}
                 renameDraft={taskDrafts[`rename:${task.id}`]}
                 canArchive={activeTasks.length > 1}
                 popup={

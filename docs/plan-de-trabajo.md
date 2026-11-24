@@ -186,12 +186,22 @@ lifeTotal       = activitiesTotal + learningTotal
 
 #### 06B-07 · Racha y días desde el alta (P1)
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado, aprobado por el propietario.
+- **Commit local verificado** — `708511f`.
 - **Objetivo y alcance** — Derivar la racha de Life y la antigüedad de Life, Activities y Learning según el dossier §02.8. Reutilizar las completaciones, la regla B y la fecha de registro disponible en Auth.
 - **Aceptación** — La racha excluye hoy y respeta los incrementos, descansos y reinicios. El historial incluye tareas archivadas. La antigüedad cuenta días calendario locales e incluye el alta. Cuando falta el alta real, la fecha simulada queda identificada y es estable durante la sesión.
 - **Skills** — `architecture-guardian` y `ub-mode`.
 - **Verificación técnica** — Pasaron build, lint y formato. Se comprobaron 12 escenarios de racha, seis casos de calendario y la regresión de contadores. Edge sin interfaz verificó inicio vacío, navegación, cambio de día, aislamiento entre cuentas y fecha simulada estable. La revisión visual corresponde al propietario.
-- **Commit propuesto** — `feat(progress): derive streak and ladder days`.
+- **Commit** — `feat(progress): implement streak and days in ladder calculations`.
+
+#### AUD-02-01 · Sincronización de las acciones con el día local (P1)
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Compartir la referencia de fecha del layout privado entre las vistas y las acciones diarias. Resolver cada pulsación con los registros del día vigente, incluso si el temporizador se retrasa.
+- **Aceptación** — La primera pulsación después de medianoche funciona en ambas escaleras y en Health. Las acciones conservan el historial, los indicadores siguen las reglas del dossier y la fecha se actualiza al recuperar foco o visibilidad.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Pasaron build, lint, formato y `git diff --check`. En Edge sin interfaz se reprodujo el fallo previo y se comprobó su corrección con reloj simulado. Pasaron los casos de medianoche, temporizador retrasado, foco, visibilidad, pulsaciones consecutivas, historial, indicadores y aislamiento. También se verificaron creación, renombrado, retiro y la frase provisional. Las pruebas aisladas cubrieron 162 combinaciones de Health y 4.096 secuencias de racha. La revisión visual corresponde al propietario.
+- **Commit propuesto** — `fix(dates): synchronize daily actions with the displayed day`.
 
 **Cierre:** reglas Health B y racha probadas de forma independiente de contadores históricos.
 

@@ -1,28 +1,37 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { getLocalDateKey } from '../utils/dates'
 
 export function useLocalDateKey() {
   const [dateKey, setDateKey] = useState(() => getLocalDateKey(new Date()))
+  const timer = useRef<number | undefined>(undefined)
 
-  useEffect(() => {
-    let timer: number
-
-    function syncDate() {
-      window.clearTimeout(timer)
-      const now = new Date()
-      setDateKey(getLocalDateKey(now))
-      const midnight = new Date(now)
-      midnight.setHours(24, 0, 0, 0)
-      timer = window.setTimeout(syncDate, midnight.getTime() - now.getTime())
-    }
-
-    syncDate()
-    document.addEventListener('visibilitychange', syncDate)
-    return () => {
-      window.clearTimeout(timer)
-      document.removeEventListener('visibilitychange', syncDate)
-    }
+  const syncDate = useCallback(function syncDate(now = new Date()) {
+    const currentDate = getLocalDateKey(now)
+    setDateKey(currentDate)
+    window.clearTimeout(timer.current)
+    const midnight = new Date(now)
+    midnight.setHours(24, 0, 0, 0)
+    timer.current = window.setTimeout(
+      syncDate,
+      midnight.getTime() - now.getTime(),
+    )
+    return currentDate
   }, [])
 
-  return dateKey
+  useEffect(() => {
+    function refreshDate() {
+      syncDate()
+    }
+
+    refreshDate()
+    window.addEventListener('focus', refreshDate)
+    document.addEventListener('visibilitychange', refreshDate)
+    return () => {
+      window.clearTimeout(timer.current)
+      window.removeEventListener('focus', refreshDate)
+      document.removeEventListener('visibilitychange', refreshDate)
+    }
+  }, [syncDate])
+
+  return { dateKey, syncDate }
 }
