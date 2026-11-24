@@ -1,119 +1,148 @@
-# ADHD Ladder — Plan de trabajo v2.1
+# ADHD Ladder — Plan de trabajo v2.2
 
-> Transcripción estructurada del PDF original; las decisiones y fechas se preservan tal como aparecen en la versión 2.1.
+> **Documento completo para reemplazar `docs/plan-de-trabajo.md`.** Actualizado el 24 de noviembre de 2026. Fuente normativa: `docs/dossier.md` v2.2. Este plan organiza el trabajo; **no sustituye las reglas del dossier ni acredita pruebas por sí mismo**.
 
-ADHD LADDER · PLAN DE TRABAJO Versión 2.1 · 22 de noviembre de 2026 · Etapa 1 con Supabase · Plazo: 30/11/2026
+**Producto:** ADHD Ladder · **Entrega:** TripleTen Etapa 1 · **Stack:** React + TypeScript + Vite + React Router + Supabase Auth/PostgreSQL/RLS + API de frases separada por `fetch()` · **Plazo:** 30/11/2026 · **Meta:** PR `stage-frontend` → `main` 28–29/11.
 
-## Resumen
+## 1. Reglas de trabajo y estado verificable
 
-- Meta: PR de stage-frontend a main enviado el sábado 28 o domingo 29. TripleTen revisa en menos de 24 horas; el lunes 30 queda de colchón.
+- Antes de ejecutar cualquier etapa, inspeccionar el árbol **local actual**, `git status`, el dossier pertinente, `AGENTS.md` y Architecture Guardian según el alcance. La rama remota puede ir detrás de cambios no subidos.
+- Los reportes de Codex sobre 06A son indicios de trabajo realizado, **no evidencia independiente de pruebas**. No marcar una etapa como completa hasta verificar el código y su resultado.
+- No crear ramas, hacer commit, push, merge, ejecutar migraciones o eliminar datos sin autorización explícita.
+- Prioridad de decisiones: instrucción más reciente del propietario > `[DECIDIDO]` dossier v2.2 > este plan > propuestas `[PROP]`. No implementar puntos `[ABIERTO]` por suposición.
+- Mantener cambios pequeños, revisables y con verificación; no sacrificar funcionalidades obligatorias por pulido visual.
 
-- Tiempo: ≈30 horas (3 h en días laborales; Mié 25 y Sáb 28 ≈7 h). Hoy no existen repo, proyecto Supabase ni código.
+## 2. Estado de avance al 24 de noviembre (no certificado)
 
-- Orden: Auth y RLS primero. Punto de control el martes por la noche: si fallan, el miércoles la UI usa datos de ejemplo tipados y Supabase sigue el jueves.
+| Área | Estado de trabajo conocido | Prueba/cierre requerido |
+|---|---|---|
+| Setup, rutas y maquetación Etapa 05 | Realizada/revisada parcialmente en local según reportes anteriores | Build, lint y prueba visual final de las cuatro escaleras |
+| Auth y rutas privadas | Implementación reportada, con flujos React/Supabase | Verificar registro, login, logout, restauración y redirects con cuenta real |
+| 06A popups | Codex reportó edición temporal, tooltips, menus, Health clicable y quote local | Reproducir comportamiento y corregir regresiones 06A.1 |
+| Ilustración Life en tablet/móvil | Regresión reportada | Corregir separación vertical con frase oculta/revelada |
+| Globo de username en móvil | Regresión reportada | Centrar cuerpo en viewport y mantener punta hacia el lápiz |
+| Supabase, SQL y RLS | Migraciones planeadas/escritas; aplicación y pruebas cruzadas no certificadas | Revisar esquema y RLS, aplicar con autorización, probar dos cuentas |
+| CRUD de tareas y checks persistidos | Pendiente por verificar/implementar | Crear, renombrar, retirar, marcar y desmarcar con persistencia |
+| Contadores v2.2 | Nueva regla documental aprobada; no asumir código actualizado | Implementar y probar hoy vs días cerrados sin duplicados |
+| API externa de frases | **No conectada** en 06A; frases de ejemplo | API real por `fetch`, tipado, carga/error/reintento y vacío |
+| Deploy / README / PR | Pendiente de verificación | URL pública, sin 404 al recargar, README y PR a tiempo |
 
-- Fuente de reglas: dossier v2.1 y mini-skill v2 (copiada como AGENTS.md en el repo).
+No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del proyecto.
 
-## Tareas por día (cada una con objetivo verificable)
+## 3. Orden operativo restante (una tarea revisable por vez)
 
-### Domingo 22 · 3 h · Cimientos
+### A. Cierre de regresiones visuales 06A.1
 
-- [ ] Crear repo público project-adhd-ladder con README mínimo, .gitignore y .env.example; tablero de GitHub Projects o Issues con tareas de una sesión.
+- [ ] Corregir la separación vertical excesiva de la ilustración en Life bajo `64rem`; investigar layout / cambio de altura de quote, no tapar con márgenes negativos.
+- [ ] Centrar el **cuerpo** del globo de nombre respecto al viewport móvil; permitir que la punta se alinee **independientemente** con el lápiz.
+- [ ] Revisar 320, 375, 640, 768, 1024, 1280 y 1440 px en las vistas afectadas; conservar páginas no afectadas.
 
-- [ ] Rama stage-frontend; proyecto Vite + React + TS; borrar restos de la plantilla; carpetas (components, pages, styles, images, utils, vendors, types, hooks, context, config).
+**Cierre:** comportamiento de popups intacto, Life correcto antes y después de revelar quote, sin overflow; comprobaciones adecuadas pasan.
 
-- [ ] variables.css, normalize.css y fuentes autohospedadas con fallback de sistema; React Router con / , /about y rutas privadas vacías.
+### B. Cierre de la decisión abierta que bloquea CRUD destructivo
 
-- [ ] Landing y About (si falta tiempo, About pasa al lunes).
+- [ ] Pedir decisión al propietario para el único caso pendiente: **una tarea completada hoy que se elimina/retira hoy**. Debe definirse si la completación de hoy sobrevive y cuenta mañana o se revierte hoy.
+- [ ] No permitir hard-delete con pérdida de pasos históricos. Confirmar si la opción UI `Delete Card` sigue siendo un retiro/archivo interno mediante `archived_at` u otra estrategia explícitamente aprobada.
+- [ ] Revisar impacto en completaciones de hoy, RLS, FK, histórico y racha antes de cambiar la implementación.
 
-Cierre: npm run dev, build y lint limpios; / y /about navegan. Primera rama revisada antes de integrar.
+**Cierre:** regla escrita en dossier y prueba esperada definida **antes** de implementar eliminación persistente. El resto del CRUD no destructivo puede avanzar en tareas separadas.
 
-### Lunes 23 · 3 h · Auth
+### C. Datos y seguridad Supabase (P0)
 
-- [ ] Proyecto Supabase (plan gratuito); decidir la confirmación de email; cliente en utils/supabaseClient.ts con variables VITE_.
+- [ ] Revisar migraciones existentes contra dossier v2.2, especialmente `tasks`, `task_completions`, `health_checks`, unicidad `(task_id, completed_date)`, FK compuesta y **ausencia de cascada destructiva de historial**.
+- [ ] Revisar políticas RLS de SELECT, INSERT, UPDATE, DELETE por propietario en cada tabla personal, incluyendo referencias cruzadas.
+- [ ] Aplicar migraciones **solo después de autorización**, comprobar esquema real, probar aislamiento con dos cuentas y errores de red.
+- [ ] Definir/verificar siembra de las seis tareas de ejemplo **una sola vez** para cada cuenta. No resembrar si el usuario retira tareas.
 
-- [ ] AuthContext; pantallas Signup y Login reales; logout; getSession y onAuthStateChange; rutas privadas con redirección.
+**Cierre:** persistencia real y RLS comprobadas en dos cuentas, sin pérdida de historial.
 
-Cierre: registro, login, logout y recarga con sesión funcionan; /life sin sesión redirige a login.
+### D. 06B — CRUD y casillas persistentes (P0)
 
-### Martes 24 · 3 h · Datos y RLS
+- [ ] Crear tareas hasta cuatro activas por escalera; reutilizar TaskCard y componentes de Activities/Learning; validar título.
+- [ ] Renombrar tareas y conservar identidad; la interfaz React 06A no equivale a una mutación persistente.
+- [ ] Implementar marcación y desmarcación por **fecha local**; una completación por tarea por día; gestionar errores y rollback de operaciones optimistas.
+- [ ] Implementar retiro/`Delete Card` **solo después** de cerrar el caso del apartado B; conservar historial.
+- [ ] Mantener Health en sus tres metas fijas, con datos fechados independientes de tareas Activities/Learning.
 
-- [ ] SQL: profiles, tasks, task_completions (UNIQUE y FK compuesta), health_checks; RLS en todas; mecanismo de siembra de tareas de ejemplo (una sola vez).
+**Cierre:** operaciones correctas tras navegación, recarga y cambio de cuenta; no duplicados; estados vacío/carga/error accesibles.
 
-- [ ] Prueba con dos cuentas: lectura, escritura, borrado y referencias cruzadas.
+### E. 06B — Contadores y fechas v2.2 (P0)
 
-Cierre: la cuenta A no ve ni toca datos de B. PUNTO DE CONTROL.
+Fórmulas únicas de aceptación:
 
-### Miércoles 25 · ≈7 h · UI
+```text
+activitiesToday = completaciones de Activities con completed_date === hoyLocal
+learningToday   = completaciones de Learning con completed_date === hoyLocal
+lifeToday       = activitiesToday + learningToday
 
-- [ ] Header con selector de escalera y logout; Life, Health, Activities y Learning con componentes tipados (TaskCard, TaskModal, Dropdown).
+activitiesTotal = completaciones de Activities con completed_date < hoyLocal
+learningTotal   = completaciones de Learning con completed_date < hoyLocal
+lifeTotal       = activitiesTotal + learningTotal
+```
 
-- [ ] Popups: selector de escalera, menú de tarjeta, modal de añadir y confirmar archivado, definidos en texto.
+- [ ] Actualizar `utils/progress.ts` o el módulo puro existente, reutilizando el servicio de fechas local. Todos los contadores derivados de completaciones válidas por cuenta.
+- [ ] Marcar suma hoy +1, desmarcar resta hoy −1; hoy no altera totales históricos. Life suma los **números**, no el número de SectionCards.
+- [ ] Cambio de día: nuevo día inicia sin checks y diarios cero si aún no hay completaciones; los registros anteriores **ya** entran al histórico, sin moverlos ni borrar datos, ni cron de medianoche.
+- [ ] Verificar retorno tras varios días sin abrir aplicación, zona horaria local coherente, cambio de ruta/cuenta, eventos duplicados.
+- [ ] Prueba de referencia: lunes histórico Activities 8, Learning 12, Life 20; Learning marca tres -> Life hoy 3, Life total 20. Martes sin nuevos checks -> Life hoy 0, Learning total 15, Life total 23.
+- [ ] Probar renombrado/retiro sin pérdida de pasos históricos; no resolver caso de retiro marcado hoy por intuición.
 
-- [ ] Estados vacíos y de carga; base mobile-first. Con datos reales si el control se superó; si no, con datos de ejemplo en useTasks.
+**Cierre:** coinciden todas las vistas y pruebas de días cerrados sin duplicación.
 
-Cierre: las cuatro vistas navegan y se ven bien desde 320 px.
+### F. Health, racha y días desde alta (P0/P1 según dossier)
 
-<!-- Página 2 del PDF original -->
+- [ ] Health: tres casillas fechadas; verde 3, amarillo 1–2, amarillo 0 si ayer tuvo checks, rojo 0 si ayer tuvo cero, amarillo primer día con cero.
+- [ ] Health no aporta pasos a Life. Semáforo de Health en Life = círculo de color con texto accesible; no marca de tarea.
+- [ ] Racha de **días cerrados** conforme a la sección 02.8 del dossier; no derivarla de `lifeTotal`. Días desde alta es otra métrica.
+- [ ] Casos de cero pasos, dos días consecutivos, primer día y retorno después de varios días.
 
-### Jueves 26 · 3 h · Funcionalidad
+**Cierre:** reglas Health B y racha probadas de forma independiente de contadores históricos.
 
-- [ ] Alta, renombrar, archivar y marcar por fecha; contadores diarios y totales; días en la escalera.
+### G. API third-party de frases (P0)
 
-- [ ] utils/progress.ts con Health regla B y racha como funciones puras, con casos de prueba.
+- [ ] Verificar un proveedor público desde navegador (respuesta real, CORS, límites, sin exponer claves); no asumir que DummyJSON fue aprobado.
+- [ ] Implementar `src/utils/quotesApi.ts` con `fetch`, tipos del payload **real** y adaptación al tipo interno Quote.
+- [ ] Life: `Today's quote for you is...` + `Click to reveal`; mostrar frase real, una aleatoria por fecha local durante la sesión; carga, error, reintento y vacío sin fingir que un fallback viene de API.
+- [ ] Mantener quote separada de Supabase y documentar proveedor y limitaciones en README.
 
-Cierre: persistencia real entre sesiones; los casos de las tablas de Health y racha pasan.
+**Cierre:** frase real visible en navegador y estados de fallo comprobados.
 
-### Viernes 27 · 3 h · Frases
+### H. QA, deploy y entrega (P0)
 
-- [ ] Verificar el proveedor desde el navegador (CORS, sin clave); utils/quotesApi.ts con tipos; MotivationalQuote en Life.
+- [ ] Verificar todas las rutas, formularios, menús, teclado/focus, accesibilidad y responsive >=320 px sin scroll horizontal.
+- [ ] Probar Auth real y RLS con dos cuentas en entorno de despliegue; recarga SPA sin 404; verificación de errores y estados vacíos.
+- [ ] Ejecutar `npm run dev`, `npm run build`, `npm run lint`, `npm run format:check` y `git diff --check` donde apliquen; registrar resultados, no afirmarlos sin ejecutar.
+- [ ] README con propósito, stack, instalación, variables públicas, URL desplegada y proveedor de frases; `.env` y secretos fuera de repo.
+- [ ] Crear PR `stage-frontend` → `main`, compartir la **URL del PR**, no solo la del repositorio. Integrar únicamente con autorización del propietario.
 
-- [ ] Carga, error con reintento y estado vacío; el fallback nunca se presenta como si viniera de la API.
+**Cierre:** release desplegado, verificado y PR enviado antes de 30/11.
 
-Cierre: frase real visible en producción local; fallo simulado probado.
+## 4. Calendario objetivo y contingencias
 
-### Sábado 28 · ≈7 h · Calidad y deploy
+| Fecha (2026) | Enfoque prioritario | Nota |
+|---|---|---|
+| Mar 24 | Sincronizar documentos y revisar estado local; cerrar regla de eliminación si es posible | No confundir edición documental con aplicación de SQL |
+| Mié 25 | Datos, RLS, CRUD y contadores v2.2 según estado real | Concentrar tiempo en P0; dividir en cambios revisables |
+| Jue 26 | Cerrar CRUD, Health/racha y pruebas de fechas | Resolver los casos críticos antes del pulido |
+| Vie 27 | Quotes API externa real, errores y README | No dejar API obligatoria como fallback local |
+| Sáb 28 | QA, deploy, revisión en producción y PR | Meta principal de entrega |
+| Dom 29 | Correcciones y envío del PR si aún falta | Evitar funciones nuevas |
+| Lun 30 | Margen de evaluación | No dejar entregables obligatorios pendientes |
 
-- [ ] Responsive 320+ pulido, accesibilidad (teclado, foco, aria-live, contraste), README completo.
+El calendario es una guía, **no una declaración de trabajo completado**, y debe adaptarse a evidencia local. La disponibilidad de horas original era aproximada (3 h días laborales; 7 h miércoles y sábado), no una garantía.
 
-- [ ] Deploy en Vercel o Netlify con rewrite SPA; URLs permitidas de Auth en Supabase; prueba en producción con dos cuentas.
+## 5. Qué recortar y qué no
 
-- [ ] npm run build y lint limpios; checklist de la rúbrica; enviar el PR si todo pasa.
+- **Recortable:** animaciones, refinamientos estéticos, estadísticas avanzadas y otras mejoras P2. Mantener la UI 06A funcional ya realizada, pero no ampliarla sin necesidad.
+- **No recortable:** pasos diarios e históricos correctos, Auth, aislamiento RLS, CRUD esencial sin pérdida histórica, API real de terceros con fetch, rutas obligatorias, build/lint, deploy, README y PR.
+- Si hay un bloqueo de seguridad o de decisión de producto, informar la dependencia; no resolverlo mediante borrado de historial ni dejando RLS desactivada.
 
-Cierre: URL pública sin 404 al recargar; PR enviado.
+## 6. Flujo de trabajo y arranque de tarea
 
-### Domingo 29 · 3 h · Entrega
+1. Elegir una sola tarea con cierre verificable y revisar el estado real; consultar `AGENTS.md`, Architecture Guardian cuando aplique y la sección del dossier pertinente.
+2. Indicar propósito, archivos afectados, reglas y pruebas antes de editar.
+3. Implementar el cambio mínimo sin crear ramas/commits/push/merge salvo autorización del propietario.
+4. Revisar diff, correr pruebas pertinentes y reportar evidencia, archivos y asuntos abiertos.
+5. Detenerse para revisión del propietario antes de iniciar otra funcionalidad.
 
-- [ ] Correcciones finales, verificación del checklist y envío del PR si no se envió (se entrega la URL del PR, no del repo).
-
-Cierre: PR enviado. Lunes 30: colchón para el feedback, sin funciones nuevas.
-
-## Si falta tiempo, se recorta en este orden
-
-- Edición de nombre con lápiz; racha avanzada; pulido de popups y animaciones; estadísticas extra.
-
-- Nunca se sacrifican: seguridad de datos (RLS), API de frases visible con fetch, /about, build y lint, deploy sin 404 y PR.
-
-## Flujo de revisión antes de integrar
-
-- Trabajar en una rama feature/* → subirla → compartir el enlace de la rama o del PR (con .diff) con Claude y ChatGPT → corregir → Dara integra a stage-frontend.
-
-- Revisión mínima por tarea: npm run build, npm run lint, lectura del diff, ningún secreto, componentes sin dependencia directa de Supabase.
-
-- Claude puede leer repos públicos por enlace; no entra a repos privados. Si no hay enlace, pegar el resultado de git diff.
-
-- Nada se sube a main sin autorización de Dara.
-
-## Pendientes antes de empezar
-
-- [ ] Escribir al tutor para confirmar por escrito que Supabase es aceptable.
-
-- [ ] Decidir si la confirmación de email estará desactivada y el plan para la pausa del plan gratuito.
-
-- [ ] Probar el proveedor de frases desde el navegador (candidato sin verificar: DummyJSON).
-
-- [ ] Redactar en texto el contenido de los popups y de los breakpoints móviles; texto de About con un párrafo sobre la autora.
-
-## Mensaje de arranque para ChatGPT / Codex
-
-Contexto: proyecto ADHD Ladder (Etapa 1 de TripleTen) con React + TypeScript + Vite, React Router, Supabase (Auth + PostgreSQL con RLS) y una API externa de frases vía fetch. Reglas: lee el dossier v2.1 y la mini-skill v2 y no las contradigas. Trabaja en tareas pequeñas con objetivo verificable, en ramas feature/*. No uses claves privadas ni toques .env. Los componentes no dependen directamente de Supabase (usa hooks). Health y racha son funciones puras en utils/progress.ts. Nada va a main sin aprobación de Dara. Tarea de hoy: (pegar aquí la tarea del día).
+**Instrucción corta para Codex:** «Proyecto ADHD Ladder, TripleTen Etapa 1. `docs/dossier.md` v2.2 es la fuente normativa; `AGENTS.md` y Architecture Guardian son instrucciones operativas. Para `Your total steps` solo cuentan `completed_date < todayLocalDate`; Life es la suma Activities + Learning y Health no suma pasos. No alteres historias al retirar tarjetas ni resuelvas sin permiso la eliminación de una tarjeta marcada hoy. Trabaja solo en la tarea indicada, sin commits, push, merge, migraciones ni nuevas dependencias sin autorización. Describe cambios y pruebas reales».

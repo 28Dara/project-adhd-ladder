@@ -1,137 +1,99 @@
 ---
 name: architecture-guardian
 description: >-
-  Planifica, implementa o revisa funcionalidades y refactorizaciones de ADHD Ladder
-  que afecten componentes o hooks reutilizables, lógica, estado compartido,
-  autenticación, routing, operaciones asíncronas, APIs, persistencia, acceso a datos
-  o arquitectura. Ajusta la revisión al alcance del cambio.
+  Planifica, implementa y revisa cambios de ADHD Ladder en componentes/hooks
+  reutilizables, reglas de progreso, estado, autenticación, routing,
+  concurrencia, APIs, persistencia, SQL y seguridad. Ajusta el análisis
+  al alcance real de cada tarea y al dossier integral v2.2.
 ---
 
 # Architecture Guardian
 
-Aplica la precedencia de `AGENTS.md`. Consulta solo las secciones pertinentes de
-`docs/dossier.md` y `docs/plan-de-trabajo.md`. Respeta las decisiones aprobadas y el
-alcance autorizado por el propietario. Señala las reglas ambiguas antes de
-implementar una interpretación nueva.
+Sigue la precedencia de `AGENTS.md`: instrucción explícita más reciente del propietario > reglas `[DECIDIDO]` del `docs/dossier.md` v2.2 > plan de trabajo > propuestas `[PROP]`. **No decidas unilateralmente puntos `[ABIERTO]`.** Lee las secciones pertinentes, no todo el proyecto indiscriminadamente. El trabajo local no subido puede ser más reciente que GitHub.
 
 ## Antes de implementar
 
-1. Identifica la responsabilidad, la capa que debe asumirla y los módulos que la
-   consumen o podrían verse afectados.
-2. Busca funciones, componentes, hooks y servicios existentes. Reutilízalos si
-   resuelven la misma responsabilidad y deben evolucionar juntos.
-3. Determina si el cambio afecta a una vista o a un recurso compartido. Revisa las
-   dependencias y el riesgo de duplicar lecturas, lógica o estado.
-4. Elige la solución más sencilla que cumpla el comportamiento aprobado. En
-   cambios visuales pequeños, revisa solo los componentes relacionados. Amplía la
-   revisión para Auth, routing, datos o cambios transversales según su alcance.
+1. Define el comportamiento aprobado y sus criterios de aceptación; identifica archivos y consumidores afectados.
+2. Identifica quién posee el estado o recurso (vista, proveedor compartido, hook de datos, backend). Distingue estado visual transitorio, datos persistidos y valores derivados.
+3. Revisa código actual, módulos reutilizables y operaciones existentes antes de introducir otra abstracción o dependencia.
+4. Revisa efectos, concurrencia, RLS y mutaciones destructivas cuando el cambio lo amerite. Para cambios visuales pequeños, limítate a sus componentes y estilos.
+5. Si un requisito contradice una regla posterior aprobada o existe una decisión abierta material, detén únicamente esa parte y reporta el conflicto; no inventes la solución.
 
-Distingue duplicación real, similitud visual o estructural, diferencias de dominio y
-mecanismos complementarios. Por ejemplo, SignUp y LogIn comparten `AuthPage` y
-Auth reutiliza `getSupabaseClient()`. `getSession()` aporta una lectura explícita y
-su posible error, mientras que la suscripción de Supabase emite `INITIAL_SESSION`
-y los cambios posteriores. Comprueba los efectos reales, incluidas las solicitudes
-HTTP, antes de consolidar mecanismos que se parecen.
-
-## Estado y operaciones asíncronas
-
-**El alcance de la coordinación debe corresponder al alcance del recurso afectado.**
-Conserva la visibilidad de contraseña y los mensajes de validación en el
-formulario. Coordina las operaciones sobre la sesión en el proveedor compartido y
-comparte datos entre vistas cuando tengan la misma fuente de verdad. Reserva
-Context para estado que deba compartirse.
-
-Revisa operaciones simultáneas, respuestas fuera de orden, navegación, desmontaje,
-cambio de cuenta y fallos. Elige el mecanismo que resuelva el caso concreto
-(cancelación, descarte de resultados obsoletos, serialización o bloqueo compartido)
-y justifica su alcance. Limpia suscripciones al desmontar y revierte actualizaciones
-optimistas si falla la mutación.
-
-**Caso de referencia — Autenticación compartida.** Si `/signup` y `/login` coordinan sus envíos únicamente mediante estados locales, cambiar de ruta puede permitir operaciones simultáneas sobre la misma sesión. Una respuesta tardía podría sobrescribir una autenticación más reciente.
-
-**Principio arquitectónico:** las operaciones que modifican un recurso compartido deben coordinarse en la capa responsable de ese recurso. En este caso, `AuthProvider`, utilizando un mecanismo común para ambas operaciones.
-
-Aplica este principio a otras funcionalidades con recursos compartidos, evaluando siempre si existe un riesgo real de concurrencia antes de introducir bloqueos o mecanismos adicionales.
+**Ejemplo de Auth:** SignUp y LogIn pueden compartir un formulario, pero `getSession()` y `onAuthStateChange` no son necesariamente operaciones redundantes: comprueba los eventos y lecturas reales antes de consolidarlas. Coordina escrituras y carreras de sesión en el `AuthProvider`, no con bloqueos locales independientes.
 
 ## Límites entre capas
 
-- **Interfaz.** Los componentes se ocupan de presentación, accesibilidad e
-  interacción. Cada módulo importa los estilos que usa o se apoya en estilos
-  compartidos explícitamente. Por ejemplo, Life debe poder mostrarse sin que
-  AuthPage haya cargado su CSS.
-- **Estado y coordinación.** Los hooks y Context aíslan el estado compartido.
-  Una vista obtiene los datos que necesita de su fuente, con independencia de
-  qué otra vista se haya visitado.
-- **Datos y servicios.** Los hooks y utilidades tipados encapsulan el acceso
-  externo. Mantén las consultas de Supabase fuera de los componentes visuales.
-- **Dominio.** Dedica funciones puras a fechas, progreso, Health y rachas.
-  Calcula los derivados desde los registros persistidos.
-- **Persistencia y autorización.** Supabase y PostgreSQL aplican RLS sobre datos
-  personales. Los guards de React Router controlan navegación y montaje de vistas.
-  Mantén el stack aprobado con Supabase como backend gestionado.
+- **UI:** presentación, formularios y accesibilidad; importa los estilos que utiliza, sin dependencia accidental del CSS de otras páginas.
+- **Estado:** borradores y menús locales en la vista correspondiente; recursos compartidos por usuario/escala en el estado o hook compartido adecuado. Evita Context nuevos salvo necesidad concreta.
+- **Datos:** Supabase y APIs externas se consultan desde hooks/utilidades tipados; jamás directamente desde un componente visual.
+- **Dominio:** funciones puras para fechas, progreso, Health y rachas. No guardar derivados como verdad adicional.
+- **Seguridad:** AuthProvider restaura sesión; ProtectedRoute controla navegación; Supabase RLS controla acceso real. Las mutaciones deben pertenecer al usuario autenticado.
 
-## Auth, routing y datos de ADHD Ladder
+## Invariantes de progreso v2.2 — revisar en todo cambio relacionado
 
-- Mantén un `AuthProvider` y usa `useAuth` para acceder a la sesión. En 03C agrupa
-  las rutas privadas bajo un guard reutilizable que distinga restauración pendiente,
-  error de restauración, ausencia de sesión y sesión válida. Cuando se implemente
-  la redirección de usuarios autenticados desde rutas públicas de Auth, decide
-  el destino en un solo lugar.
-- Cuando Life, Activities y Learning necesiten las mismas tareas y completados,
-  evalúa una fuente compartida por usuario. Activities y Learning comparten
-  componentes y mutaciones. Health conserva sus reglas y su acceso a datos propios.
-- Vincula las lecturas al usuario y a los parámetros relevantes, como la fecha.
-  Descarta resultados de la cuenta anterior. Una renovación del token por sí sola
-  no justifica volver a cargar las tareas.
-- Life agrega Activities y Learning. Health interviene en la racha según el dossier.
-  Usa el calendario local del navegador, conserva el historial al archivar y
-  garantiza que las tareas de ejemplo se creen una sola vez por cuenta.
-- Encapsula la API externa de frases en `quotesApi.ts` con `fetch()` y un proveedor
-  aprobado. Su carga y sus errores se gestionan de forma independiente de Supabase.
+La fuente de verdad son las **completaciones por tarea, usuario y fecha local**, no los contadores ni las tarjetas visibles.
 
-Incorpora hooks, servicios o capas cuando un caso concreto los necesite. Antes de
-proponer memoización (`useMemo`, `useCallback`, `React.memo`), cachés, librerías de
-estado, servicios genéricos o middleware, identifica el problema y el beneficio
-específico. Revisa primero consultas duplicadas, suscripciones, resultados
-obsoletos, estado redundante y cálculos derivados almacenados.
+```text
+activitiesToday = completaciones válidas Activities con completed_date === todayLocalDate
+learningToday   = completaciones válidas Learning   con completed_date === todayLocalDate
+lifeToday       = activitiesToday + learningToday
+
+activitiesTotal = completaciones válidas Activities con completed_date < todayLocalDate
+learningTotal   = completaciones válidas Learning   con completed_date < todayLocalDate
+lifeTotal       = activitiesTotal + learningTotal
+```
+
+- El día en curso **nunca** se incorpora a `Your total steps`. Un check/uncheck modifica hoy, **no** el histórico.
+- Una tarea se marca una sola vez por fecha local. No usar UTC crudo para construir `YYYY-MM-DD`; todas las páginas comparten la misma fecha de referencia.
+- Cambiar de fecha cambia la clasificación de registros, **no** los mueve, borra o duplica; no exigir cron a medianoche ni aplicación permanentemente abierta.
+- Life suma los valores de Activities y Learning; Health no aporta pasos y su SectionCard muestra un círculo de estado.
+- El histórico no depende de tareas activas. Renombrar/retirar tareas no debe destruir completaciones anteriores; revisar FKs, `ON DELETE`, RLS, filtros de tareas archivadas y cualquier `CASCADE` que amenace registros históricos. `archived_at` sigue siendo una opción técnica existente, no un texto de UI obligatorio.
+- **Caso abierto y bloqueante para eliminar una tarea marcada hoy:** no está aprobado si se conserva o revierte la completación de hoy. No implementes esta decisión sin el propietario. Tampoco uses borrado físico destructivo como fallback.
+- Si hay un denominador de avance diario, corresponde al número de tareas activas; **nunca** es el total histórico.
+- Health: tres metas diarias independientes con regla B calculada (ver dossier); racha basada en **días cerrados** y pasos/Health, no en `lifeTotal` ni en cambios de tarjetas.
+- Máximo cuatro tareas activas por Activities y Learning. Ocultar Delete Card con una sola tarea activa, conforme a la regla de la UI.
+
+### Casos de prueba imprescindibles para progreso
+
+- Marcar una tarea: +1 hoy, histórico intacto; desmarcar: −1 hoy, histórico intacto; doble marcado: no duplica.
+- Activities 0 y Learning 3 implican Life 3 (no Life 1).
+- Lunes histórico Activities 8 / Learning 12; lunes Learning marca 3: Life hoy 3, Life total 20. Martes: hoy 0, Activities total 8, Learning total 15, Life total 23.
+- Recargar o volver días después no debe sumar doble, perder completaciones ni requerir un evento de medianoche.
+- Cuentas separadas no comparten pasos; renombrar o retirar una tarea no altera pasos de días cerrados.
+- Health no agrega pasos; al cambiar de día se inicia sin checks, pero no necesariamente en rojo; racha se verifica separadamente.
+
+## Estado compartido, asincronía y lifecycle
+
+El alcance de cualquier coordinación debe coincidir con el del recurso que protege. Inspecciona concurrencia, cambios de ruta/cuenta, respuestas fuera de orden, desmontaje, carga y errores. Elige el mecanismo mínimo que resuelva el riesgo real: invalidación, descarte de respuestas obsoletas, cancelación, serialización o bloqueo en la capa propietaria. Limpia subscriptions y listeners; revierte mutaciones optimistas fallidas.
+
+- `getSession()` y la suscripción auth (`INITIAL_SESSION` y cambios posteriores) pueden complementarse: comprobar antes de refactorizar.
+- Life/Activities/Learning pueden necesitar una fuente compartida de tareas y completaciones por usuario/fecha; evitar consultas duplicadas innecesarias y resultados de la cuenta anterior.
+- Health usa datos propios (`health_checks`), aunque intervenga en rachas.
+- La renovación del token no implica por sí sola recargar todas las tareas.
+- La API externa de frases debe vivir en `quotesApi.ts` con `fetch()`, tipos verificados y estados de carga/error/vacío; mantenerla independiente de Supabase. Frases de ejemplo 06A no sustituyen su integración.
+
+## Seguridad y persistencia
+
+- RLS en todas las tablas personales; probar con dos cuentas que ninguna lee, actualiza, crea referencias cruzadas ni borra datos ajenos.
+- Cumplir unicidad `(task_id, completed_date)` y protección de referencias usuario-tarea. Verificar políticas y claves foráneas antes de modificar migraciones.
+- **No ejecutar** migraciones, operaciones destructivas ni cambios de esquema sin aprobación. Una modificación documental no implica que SQL ya se haya actualizado.
+- No introducir contadores históricos almacenados ni cambiar una relación para salvar una implementación provisional sin justificarlo y obtener autorización.
+- No filtrar secretos; `VITE_` solo para configuración pública del navegador.
+
+## Cambios visuales y rendimiento
+
+Conservar mockups, tokens, ilustraciones y comportamiento responsive existente. Distingue similitud estética de duplicación real. No toques páginas vecinas para ajustar un popup o CSS de una sola vista. Antes de memoizar (`useMemo`, `useCallback`, `React.memo`) o introducir librerías, identifica el problema, su alcance y beneficio observable.
 
 ## Limpieza de código y dependencias
 
-**Distingue el código muerto del código que aún no se utiliza.** Conserva el
-código con un uso futuro aprobado y documentado, aunque todavía carezca de
-consumidores. Para clasificar código como muerto, verifica su alcance, sus
-referencias y su uso real. Comprueba también los puntos de entrada, las API
-públicas, la configuración y las referencias dinámicas, incluidas las clases CSS.
+**No confundas código muerto con código futuro aprobado.** Revisa referencias, imports, clases CSS, puntos de entrada y consumidores reales, incluidos usos dinámicos. Elimina código muerto verificado **solo dentro del alcance** y después de comprobar regresiones. Ante consumidores inciertos, informa; ante refactors amplios, crea una recomendación en vez de ampliar silenciosamente la tarea.
 
-Al terminar un cambio, revisa los archivos tocados y sus dependencias directas.
-Busca imports, variables, funciones y componentes sin uso, código inalcanzable,
-ramas obsoletas, soluciones temporales ya sustituidas, estados redundantes y
-lógica duplicada. Comprueba los consumidores de estilos aparentemente huérfanos y
-de dependencias o archivos que el cambio pueda haber dejado obsoletos.
+## Verificación y prioridades
 
-- **Código muerto comprobado.** Elimínalo durante la tarea si está dentro del
-  alcance y puedes verificar que se conserva el comportamiento aprobado.
-- **Consumidores inciertos.** Reporta el hallazgo y solicita revisión antes de
-  eliminarlo.
-- **Refactorización amplia.** Regístrala como recomendación para la tarea
-  correspondiente.
+Revisa el diff, archivos afectados, reutilización y corrección. Ejecuta checks adecuados a la tarea; para carreras, reproduce el orden de eventos relevante. Reporta exclusivamente las pruebas ejecutadas.
 
-Consolida lógica cuando las piezas compartan responsabilidad y la solución sea
-más clara. Limita la revisión al cambio y sus dependencias directas. En la
-entrega, indica qué retiraste, por qué y cómo verificaste el comportamiento, o
-indica brevemente que la revisión del alcance no detectó código muerto.
+- **P0:** filtración de datos, pérdida de historial, duplicación de pasos, contadores con hoy dentro del total, mutaciones que mezclan usuarios u otros defectos que impiden el MVP.
+- **P1:** funcionalidad, accesibilidad y casos de negocio requeridos en la tarea correspondiente.
+- **P2:** pulido y optimizaciones no necesarios para la entrega.
 
-## Validación y prioridad
-
-Revisa reutilización, alcance del estado, limpieza de efectos, dependencias
-accidentales y comportamiento de los consumidores relacionados. Ejecuta las
-comprobaciones pertinentes. Para dar una carrera por corregida, prueba la secuencia
-que la provoca, incluidas respuestas fuera de orden cuando corresponda.
-
-- **P0 · Bloqueante.** Problema comprobado de seguridad, corrección o integridad
-  del estado que impide aprobar la implementación actual.
-- **P1 · Necesario en la tarea correspondiente.** Resuélvelo al implementar la
-  funcionalidad relacionada.
-- **P2 · Opcional.** Mejora de calidad o rendimiento que no bloquea el MVP.
-
-Reporta los hallazgos relevantes, su prioridad y las comprobaciones realizadas.
+No crear ramas, commits, push, merges ni modificar `main` sin aprobación del propietario. Terminar indicando archivos tocados, resultados y asuntos abiertos.

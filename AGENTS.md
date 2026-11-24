@@ -1,58 +1,54 @@
-# ADHD Ladder — AI development instructions
+# ADHD Ladder — AI development instructions (aligned with dossier v2.2)
 
-## Role and authority
-- Act as an implementation assistant for a TripleTen final project. The project owner approves product decisions and integration; do not silently expand scope.
-- Follow approved requirements in `docs/dossier.md` and the schedule in `docs/plan-de-trabajo.md`. For visual work, use `docs/design/paleta-colores.md`, `src/styles/variables.css`, and the **relevant** mockup in `docs/design/mockups/`.
-- Source precedence: explicit latest instruction from the owner > approved decisions marked `[DECIDIDO]` in the dossier > current plan > implementation proposals `[PROP]`. Treat `[ABIERTO]` as undecided; ask before making consequential choices.
-- Read only the relevant documentation sections for the current task; do not repeatedly load the full dossier or all mockups. Do not treat mockups as proof of implemented behavior.
+## Role, authority and source of truth
+- Assist with a TripleTen final project; the owner approves product rules, scope and integration. Do not silently expand scope or invent behavior.
+- **Precedence:** owner's latest explicit instruction > `[DECIDIDO]` rules in `docs/dossier.md` v2.2 > `docs/plan-de-trabajo.md` > `[PROP]` proposals. `[ABIERTO]` is unresolved, not permission to choose.
+- The dossier is the **complete normative product specification**. The plan is a schedule, not a second set of business rules. This file is an operational guide, not a competing definition.
+- Read the dossier sections relevant to a task. For UI changes, use the relevant `docs/design/mockups/` image, `docs/design/paleta-colores.md` and `src/styles/variables.css`. Mockups and reports do not establish that functionality has been tested.
+- Historic statements in the dossier or plan do not override the latest normative rules. Report contradictions before implementing.
 
 ## Stack and delivery scope
-- Vite + React + TypeScript; React Router; semantic HTML; CSS with Flex/Grid and mobile-first layout.
-- Supabase Auth + PostgreSQL with Row Level Security (RLS) for persistence. No custom Express/Node API or MongoDB; this submission is **TripleTen Stage 1** only.
-- A **separate third-party quotes API** must be called with `fetch()` in `src/utils/quotesApi.ts`, with typed data and visible loading, error and empty states on the Life page. The provider is not yet approved; do not assume DummyJSON is confirmed.
-- Prioritize a deployed, functional Stage 1 application and the `stage-frontend` → `main` pull request before November 30, 2026. The plan targets PR submission November 28–29.
+- Vite, React, TypeScript, React Router, semantic HTML, CSS Grid/Flex and responsive design from 320px.
+- Supabase Auth + PostgreSQL with RLS for user data. **Stage 1 only**; no custom Express/Node server, MongoDB or home-built JWT system.
+- A **separate third-party quotes API** must be called using `fetch()` in `src/utils/quotesApi.ts`; type its verified response and handle loading, empty, error and retry states. The current local sample quotes do not satisfy this requirement; provider selection remains open until verified.
+- Target: deployed usable application with README and PR from `stage-frontend` to `main` before November 30, 2026; aim for November 28–29.
 
-## Project structure
-- Pages: Landing, About, SignUp, LogIn, Life, Health, Activities and Learning in `src/pages/`.
-- Reusable UI in `src/components/`; session state in `src/context/`; data access in `src/hooks/` and `src/utils/`; shared interfaces in `src/types/`; constants in `src/config/`; styling in `src/styles/`; production images in `src/images/`; SQL migrations in `supabase/migrations/`.
-- Do not make UI components query Supabase directly. Use typed hooks/utilities. Keep progress, dates, Health and streak calculations in testable pure functions.
-- Reuse task components for Activities and Learning. Use unique stable IDs as React keys; do not use array indices.
+## Project structure and architecture
+- Pages: Landing, About, SignUp, LogIn, Life, Health, Activities, Learning (`src/pages/`). Shared UI belongs in `src/components/`, auth/shared state in existing `src/context/` or authorized shared hooks, data access in `src/hooks/` or `src/utils/`, types in `src/types/`, constants in `src/config/`, CSS in `src/styles/`, images in `src/images/`, SQL migrations in `supabase/migrations/`.
+- **Never query Supabase directly from visual components.** Use typed data hooks and utilities; derive progress, Health color, local dates and streaks in testable pure functions.
+- Reuse the task UI and mutations for Activities/Learning; use stable unique IDs as keys, never list indices. Use the existing code and approved patterns rather than creating duplicate providers, hooks or systems.
+- Apply `.agents/skills/architecture-guardian/SKILL.md` to changes in shared state, business rules, data access, async operations, auth or routing. Limit analysis to affected modules and dependencies.
 
-## Architecture consistency
-- Use `.agents/skills/architecture-guardian/SKILL.md` when planning and reviewing changes to logic, state, data access, routing, or architecture.
-- Identify the owner of each responsibility, distinguish local UI state from shared resources, and look for reusable code before creating an equivalent implementation.
-- Check relevant async operations for races, stale responses, and cleanup. Keep dependencies explicit and add abstractions only when the current task demonstrates a need.
-- Limit the review to affected modules and their dependencies. Follow approved dossier decisions and the scope authorized by the project owner.
+## Approved counter rules — v2.2, mandatory
+- **Steps:** only completions of Activities or Learning tasks count. Health NEVER adds steps to Life, Activities or Learning.
+- **Today:** `activitiesToday` and `learningToday` count each respective user's completions where `completed_date === todayLocalDate` (local browser calendar day as `YYYY-MM-DD`). `lifeToday = activitiesToday + learningToday`. The Life section cards display the corresponding numerical ladder counts, not one point per section card.
+- Checking a task records at most one completion **per task per local day** and adds +1 today; unchecking today removes that day's completion and subtracts 1. No duplicates or negative counters; past days are not affected by today's unchecking.
+- **Historical totals:** `activitiesTotal` and `learningTotal` count ONLY completions with `completed_date < todayLocalDate`. `lifeTotal = activitiesTotal + learningTotal`. The ongoing day is EXCLUDED even if tasks are checked. Checking/unchecking today NEVER changes totals for previous days.
+- At the next local calendar date, yesterday's completion records naturally qualify as historical; today's checkboxes start unchecked and today's counts at 0 if there are no records for the new date. **Do not delete/move yesterday's records; do not add an incrementing lifetime counter or require a midnight cron job.** Reopening after multiple days must not duplicate anything.
+- Do not confuse the `Your steps today` numerator with a separate fraction's denominator (active tasks), and never compute historical totals by counting currently visible task cards.
+- Dates must be based on the **browser's local calendar date**, not raw `new Date().toISOString().slice(0,10)` or a hard-coded timezone. Keep date handling coherent across all views.
+- Historical completions must survive renaming or removing a task from the active list. **No physical deletion/cascade that destroys history.** Existing `archived_at` is the proposed storage mechanism; `Delete Card` is the UI label, not permission for hard-delete.
+- **OPEN PRODUCT DECISION:** removing a task *already checked today* before the day closes. Do not invent whether today's check remains or is reversed. Resolve with owner before implementing persistent deletion/archiving that affects this case.
 
-## Approved business rules — do not change implicitly
-- Health has three fixed daily checks: Good Nutrition, Good Sleep and Daily Movement. Health does **not** add steps to Life.
-- Life today = completed Activities tasks today + completed Learning tasks today; lifetime Life total combines completions from these two ladders. Each ladder also has its own daily and lifetime total.
-- Each task may be completed once per **local calendar day**. Unchecking today reverses today's count; prior-day history remains. Handle dates using the browser's local day, not raw UTC `toISOString()`.
-- New accounts receive the six example tasks listed in the dossier **once only**. Archiving hides a task but preserves completion history and lifetime totals; hard-delete is only a documented time-pressure fallback requiring approval.
-- Health color logic: 3 checks = green; 1–2 = yellow; 0 = yellow if yesterday had any checks, red if yesterday also had 0, and yellow on the first account day. Always pair color with text; never represent medical assessment.
-- Streaks are calculated for closed days: a day with >=1 Activities/Learning step adds one; a day with zero steps may preserve the streak if Health is green/yellow and the previous day had steps; consecutive no-step days or no-step day with red Health resets it. Follow the dossier for edge cases; flag ambiguous sequences rather than inventing rules.
-- Do not store derived counters or Health color as independent sources of truth.
+## Other approved business rules
+- Maximum **4 active tasks** per Activities/Learning. A new account receives the six named example tasks from the dossier once only; do not recreate them on later visits. With one active task, Settings hides `Delete Card`; still support an empty list state if encountered.
+- Health has exactly three daily checks: Good Nutrition, Good Sleep, Daily Movement; new local day has no checks until recorded. **Rule B:** 3 today -> green; 1–2 -> yellow; 0 -> yellow if yesterday had any check, red if yesterday also had zero, yellow on first account day. Pair semaphoric colors with explanatory text; never imply medical assessment.
+- The Health indicator in Life is a colored semantic circle, not a step check.
+- Streak evaluates **closed days only**. A day with at least one Activities/Learning step increments; zero steps may hold if Health was green/yellow and previous day had steps; two consecutive zero-step days or zero steps with red Health reset. Consult the dossier's exact cases; don't conflate streak with historical total or days since signup.
+- 06A includes *temporary UI behavior* (username/title edits in React, popups, Health checkboxes, quotes example by local date); do not treat it as persisted data or a real quotes API. Preserve draft-close/cancel/submit behavior and previously approved responsive composition.
+- Derived counters and Health color are **not independently persisted sources of truth**.
 
-## Security and correctness
-- Enable and test RLS for **all** user-owned tables; test that two separate accounts cannot read or mutate each other's data, including completion references.
-- Keep user-owned records attached to the authenticated user. Use the `task_completions` uniqueness rule and cross-user FK protections described in the dossier when implementing SQL.
-- Only browser-safe Supabase public configuration may use `VITE_` variables. Never expose `service_role`, secret keys, credentials or `.env` contents; do not commit `.env`.
-- Authentication must support sign-up, sign-in, sign-out, session restoration and private-route redirects; React route guards are not substitutes for RLS.
-- Treat Supabase/quotes failures explicitly. Roll back optimistic updates when mutations fail. Avoid destructive database operations without explicit approval.
+## Security, async behavior and correctness
+- RLS must protect every user-owned table. Test account A vs B, including completion foreign-key cross-user attempts and all relevant CRUD operations.
+- Use the approved unique task/date completion constraint and composite user/task reference. Review migrations and cascade actions before changes; the existing SQL may require follow-up work to enforce v2.2 history preservation. Do not run migrations, delete databases or alter schemas without authorization.
+- Never expose `service_role`, passwords or secret keys in client code, `VITE_` variables, repo or chat. Public Supabase config may be exposed through `VITE_`. Keep `.env` untracked and `.env.example` sanitized.
+- Support sign up, sign in, sign out, session restoration and private-route redirects; UI route guards do not provide data security.
+- Coordinate mutations of shared resources in their owning layer; avoid races, stale responses across navigation/account changes and leaked effects; roll back failed optimistic updates. Handle Supabase and quotes errors.
 
-## Design, accessibility and TripleTen criteria
-- Follow approved mockups and `variables.css`; keep backgrounds/gradients in CSS, text and buttons in HTML, optimized illustration in WebP, icons in SVG where possible.
-- Ensure responsive behavior down to **320px**, without horizontal overflow or hiding overflow as a workaround. Use accessible labels, keyboard support, focus states and meaningful image alt text.
-- Maintain `npm run dev`, `npm run build` and `npm run lint`. Keep at least `/` and `/about` reachable with React Router; configure deployment to avoid 404 on refresh.
-- Keep `README.md` accurate, including technologies and deployment URL when available. Follow the Stage 1 checklist in the dossier before PR submission.
-
-## Working style — small, reviewable changes
-1. Before editing, state a short plan: goal, affected files and how success will be checked.
-2. Work on **one requested task**; inspect only relevant files; prefer minimal changes. Do not install dependencies, redesign screens or add features without permission.
-3. Do not create branches, commit, push, merge or modify `main` unless explicitly requested. If asked to use feature branches, target `stage-frontend` for review, not `main`.
-4. After editing, run focused checks and, when practical, `npm run build` and `npm run lint`. Report commands actually run and results; never claim unrun tests passed.
-5. Finish with: files changed, brief explanation, verification results, any open questions or blockers. Stop for review before starting another feature.
-
-## Current priorities
-- Use `docs/plan-de-trabajo.md` for task order; do not assume checkboxes are complete without verifying the repository.
-- Preserve the November 24 Auth/RLS checkpoint and time-box optional polish. Never cut RLS, third-party API integration, required routes, deploy or the final PR to save time.
+## UX, verification and delivery
+- Honor mockups, palette, typography, WebP illustrations and existing CSS. Use real accessible buttons/links/labels; keyboard, focus, responsive width >=320px. Do not hide horizontal overflow to mask layout defects.
+- Prefer the smallest safe change; no unrelated redesign, extra dependencies or broad refactoring. Review affected files and their direct consumers for regressions and dead code.
+- Before editing: identify goal, files, relevant rules and verification. After editing: run appropriate focused checks and where applicable `npm run build`, `npm run lint`, `npm run format:check`, `git diff --check`. Report **only actually executed** tests.
+- **Do not create branches, commit, push, merge or modify `main` without explicit owner authorization.** Do not assume checked-off work exists without inspecting current local code. Local unpushed changes take precedence over remote snapshots for implementation.
+- Finish with changed files, behavior, verification and blockers. Stop before starting another feature.
+- Non-negotiable final checks: real third-party quote via fetch, Supabase persistence, RLS isolation with two accounts, accessibility, deployment without SPA refresh 404, full README and a PR delivered by deadline.
