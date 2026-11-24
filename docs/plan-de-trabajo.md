@@ -34,6 +34,15 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 **Completado por aprobación visual del propietario.** La aprobación de las páginas actuales cierra las regresiones reportadas de la ilustración de Life y el globo de nombre en móvil como objetivos de esta sección.
 
+#### 06A.1-DROPDOWN-01 · Cierre del selector de escaleras por clic exterior
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Cerrar `LadderSelector` al hacer clic fuera y conservar el comportamiento del selector y de los popups existentes.
+- **Aceptación** — El mouse y el toque exterior cierran el selector. Escape, pulsar de nuevo el control y elegir una opción conservan su comportamiento. Un clic interior sin selección mantiene el menú abierto. El listener se retira al desmontar. Build, lint y formato pasan. La verificación visual corresponde al propietario.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Build, lint y formato pasaron. En Edge sin interfaz, el código anterior reprodujo el fallo de clic exterior y el ajuste pasó las comprobaciones de cierre, selección y retirada del listener con eventos simulados. Quedan pendientes la revisión visual y la comprobación en pantalla táctil física.
+- **Commit propuesto** — `fix(navigation): close ladder dropdown on outside click`.
+
 ### B. Cierre de la decisión abierta que bloquea CRUD destructivo
 
 - [ ] Pedir decisión al propietario para el único caso pendiente: **una tarea completada hoy que se elimina/retira hoy**. Debe definirse si la completación de hoy sobrevive y cuenta mañana o se revierte hoy.

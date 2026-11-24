@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Link, useMatch } from 'react-router'
 import './LadderSelector.css'
 
@@ -11,6 +12,24 @@ const destinations = {
 export default function LadderSelector() {
   const match = useMatch('/:ladder')
   const slug = match?.params.ladder?.toLowerCase()
+  const selectorRef = useRef<HTMLDetailsElement>(null)
+
+  useEffect(() => {
+    function closeOnOutsideClick(event: MouseEvent) {
+      const selector = selectorRef.current
+      if (
+        selector?.open &&
+        event.target instanceof Node &&
+        !selector.contains(event.target)
+      ) {
+        selector.open = false
+      }
+    }
+
+    document.addEventListener('click', closeOnOutsideClick, true)
+    return () =>
+      document.removeEventListener('click', closeOnOutsideClick, true)
+  }, [])
 
   if (
     slug !== 'life' &&
@@ -23,6 +42,7 @@ export default function LadderSelector() {
   return (
     <details
       key={slug}
+      ref={selectorRef}
       className="ladder-selector"
       onKeyDown={(event) => {
         const selector = event.currentTarget
