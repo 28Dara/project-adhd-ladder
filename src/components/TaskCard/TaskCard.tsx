@@ -1,5 +1,4 @@
 import { useId, useRef } from 'react'
-import type { TaskPreview } from '../../config/ladderPreviews'
 import '../../styles/ladder-cards.css'
 import type { TaskNameEdit } from '../../types/task'
 import EditBubble from '../LadderPopup/EditBubble'
@@ -10,7 +9,8 @@ import './TaskCard.css'
 export type TaskPopup = 'settings' | 'rename' | 'archive'
 
 interface TaskCardProps {
-  task: TaskPreview
+  title: string
+  completed: boolean
   nameEdit?: TaskNameEdit
   canArchive: boolean
   popup?: TaskPopup
@@ -20,7 +20,8 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({
-  task,
+  title: taskTitle,
+  completed,
   nameEdit,
   canArchive,
   popup,
@@ -32,7 +33,7 @@ export default function TaskCard({
   const archiveTitleId = useId()
   const archiveDescriptionId = useId()
   const settingsTrigger = useRef<HTMLButtonElement>(null)
-  const title = nameEdit?.title ?? task.title
+  const title = nameEdit?.title ?? taskTitle
 
   function closePopup() {
     if (popup) onClosePopup(popup)
@@ -50,7 +51,7 @@ export default function TaskCard({
         <input
           className="ladder-check"
           type="checkbox"
-          checked={task.completed}
+          checked={completed}
           disabled
         />
         <span className="task-card__title">{title}</span>

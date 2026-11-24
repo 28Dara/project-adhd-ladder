@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router'
 import Footer from '../components/Footer/Footer'
-import { ladderPreviews } from '../config/ladderPreviews'
 import About from '../pages/About/About'
 import Health from '../pages/Health/Health'
 import LadderPage from '../pages/LadderPage/LadderPage'
@@ -26,11 +25,11 @@ export default function App() {
             <Route path="/health" element={<Health />} />
             <Route
               path="/activities"
-              element={<LadderPage preview={ladderPreviews.activities} />}
+              element={<LadderPage ladder="activities" />}
             />
             <Route
               path="/learning"
-              element={<LadderPage preview={ladderPreviews.learning} />}
+              element={<LadderPage ladder="learning" />}
             />
           </Route>
         </Route>

@@ -3,17 +3,26 @@ import { Link } from 'react-router'
 import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
 import LadderTooltip from '../../components/LadderPopup/LadderTooltip'
 import TaskCard, { type TaskPopup } from '../../components/TaskCard/TaskCard'
-import type { LadderPreview } from '../../config/ladderPreviews'
+import { ladderSummaryPreviews } from '../../config/ladderPreviews'
 import { useLadderSession } from '../../hooks/useLadderSession'
+import { useLocalDateKey } from '../../hooks/useLocalDateKey'
+import { useTasks } from '../../hooks/useTasks'
+import type { TaskLadder } from '../../types/task'
 import '../../styles/ladder-cards.css'
 import './LadderPage.css'
 
 const MAX_ACTIVE_TASKS = 4
 
-export default function LadderPage({ preview }: { preview: LadderPreview }) {
-  const { todaySteps, totalSteps, daysOnLadder, joinedOn, tasks } = preview
+export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
+  const { todaySteps, totalSteps, daysOnLadder, joinedOn } =
+    ladderSummaryPreviews[ladder]
+  const { tasks, completions } = useTasks()
   const { taskNames, updateTaskName } = useLadderSession()
+  const today = useLocalDateKey()
   const [popup, setPopup] = useState<{ taskId: string; mode: TaskPopup }>()
+  const activeTasks = tasks.filter(
+    (task) => task.ladder === ladder && task.archived_at === null,
+  )
 
   return (
     <main className="ladder-page">
@@ -36,7 +45,7 @@ export default function LadderPage({ preview }: { preview: LadderPreview }) {
               </svg>
             </div>
             <p className="ladder-card__pill">
-              {todaySteps} of {tasks.length} completed
+              {todaySteps} of {activeTasks.length} completed
             </p>
           </section>
 
@@ -61,12 +70,16 @@ export default function LadderPage({ preview }: { preview: LadderPreview }) {
 
         <section className="ladder-page__tasks" aria-label="Tasks">
           <ul className="ladder-page__task-list">
-            {tasks.map((task) => (
+            {activeTasks.map((task) => (
               <TaskCard
                 key={task.id}
-                task={task}
+                title={task.title}
+                completed={completions.some(
+                  ({ task_id, completed_date }) =>
+                    task_id === task.id && completed_date === today,
+                )}
                 nameEdit={taskNames[task.id]}
-                canArchive={tasks.length > 1}
+                canArchive={activeTasks.length > 1}
                 popup={popup?.taskId === task.id ? popup.mode : undefined}
                 onOpenPopup={(mode) => setPopup({ taskId: task.id, mode })}
                 onClosePopup={(mode) =>
@@ -79,7 +92,7 @@ export default function LadderPage({ preview }: { preview: LadderPreview }) {
                 onNameEdit={(edit) => updateTaskName(task.id, edit)}
               />
             ))}
-            {tasks.length < MAX_ACTIVE_TASKS && (
+            {activeTasks.length < MAX_ACTIVE_TASKS && (
               <li className="ladder-page__add-slot" role="presentation">
                 <div className="ladder-page__add-control ladder-tooltip__anchor">
                   <button

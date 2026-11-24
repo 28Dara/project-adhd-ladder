@@ -18,9 +18,8 @@
 |---|---|---|
 | Setup, rutas y maquetación Etapa 05 | Realizada/revisada parcialmente en local según reportes anteriores | Build, lint y prueba visual final de las cuatro escaleras |
 | Auth y rutas privadas | Implementación reportada, con flujos React/Supabase | Verificar registro, login, logout, restauración y redirects con cuenta real |
-| 06A popups | Codex reportó edición temporal, tooltips, menus, Health clicable y quote local | Reproducir comportamiento y corregir regresiones 06A.1 |
-| Ilustración Life en tablet/móvil | Regresión reportada | Corregir separación vertical con frase oculta/revelada |
-| Globo de username en móvil | Regresión reportada | Centrar cuerpo en viewport y mantener punta hacia el lápiz |
+| 06A popups | Edición temporal, tooltips, menús, Health clicable y quote local | Comprobaciones funcionales en QA |
+| 06A.1 visual | Páginas actuales aprobadas visualmente por el propietario | Cerrado por el propietario |
 | Supabase, SQL y RLS | Migraciones planeadas/escritas; aplicación y pruebas cruzadas no certificadas | Revisar esquema y RLS, aplicar con autorización, probar dos cuentas |
 | CRUD de tareas y checks persistidos | Pendiente por verificar/implementar | Crear, renombrar, retirar, marcar y desmarcar con persistencia |
 | Contadores v2.2 | Nueva regla documental aprobada; no asumir código actualizado | Implementar y probar hoy vs días cerrados sin duplicados |
@@ -33,11 +32,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 ### A. Cierre de regresiones visuales 06A.1
 
-- [ ] Corregir la separación vertical excesiva de la ilustración en Life bajo `64rem`; investigar layout / cambio de altura de quote, no tapar con márgenes negativos.
-- [ ] Centrar el **cuerpo** del globo de nombre respecto al viewport móvil; permitir que la punta se alinee **independientemente** con el lápiz.
-- [ ] Revisar 320, 375, 640, 768, 1024, 1280 y 1440 px en las vistas afectadas; conservar páginas no afectadas.
-
-**Cierre:** comportamiento de popups intacto, Life correcto antes y después de revelar quote, sin overflow; comprobaciones adecuadas pasan.
+**Completado por aprobación visual del propietario.** La aprobación de las páginas actuales cierra las regresiones reportadas de la ilustración de Life y el globo de nombre en móvil como objetivos de esta sección.
 
 ### B. Cierre de la decisión abierta que bloquea CRUD destructivo
 
@@ -56,7 +51,18 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 **Cierre:** persistencia real y RLS comprobadas en dos cuentas, sin pérdida de historial.
 
-### D. 06B — CRUD y casillas persistentes (P0)
+### D. 06B — Frontend funcional y persistencia (P0)
+
+#### 06B-01 · Fuente compartida de tareas y completaciones
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Dar a Activities y Learning acceso al mismo estado de tareas y completaciones provisionales tipadas, disponible para Life en un objetivo posterior. El frontend provisional de este objetivo precede a la conexión con Supabase.
+- **Aceptación** — Cada ruta puede leer los datos al entrar directamente. Cada tarea tiene identidad estable por cuenta y una escalera. Cada completación identifica su tarea y fecha local. Diseño 06A conservado, estado en memoria y contrato reutilizable con Supabase. Build, lint y formato pasan.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Build, lint y formato pasaron. Una prueba de renderizado de rutas directas y de los datos provisionales comprobó los checks deshabilitados, las identidades estables, la separación por cuenta y la fecha local. La revisión visual corresponde al propietario.
+- **Commit propuesto** — `feat(ladders): establish shared task state`.
+
+#### CRUD y casillas persistentes
 
 - [ ] Crear tareas hasta cuatro activas por escalera; reutilizar TaskCard y componentes de Activities/Learning; validar título.
 - [ ] Renombrar tareas y conservar identidad; la interfaz React 06A no equivale a una mutación persistente.

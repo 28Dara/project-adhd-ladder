@@ -5,6 +5,7 @@ import Header from '../components/Header/Header'
 import LadderSelector from '../components/LadderSelector/LadderSelector'
 import RoutePanel from '../components/RoutePanel/RoutePanel'
 import { EXAMPLE_QUOTES } from '../config/exampleQuotes'
+import { createExampleTaskData } from '../config/exampleTasks'
 import { useAuth } from '../hooks/useAuth'
 import type { LadderSession } from '../hooks/useLadderSession'
 import { getLocalDateKey } from '../utils/dates'
@@ -87,11 +88,13 @@ function PrivateLayout({
   onLogout: () => void
 }) {
   const [displayName, setDisplayName] = useState<string>()
+  const [taskData] = useState(() => createExampleTaskData(user.id, new Date()))
   const [taskNames, setTaskNames] = useState<LadderSession['taskNames']>({})
   const [dailyQuote, setDailyQuote] = useState<LadderSession['dailyQuote']>()
   const isSigningOut = logout.status === 'pending'
 
   const ladderSession: LadderSession = {
+    taskData,
     taskNames,
     updateTaskName: (id, edit) =>
       setTaskNames((names) => ({ ...names, [id]: edit })),
