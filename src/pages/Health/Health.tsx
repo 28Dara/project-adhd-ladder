@@ -2,15 +2,14 @@ import { Link } from 'react-router'
 import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
 import {
   HEALTH_GOALS,
-  HEALTH_PREVIEW_STATUS,
-  HEALTH_PREVIEW_STATUSES,
+  HEALTH_STATUS_MESSAGES,
 } from '../../config/healthPreview'
 import { useHealth } from '../../hooks/useHealth'
 import '../../styles/ladder-cards.css'
 import './Health.css'
 
 export default function Health() {
-  const { todayCheck, setHealthGoal } = useHealth()
+  const { todayCheck, setHealthGoal, status } = useHealth()
 
   return (
     <main className="health">
@@ -24,9 +23,9 @@ export default function Health() {
               Health Status
             </h1>
             <div
-              className={`health__indicator ladder-health-tone--${HEALTH_PREVIEW_STATUS.tone}`}
+              className={`health__indicator ladder-health-tone--${status.tone}`}
               role="img"
-              aria-label={HEALTH_PREVIEW_STATUS.message}
+              aria-label={status.message}
             >
               <svg aria-hidden="true" viewBox="0 0 42 65">
                 <path d="M33 16 15 5M25 32H5M29 48 14 59" />
@@ -39,13 +38,11 @@ export default function Health() {
           </section>
           <div className="ladder-card health__legend-card">
             <ul className="health__legend" aria-label="Goal status guide">
-              {HEALTH_PREVIEW_STATUSES.map(({ tone, message }) => (
+              {Object.entries(HEALTH_STATUS_MESSAGES).map(([tone, message]) => (
                 <li
                   key={tone}
                   className={`health__legend-item ladder-health-tone--${tone}`}
-                  aria-current={
-                    tone === HEALTH_PREVIEW_STATUS.tone ? true : undefined
-                  }
+                  aria-current={tone === status.tone ? true : undefined}
                 >
                   <span className="health__light" aria-hidden="true" />
                   <span>{message}</span>

@@ -2,8 +2,8 @@ import { Link } from 'react-router'
 import LadderArtwork from '../../components/LadderArtwork/LadderArtwork'
 import LadderTooltip from '../../components/LadderPopup/LadderTooltip'
 import { lifePreview } from '../../config/lifePreview'
+import { useHealth } from '../../hooks/useHealth'
 import { useLadderSession } from '../../hooks/useLadderSession'
-import { useLocalDateKey } from '../../hooks/useLocalDateKey'
 import { useTasks } from '../../hooks/useTasks'
 import { getLadderProgress } from '../../utils/progress'
 import '../../styles/ladder-cards.css'
@@ -11,14 +11,20 @@ import './Life.css'
 
 export default function Life() {
   const { dailyQuote, revealQuote } = useLadderSession()
-  const date = useLocalDateKey()
+  const { today: date, status: healthStatus } = useHealth()
   const taskData = useTasks()
   const quote = dailyQuote?.date === date ? dailyQuote.quote : undefined
   const { streakDays, daysOnLadder, joinedOn } = lifePreview
   const progress = getLadderProgress(taskData, date)
   const { todaySteps, totalSteps } = progress.life
   const ladders = lifePreview.ladders.map((section) => {
-    if ('path' in section) return section
+    if ('path' in section) {
+      return {
+        ...section,
+        tone: healthStatus.tone,
+        caption: healthStatus.message,
+      }
+    }
 
     const steps = progress[section.ladder].todaySteps
     return {

@@ -114,7 +114,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06B-05 · Retiro de tareas en memoria (P0)
 
-- **Estado** — Completado y aprobado por el propietario.
+- **Estado** — Completado, aprobado y commiteado por el propietario.
 - **Objetivo y alcance** — Habilitar la confirmación existente de `Delete Card` en Activities y Learning y retirar tarjetas según el dossier §02.6. El estado se mantiene en memoria por cuenta.
 - **Aceptación** — Confirmar archiva y quita solo la completación de hoy. Cancel, Escape y clic exterior conservan la tarjeta. El histórico sigue disponible, el retiro libera espacio en su escalera y la operación protege la última tarjeta activa ante solicitudes consecutivas. Una tarjeta nueva con el mismo nombre empieza desmarcada y recibe un ID propio. Navegación, contadores, aislamiento entre cuentas y Health se verifican dentro del flujo afectado.
 - **Skills** — `architecture-guardian` y `ub-mode`.
@@ -164,8 +164,16 @@ lifeTotal       = activitiesTotal + learningTotal
 
 ### F. Health, racha y días desde alta (P0/P1 según dossier)
 
-- [ ] **06B-06B · Semáforo de Health mediante regla B (P1) — Pendiente.** Derivar el semáforo de los registros de 06B-06A y verificar los casos de hoy, ayer y primer día según el dossier §02.7. Skills: `architecture-guardian` y `ub-mode`. Commit propuesto: `feat(health): derive status from daily checks`.
-- [ ] Health no aporta pasos a Life. Semáforo de Health en Life = círculo de color con texto accesible; no marca de tarea.
+#### 06B-06B · Semáforo de Health mediante regla B (P1)
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Derivar el semáforo compartido de Health y Life a partir de los registros diarios de 06B-06A y la fecha de alta de Auth. Aplicar la regla B del dossier §02.7 con fechas calendario locales.
+- **Aceptación** — Ambas rutas muestran el mismo color y texto, incluso al entrar directamente a Life. Los checks y el cambio de fecha actualizan el resultado. El estado queda derivado y separado de los pasos. El diseño conserva el indicador circular.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Pasaron build, lint y formato. Las pruebas del cálculo cubrieron 162 combinaciones y límites del calendario local. Edge sin interfaz verificó acceso directo a Life, marcación y desmarcación, navegación, cambio de fecha, historial, aislamiento de cuentas e independencia de los pasos. La revisión visual corresponde al propietario.
+- **Commit propuesto** — `feat(health): derive daily health status`.
+
+#### Racha y días desde alta
 - [ ] Racha de **días cerrados** conforme a la sección 02.8 del dossier; no derivarla de `lifeTotal`. Días desde alta es otra métrica.
 - [ ] Casos de cero pasos, dos días consecutivos, primer día y retorno después de varios días.
 
