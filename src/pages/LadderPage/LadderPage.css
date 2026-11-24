@@ -119,12 +119,13 @@
 
 .ladder-page__add-slot {
   display: grid;
-  justify-items: center;
+  place-items: center;
 }
 
 .ladder-page__add-control {
   display: grid;
   width: 30%;
+  block-size: var(--ladder-task-height);
 }
 
 .ladder-page__add {

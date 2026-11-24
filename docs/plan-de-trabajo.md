@@ -52,6 +52,15 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 - **Verificación técnica** — Build, lint y formato pasaron. En Edge sin interfaz se reprodujo la X anterior y se comprobaron los estilos de ambos estados, las dimensiones y la posición al marcar, el foco visible y el clic en la etiqueta.
 - **Commit propuesto** — `fix(health): simplify checkbox visual states`.
 
+#### 06A.1-ADD-CARD-01 · Dimensiones del botón de alta tras el retiro (P1)
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Centrar el botón de alta en su espacio y conservar su ancho y altura responsive base en el CSS compartido de Activities y Learning.
+- **Aceptación** — De cero a tres tarjetas, el botón conserva sus dimensiones a cada ancho y queda centrado en ambos ejes. Con cuatro tarjetas se mantiene oculto. Las tarjetas y los popups conservan su geometría y comportamiento.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Pasaron build, lint y formato. En Edge sin interfaz se comprobaron cero a cuatro tarjetas en ambas rutas a 320, 375, 640, 768, 1024, 1280 y 1440 px. Se verificaron dimensiones, centrado, ausencia de overflow horizontal, geometría de tarjetas y anclaje y cierre del popup con retorno de foco. La revisión visual corresponde al propietario.
+- **Commit propuesto** — `fix(ladders): preserve add card button dimensions`.
+
 ### B. Decisiones aprobadas sobre el retiro de tareas
 
 **Completado por decisión del propietario.** `Delete Card` archiva mediante `archived_at` y elimina solo la completación de hoy. La regla vigente y la conservación del histórico están en el dossier §02.6. El cierre de la decisión habilita 06B-05 en memoria. La revisión de RLS, claves foráneas e integridad en la base de datos corresponde al apartado C.
@@ -105,7 +114,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06B-05 · Retiro de tareas en memoria (P0)
 
-- **Estado** — En revisión del propietario.
+- **Estado** — Completado y aprobado por el propietario.
 - **Objetivo y alcance** — Habilitar la confirmación existente de `Delete Card` en Activities y Learning y retirar tarjetas según el dossier §02.6. El estado se mantiene en memoria por cuenta.
 - **Aceptación** — Confirmar archiva y quita solo la completación de hoy. Cancel, Escape y clic exterior conservan la tarjeta. El histórico sigue disponible, el retiro libera espacio en su escalera y la operación protege la última tarjeta activa ante solicitudes consecutivas. Una tarjeta nueva con el mismo nombre empieza desmarcada y recibe un ID propio. Navegación, contadores, aislamiento entre cuentas y Health se verifican dentro del flujo afectado.
 - **Skills** — `architecture-guardian` y `ub-mode`.
