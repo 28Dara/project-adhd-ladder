@@ -111,6 +111,10 @@ lifeTotal       = activitiesTotal + learningTotal
 
 **Precisión temporal:** el histórico es relativo a la fecha local de consulta, no una cifra que se actualice por un proceso nocturno. Cambios posteriores en zona horaria deben manejarse coherentemente, sin reinterpretar silenciosamente fechas ya guardadas; los escenarios de cambio manual de reloj o zona horaria requieren pruebas adicionales, no una nueva regla inventada.
 
+**DEC-07-01 [DECIDIDO] · Fecha local.** Las operaciones fechadas conservan el día calendario local del dispositivo y preservan la sincronización de lectura y escritura corregida en AUD-02-01. Se validarán en SQL. La interfaz seguirá sin configuración de zona horaria y la fecha UTC no sustituirá el día local. Sin una referencia temporal confiable, el servidor no puede verificar de forma absoluta la fecha local declarada por un dispositivo. El mecanismo de validación queda pendiente de diseño en 07-01.
+
+**DEC-07-02 [DECIDIDO] · Integridad temporal.** Rechazar registros fechados antes del alta. Usar la fecha real de registro de Supabase Auth según el contrato de fecha local y proteger los días cerrados. Al persistir un renombrado efectivo o un retiro, confirmar o revertir juntos el cambio de la tarjeta y la eliminación exclusiva de su completación de hoy, conforme a §02.6.
+
 ### 02.5 Ejemplo vinculante: lunes → martes [DECIDIDO]
 
 Histórico anterior al lunes: Activities 8, Learning 12, Life 20.
@@ -183,11 +187,13 @@ Supabase guarda cuentas y datos personales, pero **no sustituye** la API de fras
 
 **Proveedor [DECIDIDO]** — DummyJSON, mediante `https://dummyjson.com/quotes/random`. Se consulta directamente desde el navegador, sin credenciales ni datos de cuenta. La respuesta debe contener `id` numérico, `quote` y `author` de texto. La aplicación conserva el texto original y lo muestra como texto plano. Se verifica CORS (intercambio de recursos entre orígenes) desde el navegador.
 
-**Interacción aprobada** — Life conserva la tarjeta inicial «Today's quote for you is...» y el botón «Click to reveal». Solo se solicita una frase al pulsar el botón. Al recibirla, desaparecen el título y el botón y se muestra solo la frase. Una revelación exitosa permanece al navegar por la sesión privada durante ese día calendario local. El siguiente día comienza en el estado inicial. Un error o respuesta vacía o inválida permite reintentar. Las respuestas de un día o cuenta que ya no estén activos se descartan.
+**Interacción aprobada** — Si la fecha local carece de frase asignada, Life muestra «Today's quote for you is...» y «Click to reveal». Solo se solicita una frase a DummyJSON al pulsar el botón. Al revelarla, desaparecen título y botón y se muestra solo la frase. Se conservan los estados de carga, error, vacío y reintento. Las respuestas de otro día o cuenta se descartan.
 
-**Prevención de repeticiones [DECIDIDO]** — Al revelar, se compara cada frase recibida con las reveladas exitosamente durante los seis días calendario locales anteriores. Se considera repetición si coincide su identificador o su texto al ignorar mayúsculas, minúsculas y espacios redundantes. La comparación no modifica el texto que se muestra. Se solicitan alternativas de forma secuencial y se mantiene el indicador de carga hasta obtener una respuesta válida y diferente o alcanzar cinco solicitudes totales por intento. Si las cinco frases se repiten, se informa y se permite reintentar manualmente. El historial registra solo revelaciones exitosas. Una frase revelada hace siete días o más vuelve a ser elegible.
+**Prevención de repeticiones [DECIDIDO]** — Comparar cada frase recibida con las revelaciones exitosas de la cuenta durante hoy y los seis días calendario locales anteriores. Se considera repetición si coincide el identificador o el texto al ignorar mayúsculas, minúsculas y espacios redundantes. Conservar el texto original al mostrarlo. Solicitar alternativas de forma secuencial y mantener la carga hasta obtener una frase válida y diferente o alcanzar cinco solicitudes totales por intento. Si las cinco se repiten, informar y permitir un reintento manual. Una frase revelada hace siete días o más vuelve a ser elegible.
 
-**Límite temporal** — Se conservan como máximo las revelaciones de hoy y los seis días anteriores en el estado compartido en memoria de la cuenta activa. Se eliminan las entradas que salen de esa ventana. El historial dura mientras esa sesión privada permanezca montada y se reinicia al recargar, cerrar sesión o cambiar de cuenta.
+**DEC-07-03 [DECIDIDO] · Persistencia.** Una revelación exitosa guarda una única frase por cuenta y fecha local, incluso con solicitudes concurrentes. Al recargar, volver a iniciar sesión o entrar desde otro dispositivo en la misma fecha, mostrar directamente la frase asignada. Una nueva fecha admite revelar si todavía falta una asignación. Aislar por cuenta y conservar el historial completo. Consultar únicamente la ventana de hoy y los seis días anteriores para evitar repeticiones. La asignación guardada determina si la frase está revelada, sin un estado persistente adicional ni limpieza automática del historial. La implementación corresponde a 07-08 y sus dependencias autorizadas.
+
+**Estado actual de 06B-08** — La frase y la ventana de comparación se mantienen en memoria de la sesión privada y se reinician al recargar, cerrar sesión o cambiar de cuenta. La persistencia sigue pendiente.
 
 ### 02.11 Estado, persistencia y accesibilidad
 

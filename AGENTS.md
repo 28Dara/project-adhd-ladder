@@ -10,7 +10,7 @@
 ## Stack and delivery scope
 - Vite, React, TypeScript, React Router, semantic HTML, CSS Grid/Flex and responsive design from 320px.
 - Supabase Auth + PostgreSQL with RLS for user data. **Stage 1 only**; no custom Express/Node server, MongoDB or home-built JWT system.
-- The **separate third-party quotes API** uses DummyJSON via `fetch()` in `src/utils/quotesApi.ts`. Real requests have verified the integration. Preserve response validation and loading, empty, error and retry states. The daily quote and seven-day history remain in private-session memory pending a separately approved persistence contract under dossier §02.10.
+- The **separate third-party quotes API** uses DummyJSON via `fetch()` in `src/utils/quotesApi.ts`. Real requests have verified the integration. Preserve response validation and loading, empty, error and retry states. Daily quotes and comparison history currently remain in private-session memory. DEC-07-03 in dossier §02.10 defines the approved persistence contract, reserved for 07-08 and its authorized dependencies.
 - Target: deployed usable application with README and PR from `stage-frontend` to `main` before November 30, 2026; aim for November 28–29.
 
 ## Development order
@@ -65,6 +65,8 @@ Plan for Supabase architecture, data integrity and security constraints during f
 - At the next local calendar date, yesterday's completion records naturally qualify as historical; today's checkboxes start unchecked and today's counts at 0 if there are no records for the new date. **Do not delete/move yesterday's records; do not add an incrementing lifetime counter or require a midnight cron job.** Reopening after multiple days must not duplicate anything.
 - Do not confuse the `Your steps today` numerator with a separate fraction's denominator (active tasks), and never compute historical totals by counting currently visible task cards.
 - Dates must be based on the **browser's local calendar date**, not raw `new Date().toISOString().slice(0,10)` or a hard-coded timezone. Keep date handling coherent across all views.
+
+- Follow DEC-07-01 and DEC-07-02 in dossier §02.4 for dated writes. Preserve AUD-02-01, validate the device-local calendar date in SQL, reject records dated before actual Supabase Auth registration, and protect closed days. Without a trusted time reference, the server cannot conclusively establish a device's local date. Keep timezone settings out of the interface. The SQL validation mechanism remains to be designed in 07-01.
 - Historical completions must survive renaming or removing a task from the active list. Follow `docs/dossier.md` §02.6 for `Delete Card`. Set `archived_at` and remove only that task's completion for the current local date in the same update. Preserve the task record and its historical completions.
 
 ## Other approved business rules

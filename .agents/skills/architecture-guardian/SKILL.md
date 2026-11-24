@@ -55,8 +55,8 @@ lifeTotal       = activitiesTotal + learningTotal
 - Una tarea se marca una sola vez por fecha local. No usar UTC crudo para construir `YYYY-MM-DD`; todas las páginas comparten la misma fecha de referencia.
 - Cambiar de fecha cambia la clasificación de registros, **no** los mueve, borra o duplica; no exigir cron a medianoche ni aplicación permanentemente abierta.
 - Life suma los valores de Activities y Learning; Health no aporta pasos y su SectionCard muestra un círculo de estado.
-- El histórico no depende de tareas activas. Renombrar/retirar tareas no debe destruir completaciones anteriores; revisar FKs, `ON DELETE`, RLS, filtros de tareas archivadas y cualquier `CASCADE` que amenace registros históricos. `archived_at` sigue siendo una opción técnica existente, no un texto de UI obligatorio.
-- **Caso abierto y bloqueante para eliminar una tarea marcada hoy:** no está aprobado si se conserva o revierte la completación de hoy. No implementes esta decisión sin el propietario. Tampoco uses borrado físico destructivo como fallback.
+- Aplica el dossier §02.6 como fuente normativa. Retirar una tarjeta la archiva mediante `archived_at` y elimina únicamente su completación de hoy. Un renombrado efectivo conserva identidad, cuenta y escalera, y elimina únicamente la completación de hoy. Un nombre normalizado equivalente conserva la marca.
+- Al persistir un retiro o un renombrado efectivo, confirma o revierte juntos el cambio de la tarjeta y la eliminación de su completación de hoy. Preserva los días cerrados y la contribución histórica de las tareas archivadas. Revisa claves foráneas, `ON DELETE`, RLS y filtros de tareas archivadas para preservar el historial.
 - Si hay un denominador de avance diario, corresponde al número de tareas activas; **nunca** es el total histórico.
 - Health: tres metas diarias independientes con regla B calculada (ver dossier); racha basada en **días cerrados** y pasos/Health, no en `lifeTotal` ni en cambios de tarjetas.
 - Máximo cuatro tareas activas por Activities y Learning. Ocultar Delete Card con una sola tarea activa, conforme a la regla de la UI.
@@ -78,7 +78,7 @@ El alcance de cualquier coordinación debe coincidir con el del recurso que prot
 - Life/Activities/Learning pueden necesitar una fuente compartida de tareas y completaciones por usuario/fecha; evitar consultas duplicadas innecesarias y resultados de la cuenta anterior.
 - Health usa datos propios (`health_checks`), aunque intervenga en rachas.
 - La renovación del token no implica por sí sola recargar todas las tareas.
-- La API externa de frases debe vivir en `quotesApi.ts` con `fetch()`, tipos verificados y estados de carga/error/vacío; mantenerla independiente de Supabase. Frases de ejemplo 06A no sustituyen su integración.
+- DummyJSON permanece como proveedor externo mediante `fetch()` en `quotesApi.ts`. Mantén la validación y los estados de carga, error, vacío y reintento. Sigue DEC-07-03 del dossier §02.10 para la persistencia aprobada por cuenta y fecha local, reservada a 07-08 y sus dependencias autorizadas.
 
 ## Seguridad y persistencia
 
