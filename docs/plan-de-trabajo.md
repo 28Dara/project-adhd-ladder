@@ -52,13 +52,9 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 - **Verificación técnica** — Build, lint y formato pasaron. En Edge sin interfaz se reprodujo la X anterior y se comprobaron los estilos de ambos estados, las dimensiones y la posición al marcar, el foco visible y el clic en la etiqueta.
 - **Commit propuesto** — `fix(health): simplify checkbox visual states`.
 
-### B. Cierre de la decisión abierta que bloquea CRUD destructivo
+### B. Decisiones aprobadas sobre el retiro de tareas
 
-- [ ] Pedir decisión al propietario para el único caso pendiente: **una tarea completada hoy que se elimina/retira hoy**. Debe definirse si la completación de hoy sobrevive y cuenta mañana o se revierte hoy.
-- [ ] No permitir hard-delete con pérdida de pasos históricos. Confirmar si la opción UI `Delete Card` sigue siendo un retiro/archivo interno mediante `archived_at` u otra estrategia explícitamente aprobada.
-- [ ] Revisar impacto en completaciones de hoy, RLS, FK, histórico y racha antes de cambiar la implementación.
-
-**Cierre:** regla escrita en dossier y prueba esperada definida **antes** de implementar eliminación persistente. El resto del CRUD no destructivo puede avanzar en tareas separadas.
+**Completado por decisión del propietario.** `Delete Card` archiva mediante `archived_at` y elimina solo la completación de hoy. La regla vigente y la conservación del histórico están en el dossier §02.6. El cierre de la decisión habilita 06B-05 en memoria. La revisión de RLS, claves foráneas e integridad en la base de datos corresponde al apartado C.
 
 ### C. Datos y seguridad Supabase (P0)
 
@@ -100,18 +96,27 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 
 #### 06B-04 · Creación y renombrado de tareas en memoria (P0)
 
-- **Estado** — En revisión del propietario. Se inició después del cierre aprobado de 06B-03.
+- **Estado** — Completado, aprobado y commiteado por el propietario después del cierre de 06B-03.
 - **Objetivo y alcance** — Habilitar el alta y renombrado de tarjetas en Activities y Learning con los formularios aprobados. El título confirmado vive en la tarea. Los borradores se conservan durante la navegación privada hasta que se confirman o se cancelan.
 - **Aceptación** — El límite de cuatro tarjetas activas se aplica por escalera en la interfaz y en la operación. Se puede crear desde una lista vacía. El alta genera un ID estable y la tarjeta aparece desmarcada. Submit normaliza el nombre según el dossier §02.6. Un renombrado efectivo conserva la identidad y el histórico, y elimina solo la completación de hoy si existe. El mismo nombre normalizado conserva la marca. Escape y clic exterior conservan los borradores. Cancel los descarta. Se verifica el aislamiento por cuenta y el funcionamiento de los contadores.
 - **Skills** — `architecture-guardian` y `ub-mode`.
 - **Verificación técnica** — Pasaron build, lint y formato. Las pruebas de las mutaciones y de Edge sin interfaz cubrieron el alta desde cero y hasta el límite, los borradores, el foco, la navegación y el cambio de cuenta. También se verificaron la normalización al confirmar, la desmarcación por renombrado efectivo, la conservación del check ante un nombre equivalente, las operaciones consecutivas, el efecto en Today y Total y la independencia de Health. La revisión visual corresponde al propietario.
 - **Commit propuesto** — `feat(tasks): enable task creation and renaming`.
 
+#### 06B-05 · Retiro de tareas en memoria (P0)
+
+- **Estado** — En revisión del propietario.
+- **Objetivo y alcance** — Habilitar la confirmación existente de `Delete Card` en Activities y Learning y retirar tarjetas según el dossier §02.6. El estado se mantiene en memoria por cuenta.
+- **Aceptación** — Confirmar archiva y quita solo la completación de hoy. Cancel, Escape y clic exterior conservan la tarjeta. El histórico sigue disponible, el retiro libera espacio en su escalera y la operación protege la última tarjeta activa ante solicitudes consecutivas. Una tarjeta nueva con el mismo nombre empieza desmarcada y recibe un ID propio. Navegación, contadores, aislamiento entre cuentas y Health se verifican dentro del flujo afectado.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Verificación técnica** — Pasaron build, lint y formato. Las pruebas del dominio y de Edge sin interfaz cubrieron el retiro de tarjetas marcadas y desmarcadas, la fecha local, el histórico, ambos límites, solicitudes consecutivas, reemplazo con el mismo nombre, navegación, aislamiento entre cuentas y separación de Health. Pasaron las comprobaciones de regresión de alta, renombrado y contadores. La revisión visual corresponde al propietario.
+- **Commit propuesto** — `feat(tasks): enable task archival`.
+
 #### CRUD y casillas persistentes
 
 - [ ] Conectar el alta y el renombrado de 06B-04 a la persistencia por cuenta. Verificar el límite de cuatro activas, la normalización del título y la aplicación conjunta del renombrado y la desmarcación de hoy conforme al dossier §02.6.
 - [ ] Implementar marcación y desmarcación por **fecha local**; una completación por tarea por día; gestionar errores y rollback de operaciones optimistas.
-- [ ] Implementar retiro/`Delete Card` **solo después** de cerrar el caso del apartado B; conservar historial.
+- [ ] Conectar el retiro de 06B-05 a la persistencia según el dossier §02.6. Verificar que el archivo y la desmarcación de hoy se apliquen juntos y que el historial permanezca disponible.
 - [ ] Mantener Health en sus tres metas fijas, con datos fechados independientes de tareas Activities/Learning.
 
 **Cierre:** operaciones correctas tras navegación, recarga y cambio de cuenta; no duplicados; estados vacío/carga/error accesibles.
@@ -121,7 +126,7 @@ No reemplazar estados "pendiente de verificar" por "hecho" sin evidencia del pro
 #### 06B-03 · Contadores derivados de pasos (P0)
 
 - **Estado** — Completado, aprobado y commiteado por el propietario después del cierre de 06B-06A.
-- **Objetivo y alcance** — Derivar los contadores de Life, Activities y Learning y los indicadores de sus tarjetas desde las completaciones en memoria. El historial conserva la escalera de las tareas archivadas. La mutación de retiro sigue sujeta a la decisión del apartado B.
+- **Objetivo y alcance** — Derivar los contadores de Life, Activities y Learning y los indicadores de sus tarjetas desde las completaciones en memoria. El historial conserva la escalera de las tareas archivadas según el dossier §02.6.
 - **Aceptación** — Today y Total usan la fecha local y los cortes del dossier v2.2. Las escaleras se calculan de forma independiente y Life las suma. Los registros futuros y duplicados quedan fuera del conteo. Health no aporta pasos. Se admite acceso directo a cada ruta. Build, lint y formato pasan. La revisión visual corresponde al propietario.
 - **Skills** — `architecture-guardian` y `ub-mode`.
 - **Verificación técnica** — Pasaron las pruebas del cálculo puro, incluido el ejemplo lunes a martes con histórico Life de 20 a 23. En Edge sin interfaz se verificaron acceso directo, checks, contadores, indicadores, navegación, día nuevo, ausencia de completaciones, independencia de Health y cambio de cuenta. Build, lint y formato pasaron.
@@ -144,7 +149,7 @@ lifeTotal       = activitiesTotal + learningTotal
 - [x] Cambio de día: nuevo día inicia sin checks y diarios cero si aún no hay completaciones; los registros anteriores **ya** entran al histórico, sin moverlos ni borrar datos, ni cron de medianoche.
 - [ ] Verificar retorno tras varios días sin abrir aplicación, zona horaria local coherente, cambio de ruta/cuenta, eventos duplicados.
 - [x] Prueba de referencia: lunes histórico Activities 8, Learning 12, Life 20; Learning marca tres -> Life hoy 3, Life total 20. Martes sin nuevos checks -> Life hoy 0, Learning total 15, Life total 23.
-- [ ] Probar renombrado/retiro sin pérdida de pasos históricos; no resolver caso de retiro marcado hoy por intuición.
+- [ ] Verificar renombrado y retiro según el dossier §02.6 en QA con persistencia.
 
 **Cierre:** coinciden todas las vistas y pruebas de días cerrados sin duplicación.
 
@@ -180,7 +185,7 @@ lifeTotal       = activitiesTotal + learningTotal
 
 | Fecha (2026) | Enfoque prioritario | Nota |
 |---|---|---|
-| Mar 24 | Sincronizar documentos y revisar estado local; cerrar regla de eliminación si es posible | No confundir edición documental con aplicación de SQL |
+| Mar 24 | Sincronizar documentos y revisar el retiro en memoria según la regla aprobada | No confundir edición documental con aplicación de SQL |
 | Mié 25 | Datos, RLS, CRUD y contadores v2.2 según estado real | Concentrar tiempo en P0; dividir en cambios revisables |
 | Jue 26 | Cerrar CRUD, Health/racha y pruebas de fechas | Resolver los casos críticos antes del pulido |
 | Vie 27 | Quotes API externa real, errores y README | No dejar API obligatoria como fallback local |
@@ -204,4 +209,12 @@ El calendario es una guía, **no una declaración de trabajo completado**, y deb
 4. Revisar diff, correr pruebas pertinentes y reportar evidencia, archivos y asuntos abiertos.
 5. Detenerse para revisión del propietario antes de iniciar otra funcionalidad.
 
-**Instrucción corta para Codex:** «Proyecto ADHD Ladder, TripleTen Etapa 1. `docs/dossier.md` v2.2 es la fuente normativa; `AGENTS.md` y Architecture Guardian son instrucciones operativas. Para `Your total steps` solo cuentan `completed_date < todayLocalDate`; Life es la suma Activities + Learning y Health no suma pasos. No alteres historias al retirar tarjetas ni resuelvas sin permiso la eliminación de una tarjeta marcada hoy. Trabaja solo en la tarea indicada, sin commits, push, merge, migraciones ni nuevas dependencias sin autorización. Describe cambios y pruebas reales».
+**Instrucción corta para Codex:** «Proyecto ADHD Ladder, TripleTen Etapa 1. `docs/dossier.md` v2.2 es la fuente normativa; `AGENTS.md` y Architecture Guardian son instrucciones operativas. Para `Your total steps` solo cuentan `completed_date < todayLocalDate`; Life es la suma Activities + Learning y Health no suma pasos. Aplica la regla aprobada de retiro en §02.6 y conserva el historial. Trabaja solo en la tarea indicada, sin commits, push, merge, migraciones ni nuevas dependencias sin autorización. Describe cambios y pruebas reales».
+
+### DOC-01 · Actualización del flujo de desarrollo y revisión
+
+- **Estado** — Completado, aprobado y commiteado por el propietario.
+- **Objetivo y alcance** — Actualizar `AGENTS.md` con el orden de desarrollo, las responsabilidades de verificación, los niveles de análisis, el flujo Git y la separación del estado por dominio. Alinear las reglas de edición de tareas con el dossier vigente durante DOC-01.
+- **Aceptación** — Diff documental limitado a `AGENTS.md`, con el flujo y las restricciones vigentes preservados. Se revisó el diff completo y pasó `git diff --check`.
+- **Skills** — `architecture-guardian` y `ub-mode`.
+- **Commit propuesto** — `docs(agents): update development and review workflow`.

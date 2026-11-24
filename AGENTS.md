@@ -65,8 +65,7 @@ Plan for Supabase architecture, data integrity and security constraints during f
 - At the next local calendar date, yesterday's completion records naturally qualify as historical; today's checkboxes start unchecked and today's counts at 0 if there are no records for the new date. **Do not delete/move yesterday's records; do not add an incrementing lifetime counter or require a midnight cron job.** Reopening after multiple days must not duplicate anything.
 - Do not confuse the `Your steps today` numerator with a separate fraction's denominator (active tasks), and never compute historical totals by counting currently visible task cards.
 - Dates must be based on the **browser's local calendar date**, not raw `new Date().toISOString().slice(0,10)` or a hard-coded timezone. Keep date handling coherent across all views.
-- Historical completions must survive renaming or removing a task from the active list. **No physical deletion/cascade that destroys history.** Existing `archived_at` is the proposed storage mechanism; `Delete Card` is the UI label, not permission for hard-delete.
-- **OPEN PRODUCT DECISION:** removing a task *already checked today* before the day closes. Do not invent whether today's check remains or is reversed. Resolve with owner before implementing persistent deletion/archiving that affects this case.
+- Historical completions must survive renaming or removing a task from the active list. Follow `docs/dossier.md` §02.6 for `Delete Card`. Set `archived_at` and remove only that task's completion for the current local date in the same update. Preserve the task record and its historical completions.
 
 ## Other approved business rules
 - Maximum **4 active tasks** per Activities/Learning. A new account receives the six named example tasks from the dossier once only; do not recreate them on later visits. With one active task, Settings hides `Delete Card`; still support an empty list state if encountered.

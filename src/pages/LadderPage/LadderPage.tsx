@@ -20,8 +20,14 @@ type LadderPopupState =
 
 export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
   const { daysOnLadder, joinedOn } = ladderSummaryPreview
-  const { tasks, completions, createTask, renameTask, setTaskCompleted } =
-    useTasks()
+  const {
+    tasks,
+    completions,
+    createTask,
+    renameTask,
+    archiveTask,
+    setTaskCompleted,
+  } = useTasks()
   const { taskDrafts, setTaskDraft } = useLadderSession()
   const today = useLocalDateKey()
   const { todaySteps, totalSteps } = getLadderProgress(
@@ -127,6 +133,10 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
                   setTaskDraft(`rename:${task.id}`, draft)
                 }
                 onRename={(title) => renameTask(task.id, title)}
+                onArchive={() => {
+                  archiveTask(task.id)
+                  taskList.current?.focus()
+                }}
               />
             ))}
             {canAddTask && (

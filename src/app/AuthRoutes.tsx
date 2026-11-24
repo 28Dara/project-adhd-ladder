@@ -12,7 +12,7 @@ import type { HealthCheck } from '../types/health'
 import type { Task } from '../types/task'
 import { getLocalDateKey } from '../utils/dates'
 import { updateTaskCompletion } from '../utils/taskCompletions'
-import { addTask, renameTaskTitle } from '../utils/tasks'
+import { addTask, archiveTask, renameTaskTitle } from '../utils/tasks'
 import './AuthRoutes.css'
 
 export function AuthSessionBoundary() {
@@ -118,6 +118,10 @@ function PrivateLayout({
       setTaskData((data) =>
         renameTaskTitle(data, user.id, taskId, title, today),
       )
+    },
+    archiveTask: (taskId) => {
+      const now = new Date()
+      setTaskData((data) => archiveTask(data, user.id, taskId, now))
     },
     setTaskCompleted: (taskId, checked) => {
       const date = getLocalDateKey(new Date())

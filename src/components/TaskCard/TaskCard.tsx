@@ -18,6 +18,7 @@ interface TaskCardProps {
   onClosePopup: (mode: TaskPopup) => void
   onRenameDraftChange: (draft: string | undefined) => void
   onRename: (title: string) => void
+  onArchive: () => void
 }
 
 export default function TaskCard({
@@ -31,6 +32,7 @@ export default function TaskCard({
   onClosePopup,
   onRenameDraftChange,
   onRename,
+  onArchive,
 }: TaskCardProps) {
   const popupId = useId()
   const archiveTitleId = useId()
@@ -148,14 +150,21 @@ export default function TaskCard({
               aria-labelledby={archiveTitleId}
               aria-describedby={archiveDescriptionId}
             >
-              <h2 id={archiveTitleId}>Archive “{title}”?</h2>
+              <h2 id={archiveTitleId}>Delete “{title}”?</h2>
               <p id={archiveDescriptionId}>
-                Archived cards keep their completion history. Archiving will be
-                available in a later stage.
+                Past steps are kept. Any step recorded for this card today will
+                be removed.
               </p>
               <div className="ladder-popup__actions">
-                <button type="button" disabled>
-                  Archive
+                <button
+                  type="button"
+                  disabled={!canArchive}
+                  onClick={() => {
+                    closePopup()
+                    onArchive()
+                  }}
+                >
+                  Delete
                 </button>
                 <button
                   type="button"

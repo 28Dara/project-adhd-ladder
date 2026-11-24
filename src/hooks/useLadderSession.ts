@@ -9,6 +9,7 @@ export interface LadderSession {
   taskData: TaskData
   createTask: (ladder: TaskLadder, title: string) => void
   renameTask: (taskId: string, title: string) => void
+  archiveTask: (taskId: string) => void
   setTaskCompleted: (taskId: string, checked: boolean) => void
   taskDrafts: Partial<Record<TaskDraftKey, string>>
   setTaskDraft: (key: TaskDraftKey, draft: string | undefined) => void

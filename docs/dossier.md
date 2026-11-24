@@ -13,7 +13,7 @@
 - **Contadores diarios:** solo completaciones del día calendario local actual. Una casilla marcada aporta +1; desmarcarla revierte −1. Activities y Learning son independientes. Life es la **suma de sus valores numéricos**, nunca un contador de tarjetas de Life.
 - **Totales históricos:** `Your total steps` incluye **solo pasos de fechas anteriores a hoy**; los pasos actuales no forman parte del total hasta cambiar el día calendario. Totales propios de Activities y Learning; Life total = suma de ambos históricos.
 - **Cambio de fecha:** al consultar el nuevo día, sus casillas están desmarcadas y sus contadores diarios son 0; los registros de días anteriores permanecen y ya pertenecen al histórico. **No exige cron a medianoche, transferencia física, ni que la aplicación esté abierta.**
-- **Integridad histórica:** renombrar o retirar una tarjeta de la lista activa nunca reduce pasos ya contabilizados de días cerrados. No se permite un borrado físico que destruya ese historial. El comportamiento de una tarea **marcada hoy y eliminada hoy** queda `[ABIERTO]` para el CRUD; no inferirlo.
+- **Integridad histórica:** renombrar o retirar una tarjeta nunca reduce los pasos de días cerrados. El retiro usa `archived_at` y elimina solo la completación de hoy, según §02.6.
 - **Health:** tiene tres chequeos diarios independientes y no aporta pasos. Las casillas de hoy se inician vacías; el semáforo se **calcula** con la regla B, no se fuerza a rojo al comenzar el día.
 - **Estado de implementación:** la etapa 06A incluye popups, edición temporal y frases de ejemplo, según el reporte de implementación del 24/11. Estos datos transitorios **no equivalen** a persistencia real ni a la integración obligatoria de la API de frases. El resultado local no puede certificarse desde este documento.
 
@@ -125,18 +125,16 @@ Histórico anterior al lunes: Activities 8, Learning 12, Life 20.
 
 **Lectura:** el lunes, las tres marcas de Learning son progreso diario y **no** elevan Life total de 20. El martes, esas mismas tres completaciones ya son históricas, de modo que Life total es 23 y Life hoy es cero. No hubo transferencia física de datos. Si se desmarcara una de las tres tareas **antes de que termine el lunes**, el martes el histórico aumentaría solo dos.
 
-### 02.6 Integridad del historial y gestión de tareas [DECIDIDO / ABIERTO]
+### 02.6 Integridad del historial y gestión de tareas [DECIDIDO]
 
 - Una tarea pertenece a una escalera (Activities o Learning) y puede completarse una vez por día.
 - **[DECIDIDO] Nombre al confirmar:** al crear o renombrar con Submit, se aplica `trim()` y se convierte el primer carácter a mayúscula conservando el resto del texto tal como se escribió. Se rechaza un nombre que quede vacío. El borrador conserva el texto escrito.
 - **[DECIDIDO] Renombrado efectivo:** si el nombre normalizado cambia respecto del confirmado, se conservan el ID, la escalera y el propietario. En la misma operación se elimina solo la completación de esa tarea para la fecha local actual, si existe. En ese caso, Today disminuye un paso en la escalera correspondiente y en Life. El histórico permanece intacto. Si se confirma el mismo nombre normalizado o la tarea ya está desmarcada, los contadores se mantienen. Cancel, Escape, clic exterior y envíos inválidos dejan intactas las completaciones.
 - Cuentas nuevas reciben **una sola vez** las tareas de ejemplo: Activities — Gym, Read my Book, Guitar Practice; Learning — Learned something new, Studied a language, Studied music theory. No recrearlas automáticamente si el usuario las retira.
-- Se permiten hasta **cuatro tareas activas por escalera**. Con una única tarea activa, el menú Settings **no ofrece Delete Card**, conforme a la interfaz de 06A. **Un estado vacío (0 tareas) aún debe poder representarse** si ocurre por carga, error, importación o datos preexistentes; no equivale a permitir borrar la última desde Settings.
-- La acción visible puede llamarse **Delete Card**; esto **no autoriza** a borrar el historial de pasos. El modelo v2.1 propone `archived_at` como mecanismo interno para ocultar una tarea preservando sus completaciones. Mostrar o no la palabra «Archive» en UI es independiente de esa decisión técnica.
-- **Prohibido como fallback automático:** borrar físicamente una tarea junto con sus completaciones históricas. La anterior frase «si es complejo, se borra definitivamente» queda **revocada** si causa pérdida de progreso. Cualquier nuevo mecanismo de eliminación requiere aprobación y revisión de esquema/RLS.
-- **[ABIERTO] Eliminar hoy una tarjeta completada hoy:** aún no se decidió si el paso de hoy permanece o se revierte. Este caso afecta `today`, el histórico del siguiente día y potencialmente la racha. No implementarlo por suposición; resolverlo antes de CRUD persistente.
-- El conteo exacto para la fecha actual en presencia de una tarjeta retirada durante ese mismo día depende del punto abierto anterior. Esta excepción **no** autoriza reinterpretar el resto de las fórmulas.
-- La UI puede tener confirmación visual de eliminación; la confirmación por sí sola no implica que se haya escrito o archivado un registro real en Supabase.
+- Se permiten hasta **cuatro tareas activas por escalera**. Cuando queda una, Settings oculta **Delete Card** y la operación rechaza su retiro. La vista admite un estado vacío si ocurre por carga, error, importación o datos preexistentes.
+- **[DECIDIDO] Retiro mediante `archived_at`.** Confirmar **Delete Card** registra la fecha de archivado, conserva la tarea con su ID, propietario y escalera y la quita de la lista activa. El retiro preserva el registro físico y las completaciones históricas. La confirmación de 06B-05 aplica al estado en memoria.
+- **[DECIDIDO] Completación de hoy al retirar.** En la misma actualización que establece `archived_at`, se elimina solo la completación de esa tarea de la fecha local actual, si existe. Today baja un paso en su escalera y en Life cuando la tarjeta estaba marcada. Total permanece intacto. Cancel, Escape y el clic exterior conservan la tarjeta y sus completaciones.
+- Las archivadas quedan fuera del límite de tareas activas y se mantienen disponibles para contar el historial. Las operaciones ordinarias de marcar, renombrar y retirar requieren una tarea activa. Una tarjeta nueva recibe un ID propio, aunque su nombre coincida con el de una archivada. La restauración queda fuera del alcance.
 
 ### 02.7 Health — regla B [DECIDIDO]
 
@@ -175,7 +173,7 @@ Los casos límite deben comprobarse según estas condiciones; no modificar esta 
 | `health_checks` | `user_id`, `date`, `nutrition`, `sleep`, `movement` | Una fila por fecha y persona; no cuenta como pasos |
 | Derivados, **sin tabla propia** | `today`, `total`, estado Health, racha, días desde alta | Se calculan de registros y fecha de consulta; no se guardan como verdad duplicada |
 
-**Integridad crítica:** la relación entre `tasks` y `task_completions` debe permitir preservar los registros históricos cuando una tarea deja de ser activa. No configurar ni ejecutar una eliminación en cascada que borre esos pasos. La v2.1 menciona `archived_at`; cualquier cambio de estrategia de borrado debe comprobar previamente claves foráneas, RLS e historial.
+**Integridad crítica:** el retiro mediante `archived_at` debe preservar los registros históricos asociados. Mantener las claves foráneas y la protección RLS al conectar la persistencia. Se prohíbe el borrado físico de tareas como mecanismo de retiro.
 
 Las fechas se almacenan como días calendario `YYYY-MM-DD` según fecha local del usuario. No usar conversión UTC automática para decidir a qué día pertenece un check. La aplicación no está limitada a una zona horaria fija.
 
@@ -276,7 +274,7 @@ La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos 
 - [ ] Tras cambiar de lunes a martes, pasos de lunes figuran en histórico **una sola vez** y hoy empieza en cero.
 - [ ] Cerrar la app y volver días después no duplica ni pierde pasos; un día con cero no aumenta totales.
 - [ ] Verificar la normalización al confirmar y la desmarcación de hoy al renombrar según §02.6, con el histórico intacto.
-- [ ] Verificar que retirar una tarjeta activa conserva los pasos históricos. Resolver antes de implementar el retiro el caso de una tarjeta marcada hoy.
+- [ ] Verificar el retiro de tarjetas marcadas y desmarcadas según §02.6, con Today correcto, histórico intacto y protección de la última activa.
 - [ ] Health mantiene tres checks por fecha; reinicio visual no fuerza rojo; tabla de semáforo B completa.
 - [ ] Racha de días cerrados conforme a su regla; no confundir con pasos totales ni días desde alta.
 - [ ] Pruebas adversariales RLS con dos usuarios y FK cruzada de completaciones; bloqueo de lecturas/mutaciones ajenas.
@@ -340,7 +338,7 @@ Una aplicación simple que presenta progreso diario e histórico sin prometer re
 |---|---|
 | Incluir pasos de hoy en históricos | Filtro estrictamente `completed_date < todayLocalDate`; pruebas lunes/martes |
 | Duplicar totales al cambiar de día o abrir tras varios días | Derivar desde completaciones únicas fechadas; sin job nocturno ni acumulador redundante |
-| Eliminar una tarea y perder histórico | Preservar completaciones; bloquear borrado físico destructivo; resolver caso de eliminación en el mismo día |
+| Perder histórico al retirar una tarea | Archivar con `archived_at` y eliminar únicamente su completación de hoy según §02.6 |
 | Confundir reinicio de checks de Health con rojo automático | Evaluar regla B con hoy y ayer |
 | Inconsistencia entre vistas | Una fuente de completaciones por cuenta y funciones puras compartidas |
 | RLS insuficiente | Pruebas de aislamiento con dos usuarios y referencias cruzadas |
@@ -368,7 +366,7 @@ Esta versión es **una especificación documental**, no evidencia de pruebas de 
 
 - [DECIDIDO] Life suma Activities y Learning; Health no suma pasos.
 - [DECIDIDO] Health regla B, racha de días cerrados, cuentas con tareas de ejemplo una sola vez, fecha calendario local.
-- [PROP en su momento] `archived_at` como mecanismo de retirar tareas; el dossier anterior permitía borrado definitivo como fallback de plazo. **Esta alternativa queda limitada por la exigencia posterior de preservar el histórico.**
+- [PROP en su momento] `archived_at` como mecanismo de retiro. La regla aprobada en §02.6 sustituyó la alternativa de borrado definitivo.
 - [CONTEXTO HISTÓRICO] El dossier original declaraba que el repositorio todavía no existía. Era cierto para aquella redacción, **no describe el estado del proyecto el 24/11**.
 
 ### 23–24 de noviembre de 2026 — Interfaz y 06A
@@ -385,7 +383,7 @@ Esta versión es **una especificación documental**, no evidencia de pruebas de 
 - [DECIDIDO] `Your total steps` refleja **solo días anteriores**; al cambiar de día, el progreso anterior se incorpora lógicamente sin borrar ni mover registros, ni depender de una app abierta a medianoche.
 - [DECIDIDO] El histórico no depende de tarjetas activas y no se reduce por renombrar o retirarlas.
 - [DECIDIDO] Health no genera pasos y sus checks diarios empiezan vacíos; su color continúa sujeto a regla B.
-- [ABIERTO] Destino de una completación de hoy si la tarjeta se elimina antes de terminar ese día; debe resolverse antes del CRUD persistente.
+- [DECIDIDO en 06B-05] El propietario aprobó `archived_at` y la eliminación exclusiva de la completación de hoy al retirar una tarjeta. Las reglas vigentes están en §02.6.
 
 ### Referencias
 
