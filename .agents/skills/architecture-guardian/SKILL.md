@@ -13,7 +13,7 @@ Sigue la precedencia de `AGENTS.md`: instrucción explícita más reciente del p
 
 ## Coordinación y no regresión
 
-Esta skill conserva la metodología vigente de ADHD Ladder. `ub-mode` aporta técnicas de implementación y verificación; `ciber-security` aporta controles de seguridad generales. Ninguna sustituye AGENTS.md, el dossier ni el plan autorizado. No presupongas que otra skill se ha cargado: consulta sus instrucciones cuando corresponda y estén disponibles.
+Consulta `AGENTS.md` para el reparto de decisiones de frontend y backend y las autorizaciones entre etapas. Esta skill aplica ese flujo a la arquitectura de ADHD Ladder y remite al dossier para las reglas de producto. `ub-mode` aporta técnicas de implementación y verificación, y `ciber-security` aporta controles de seguridad. Comprueba la disponibilidad de cada skill pertinente antes de aplicarla.
 
 La incorporación de skills no constituye una tarea de refactorización, auditoría integral ni cambio de arquitectura. Conserva contratos, tecnologías, diseño y comportamiento aprobados; limita los cambios al objetivo solicitado y sus dependencias necesarias. Reporta hallazgos fuera de alcance como recomendaciones separadas. Ante un riesgo material, detén únicamente la parte afectada y solicita decisión. Respeta las fases, roles y permisos del flujo existente. Si falta una fuente necesaria para decidir, no supongas su contenido.
 
@@ -108,4 +108,4 @@ Revisa el diff, archivos afectados, reutilización y corrección. Ejecuta checks
 - **P1:** funcionalidad, accesibilidad y casos de negocio requeridos en la tarea correspondiente.
 - **P2:** pulido y optimizaciones no necesarios para la entrega.
 
-No crear ramas, commits, push, merges ni modificar `main` sin aprobación del propietario. Terminar indicando archivos tocados, resultados y asuntos abiertos.
+Sigue el flujo de Git y el protocolo de informe y revisión manual definidos en `AGENTS.md`.

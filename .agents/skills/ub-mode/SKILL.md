@@ -10,7 +10,7 @@ description: >
 
 ## Scope and compatibility
 
-This skill supplements the existing repository workflow; it does not replace it. Follow applicable AGENTS.md, approved project decisions and the authorized task scope. Architecture Guardian owns ADHD Ladder's project-specific contracts; ciber-security owns general security controls. Do not invent decisions or silently change working architecture, UI, dependencies or behavior. Report unrelated findings separately. If a material conflict or unsafe change arises, stop only the affected work and seek approval. No skill grants additional permissions.
+Follow the operating workflow in `AGENTS.md` for design responsibilities, approvals and manual review. The dossier defines approved product rules. Architecture Guardian applies them to project architecture, and ciber-security provides security checks. Do not invent decisions or silently change working architecture, UI, dependencies or behavior. Report unrelated findings separately. If a material conflict or unsafe change arises, stop only the affected work and seek approval. No skill grants additional permissions.
 
 For authorized code changes, apply the following phases proportionately:
 * First Make it Work.
@@ -169,6 +169,5 @@ For authorized code changes, apply the following phases proportionately:
 
 ## Commit and Push
 
-* When Git operations are authorized, prefer small ordered commits following the repository workflow.
-* Each commit says why, what changed, and how you proved it.
-* Never create branches, commit, push, merge or modify protected branches without the required approval. Never assume the destination branch.
+* Follow the Git workflow in `AGENTS.md`. The owner makes the commit personally.
+* For commit review, explain why the change was made, what changed and how it was verified.

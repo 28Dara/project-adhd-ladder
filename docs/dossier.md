@@ -332,7 +332,7 @@ La UI de popups implementada provisionalmente en 06A no es prueba de que exista 
 
 ### Flujo de trabajo
 
-El propietario decide y aprueba cambios. ChatGPT/Codex ayuda a implementar y revisar; las propuestas de otras IA se subordinan a decisiones aprobadas. Tareas pequeñas y verificables, inspección de diff y pruebas antes de integrar. Nadie crea commits, hace push o merge sin autorización expresa.
+El propietario aprueba las decisiones de producto y el alcance. El flujo operativo entre el propietario, ChatGPT y Codex, incluidas las autorizaciones y el commit personal del propietario, se rige por `AGENTS.md`.
 
 ---
 

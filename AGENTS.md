@@ -1,11 +1,16 @@
 # ADHD Ladder — AI development instructions (aligned with dossier v2.2)
 
 ## Role, authority and source of truth
-- Assist with a TripleTen final project; the owner approves product rules, scope and integration. Do not silently expand scope or invent behavior.
+- Help the owner develop their own judgment while learning full-stack development with a frontend specialization. Work step by step, slowly and safely. Prioritize understanding, quality, security and the owner's autonomy over speed.
+- The owner approves product rules, scope and integration.
 - **Precedence:** owner's latest explicit instruction > `[DECIDIDO]` rules in `docs/dossier.md` v2.2 > `docs/plan-de-trabajo.md` > `[PROP]` proposals. `[ABIERTO]` is unresolved, not permission to choose.
 - The dossier is the **complete normative product specification**. The plan tracks the schedule, backlog and objective status. This file guides how the work is carried out.
 - Read the dossier sections relevant to a task. For UI changes, use the relevant `docs/design/mockups/` image, `docs/design/paleta-colores.md` and `src/styles/variables.css`. Mockups and reports do not establish that functionality has been tested.
 - Historic statements in the dossier or plan do not override the latest normative rules. Report contradictions before implementing.
+
+## Design responsibilities
+- **Frontend.** The owner chooses and approves naming, architecture, structure, components, variables, functions, implementation patterns and design. The AI presents alternatives, recommendations and explanations.
+- **Backend.** The AI selects and recommends technical solutions for internal naming, SQL, persistence, architecture, security and concurrency. Before implementation, explain what is proposed, how it works, why it was chosen, what it achieves, which files and resources it affects, and what risks and checks remain. The owner reviews and explicitly approves the proposal as a whole. Internal identifiers do not need individual approvals. Delegating technical selection leaves review and authorization with the owner.
 
 ## Stack and delivery scope
 - Vite, React, TypeScript, React Router, semantic HTML, CSS Grid/Flex and responsive design from 320px.
@@ -43,6 +48,19 @@ Plan for Supabase architecture, data integrity and security constraints during f
 - End every planning-assistant response that includes a Codex prompt with the recommended analysis level and a brief justification. Include the explicit skill selection as described above.
 - Choose among **Low, Medium, High, Extra High, Max and Ultra** based on complexity, dependencies, risk, security impact and token cost. Use the lowest level that covers the work and justify using a higher level when the task warrants it.
 
+## Owner approval workflow
+
+1. The owner discusses progress with ChatGPT. ChatGPT verifies the state, gives feedback and proposes the next steps.
+2. The owner reviews and approves the proposal. Confirm scope and acceptance criteria.
+3. ChatGPT asks the owner for permission to generate the Codex prompt. After that authorization, ChatGPT generates it.
+4. The owner decides when to authorize and run implementation. Codex implements only the authorized scope, runs the pertinent automated checks and delivers its report.
+5. ChatGPT analyzes, verifies and summarizes the report, then identifies what the owner should inspect manually and provides a step-by-step checklist.
+6. The owner performs the manual checks and reports the results and questions. ChatGPT assesses readiness and recommends a commit message.
+7. The owner makes the commit personally and requests the next objective.
+
+- Each transition requires explicit owner authorization. Proposal approval, prompt generation, execution, acceptance and moving to the next objective are separate. An existing approval remains valid unless there is a material conflict, new evidence or an explicit request to revisit it.
+- Record approved decisions promptly in the applicable source. Consult current sources before asking. Group related approvals and allow the owner to approve recommendations together or specify exceptions. Use compact interactive panels in ChatGPT and equivalent checklists in Codex. Keep the workflow proportionate and avoid repeating normative rules across files.
+
 ## Commit-oriented planning and task lifecycle
 - Preserve the existing project → phase → section hierarchy. Subdivide remaining sections in `docs/plan-de-trabajo.md` into small, logical, measurable objectives suitable for atomic commits as work is planned. Do not split trivial changes artificially or rewrite completed history.
 - For each objective record a stable ID, objective, authorized scope, relevant skills, acceptance criteria, status and proposed commit message. Use `Pending`, `In development`, `In review`, `Completed` or `Blocked` (or their Spanish equivalents). Track implementation, technical verification, manual validation, owner approval, local commit, remote publication and integration as separate milestones. Record approval only when the owner confirms it, and record actual commit hashes only when available.
@@ -50,7 +68,7 @@ Plan for Supabase architecture, data integrity and security constraints during f
 - Keep the plan dynamic: add separately identified objectives for approved improvements or changes, reorder pending work according to dependencies and priorities, and keep unrelated findings as proposals until approved. A finding does not authorize implementation.
 - Before implementation, inspect current local code and Git status, consult relevant sources, identify scope and acceptance checks, and obtain any outstanding approvals. Implement one authorized objective, verify it, report results and stop for owner review before starting another. Do not mark objectives complete solely from a report or the presence of code.
 - During review, keep directly related adjustments in the same objective before its commit. Record independent changes and regressions found after an objective closes as new objectives in the plan.
-- Keep the existing branch workflow (`feature/*`, `stage-frontend`, `main`). The owner may accumulate several approved local commits before pushing. A push after each commit is optional. Obtain explicit owner authorization before creating a branch, staging changes, committing, pushing, merging or modifying `main`. Do not rewrite history merely to adopt this methodology.
+- Keep the existing branch workflow (`feature/*`, `stage-frontend`, `main`). The owner may accumulate several approved local commits before pushing. A push after each commit is optional. Obtain explicit authorization for Git writes other than the owner's personal commit, including creating branches, staging, pushing, merging or modifying `main`. Do not rewrite history merely to adopt this methodology.
 
 ## Pending work and decision tracking
 - `docs/plan-de-trabajo.md` is the single operational backlog for remaining tasks, dependencies, verification and status. Record new proposed improvements there as separate pending objectives, subject to owner approval; do not create a parallel backlog or silently broaden scope.
@@ -87,9 +105,9 @@ Plan for Supabase architecture, data integrity and security constraints during f
 
 ## UX, verification and delivery
 - Honor mockups, palette, typography, WebP illustrations and existing CSS. Use real accessible buttons/links/labels; keyboard, focus, responsive width >=320px. Do not hide horizontal overflow to mask layout defects.
-- The owner handles visual approval and manual acceptance checks. Codex provides a short checklist with steps, expected results and failure conditions scoped to the objective. The owner may use a browser, inspect Supabase data in the authorized environment or review the diff as appropriate. Manual checks complement technical verification. For cases covered by automation, the owner can repeat a representative subset. Physical touchscreen devices are optional.
+- The owner handles visual approval and manual acceptance checks. Codex provides reproducible steps using the source code, browser and DevTools (F12), authorized Supabase queries or Git diff as applicable. Explain what to observe, where, how, why, what result to expect and what would indicate failure. Manual checks develop understanding and complement automation. A representative subset suffices when automation has already covered the cases. Physical touchscreen devices are optional.
 - Prefer the smallest safe change; no unrelated redesign, extra dependencies or broad refactoring. Review affected files and their direct consumers for regressions and dead code.
 - Before editing, identify the goal, files, relevant rules and verification. After editing, Codex runs the applicable functional, automated, regression and security checks, including `npm run build`, `npm run lint`, `npm run format:check` and `git diff --check` where applicable. Report the checks actually run, their results and any pending checks.
 - Verify checked-off work against the current local code. Local unpushed changes take precedence over remote snapshots for implementation.
-- Finish with changed files, behavior, verification and blockers. Stop for owner review before starting another objective or performing an unauthorized Git operation.
+- Report what was implemented, how it works, why it was chosen, the relevant files, technical decisions, checks actually performed, risks and pending items. Stop for owner review at the authorized stage.
 - Non-negotiable final checks: real third-party quote via fetch, Supabase persistence, RLS isolation with two accounts, accessibility, deployment without SPA refresh 404, full README and a PR delivered by deadline.

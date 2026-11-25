@@ -9,7 +9,7 @@ description: >-
 
 ## Alcance y coordinación
 
-Respeta AGENTS.md, las decisiones aprobadas y el flujo de trabajo existente. Architecture Guardian define los contratos específicos de ADHD Ladder; ub-mode define la metodología de implementación. Esta skill no autoriza rediseños, nuevas dependencias, operaciones Git, cambios de esquema, migraciones, acciones destructivas, cambios de producción ni rotación de credenciales sin aprobación correspondiente.
+Sigue `AGENTS.md` para el flujo operativo y las autorizaciones, y el dossier para las decisiones de producto. Architecture Guardian aplica las reglas de arquitectura del proyecto y ub-mode aporta técnicas de implementación. Esta skill no autoriza rediseños, nuevas dependencias, operaciones Git, cambios de esquema, migraciones, acciones destructivas, cambios de producción ni rotación de credenciales.
 
 - Desarrollo normal: revisa únicamente los riesgos del cambio solicitado y aplica controles compatibles dentro del alcance autorizado.
 - Auditoría explícita: revisa todos los controles aplicables, preferentemente en modo lectura. Distingue hallazgos, propuestas y correcciones autorizadas. No confundas una solicitud de auditoría con autorización para ejecutar cambios disruptivos.

@@ -268,13 +268,7 @@ El calendario es una guía, **no una declaración de trabajo completado**, y deb
 
 ## 6. Flujo de trabajo y arranque de tarea
 
-1. Elegir una sola tarea con cierre verificable y revisar el estado real; consultar `AGENTS.md`, Architecture Guardian cuando aplique y la sección del dossier pertinente.
-2. Indicar propósito, archivos afectados, reglas y pruebas antes de editar.
-3. Implementar el cambio mínimo sin crear ramas/commits/push/merge salvo autorización del propietario.
-4. Revisar diff, correr pruebas pertinentes y reportar evidencia, archivos y asuntos abiertos.
-5. Detenerse para revisión del propietario antes de iniciar otra funcionalidad.
-
-**Instrucción corta para Codex:** «Proyecto ADHD Ladder, TripleTen Etapa 1. `docs/dossier.md` v2.2 es la fuente normativa; `AGENTS.md` y Architecture Guardian son instrucciones operativas. Para `Your total steps` solo cuentan `completed_date < todayLocalDate`; Life es la suma Activities + Learning y Health no suma pasos. Aplica la regla aprobada de retiro en §02.6 y conserva el historial. Trabaja solo en la tarea indicada, sin commits, push, merge, migraciones ni nuevas dependencias sin autorización. Describe cambios y pruebas reales».
+Seguir el flujo de aprobación de `AGENTS.md`. El plan registra el alcance, las dependencias y el estado de cada objetivo. El propietario realiza personalmente el commit tras validar el objetivo.
 
 ### DOC-01 · Actualización del flujo de desarrollo y revisión
 
