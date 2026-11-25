@@ -111,9 +111,13 @@ lifeTotal       = activitiesTotal + learningTotal
 
 **Precisión temporal:** el histórico es relativo a la fecha local de consulta, no una cifra que se actualice por un proceso nocturno. Cambios posteriores en zona horaria deben manejarse coherentemente, sin reinterpretar silenciosamente fechas ya guardadas; los escenarios de cambio manual de reloj o zona horaria requieren pruebas adicionales, no una nueva regla inventada.
 
-**DEC-07-01 [DECIDIDO] · Fecha local.** Las operaciones fechadas conservan el día calendario local del dispositivo y preservan la sincronización de lectura y escritura corregida en AUD-02-01. Se validarán en SQL. La interfaz seguirá sin configuración de zona horaria y la fecha UTC no sustituirá el día local. Sin una referencia temporal confiable, el servidor no puede verificar de forma absoluta la fecha local declarada por un dispositivo. El mecanismo de validación queda pendiente de diseño en 07-01.
+**DEC-07-01 [DECIDIDO] · Fecha local.** Las operaciones fechadas conservan el día calendario local del dispositivo y preservan la sincronización de lectura y escritura corregida en AUD-02-01. Se validan en SQL según DEC-07-04. La interfaz sigue sin configuración de zona horaria y la fecha UTC no sustituye el día local.
 
 **DEC-07-02 [DECIDIDO] · Integridad temporal.** Rechazar registros fechados antes del alta. Usar la fecha real de registro de Supabase Auth según el contrato de fecha local y proteger los días cerrados. Al persistir un renombrado efectivo o un retiro, confirmar o revertir juntos el cambio de la tarjeta y la eliminación exclusiva de su completación de hoy, conforme a §02.6.
+
+**DEC-07-04 [DECIDIDO] · Referencia fija de escritura.** La primera operación fechada exitosa fija para la cuenta la zona horaria detectada y declarada por el dispositivo. Durante el MVP se conserva esa referencia sin selector ni modificación posterior. La fecha capturada al realizar cada acción debe coincidir con el día que PostgreSQL calcula con su reloj tanto en la zona declarada como en la referencia fija. La referencia también determina la fecha local de alta real y protege los días cerrados. Si los días no coinciden, la escritura se rechaza sin trasladarla automáticamente a otro día. Esto puede impedir temporalmente escribir desde dispositivos con días locales distintos. PostgreSQL comprueba la coherencia de la fecha declarada, pero no puede certificar de forma independiente la ubicación ni la zona real del dispositivo.
+
+**Compatibilidad de zonas [DECIDIDO].** Admitir los identificadores de zona horaria que devuelven los navegadores, previa revisión técnica de su compatibilidad con PostgreSQL. La implementación debe respetar las comprobaciones de DEC-07-04.
 
 ### 02.5 Ejemplo vinculante: lunes → martes [DECIDIDO]
 
@@ -143,6 +147,8 @@ Histórico anterior al lunes: Activities 8, Learning 12, Life 20.
 ### 02.7 Health — regla B [DECIDIDO]
 
 Health tiene exactamente tres objetivos diarios fijos: **Good Nutrition, Good Sleep y Daily Movement**. Se marcan por fecha, con toda la tarjeta como área clicable. Sus marcas **no** suman pasos a ninguna escalera. Sus checkboxes están vacíos para la nueva fecha si aún no se registraron checks de ese día.
+
+**Escritura de un objetivo [DECIDIDO].** Si todavía no hay fila diaria y se solicita `false`, devolver `null` y dejar el día sin fila.
 
 El semáforo **se calcula**, no se persiste como un valor independiente:
 

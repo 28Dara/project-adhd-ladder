@@ -84,7 +84,7 @@ Plan for Supabase architecture, data integrity and security constraints during f
 - Do not confuse the `Your steps today` numerator with a separate fraction's denominator (active tasks), and never compute historical totals by counting currently visible task cards.
 - Dates must be based on the **browser's local calendar date**, not raw `new Date().toISOString().slice(0,10)` or a hard-coded timezone. Keep date handling coherent across all views.
 
-- Follow DEC-07-01 and DEC-07-02 in dossier §02.4 for dated writes. Preserve AUD-02-01, validate the device-local calendar date in SQL, reject records dated before actual Supabase Auth registration, and protect closed days. Without a trusted time reference, the server cannot conclusively establish a device's local date. Keep timezone settings out of the interface. The SQL validation mechanism remains to be designed in 07-01.
+- Follow DEC-07-01, DEC-07-02 and DEC-07-04 in dossier §02.4 for dated writes. Preserve AUD-02-01 and the date captured when the action is performed. SQL validates that date against the device's declared zone and the account's fixed write reference. Reject dates before actual Supabase Auth registration and protect closed days. Keep timezone settings out of the interface.
 - Historical completions must survive renaming or removing a task from the active list. Follow `docs/dossier.md` §02.6 for `Delete Card`. Set `archived_at` and remove only that task's completion for the current local date in the same update. Preserve the task record and its historical completions.
 
 ## Other approved business rules

@@ -210,14 +210,14 @@ Supabase Auth está implementado. Tareas, completaciones y Health funcionan en m
 
 ### Fase 07 — Persistencia, seguridad y entrega
 
-Solicitar aprobación antes de ejecutar migraciones, funciones SQL o cambios de esquema. Habilitar escrituras de la aplicación una vez verificadas la integridad y el aislamiento en el entorno autorizado. Los commits indicados son propuestas.
+Solicitar aprobación antes de ejecutar migraciones, funciones SQL o cambios de esquema. Mantener cerradas las escrituras de clientes hasta verificar la integridad y el aislamiento de 07-02 en el entorno autorizado. Los commits indicados son propuestas.
 
 #### 07A. Datos y seguridad Supabase (P0)
 
 | ID y estado | Objetivo, alcance y dependencias | Skills | Aceptación y verificación técnica | Validación manual | Commit propuesto |
 |---|---|---|---|---|---|
 | **07-00 · Completado sin commit propio** | Diagnóstico de solo lectura de las dos migraciones y contraste de AUD-02-04, 05 y 07. | architecture-guardian, ub-mode, ciber-security | Revisión estática completada. AUD-02-07 consta en el informe de conversación como «Contratos provisionales ante errores de persistencia». | El propietario consultó `pg_tables` con `schemaname = 'public'` en Supabase SQL Editor. Resultado `Success. No rows returned` (cero filas). | — |
-| **07-01 · Pendiente** | Diseñar la validación SQL del día local y las garantías de escritura según DEC-07-01 y DEC-07-02 tras cerrar 07-00. | architecture-guardian, ub-mode, ciber-security | AUD-02-04, 05 y 06. Rechazar registros anteriores al alta real, proteger días cerrados, unicidad, estado activo y límites concurrentes. Aplicar §02.6 de forma atómica, incluida la conservación de la marca ante un nombre equivalente. Probar fallos parciales y límites. | Revisar el diseño de fecha y los resultados de historial, límites y reversión. | `fix(db): enforce task integrity and atomic writes` |
+| **07-01 · En revisión** | Migración local de garantías SQL según DEC-07-01, DEC-07-02 y DEC-07-04 tras cerrar 07-00. | architecture-guardian, ub-mode, ciber-security | AUD-02-04, 05 y 06. Validación temporal, límites, unicidad y operaciones transaccionales. Revisión estática realizada. Casos reproducibles preparados en `supabase/tests/07-01-task-integrity.md`. Aplicación y verificación real pendientes de autorización. | Revisar el diseño, los permisos y, tras autorizar la ejecución, los resultados de historial, límites y reversión. | `fix(db): enforce task and completion integrity` |
 | **07-02 · Pendiente** | Políticas RLS (seguridad por fila) y permisos mínimos para el esquema y las operaciones de 07-01. | architecture-guardian, ciber-security | Con dos cuentas verificar lectura y escrituras autorizadas, referencias cruzadas rechazadas y escrituras directas restringidas. Comprobar acceso anónimo y que los permisos no permitan saltar 07-01. | Revisar la evidencia de aislamiento y permisos efectivos en el entorno autorizado. | `fix(db): enforce account isolation for persistent writes` |
 | **07-03 · Pendiente** | Siembra inicial única de las seis tareas por cuenta. Depende de 07-01 y 07-02. Cubre la siembra de AUD-02-07. | architecture-guardian, ub-mode, ciber-security | Dos inicializaciones concurrentes producen tres tareas por escalera una sola vez. Reingreso y retiro previo no vuelven a sembrar. | Abrir una cuenta de prueba, recargar y confirmar que no aparecen duplicados. | `feat(data): seed default tasks once per account` |
 | **07-04 · Pendiente** | Cargar tareas, completaciones, Health y perfil donde corresponda. Depende de 07-02 y 07-03. Reutilizar el estado compartido. | architecture-guardian, ub-mode, ciber-security | AUD-02-02 y 07. Verificar carga, vacío, error y reintento. Las respuestas de lectura o cierre tardías no afectan otra cuenta. El historial incluye tareas archivadas y los datos se adaptan a tipos e identificadores persistidos. | Recargar y alternar cuentas, comprobando que cada una muestra sus datos. | `feat(data): hydrate private session from Supabase` |
@@ -228,6 +228,8 @@ Solicitar aprobación antes de ejecutar migraciones, funciones SQL o cambios de 
 | **07-09 · Pendiente** | Cierre funcional y de seguridad tras 07-02 a 07-08. | architecture-guardian, ub-mode, ciber-security | Verificar con dos cuentas navegación, recarga, errores de red, historial, fechas y aislamiento. Comprobar alta, restauración y cierre con Auth real y revisar mensajes de confirmación y privacidad según la configuración (AUD-02-08). | Revisar el informe y repetir los escenarios de aceptación acordados. | — |
 
 **Evidencia de cierre de 07-00.** La consulta de solo lectura del propietario no mostró tablas visibles en `public`. Según esa comprobación, las tablas de la aplicación aún no están desplegadas. La consulta no informa sobre los usuarios de Supabase Auth. RLS efectivo, atomicidad, concurrencia y aislamiento siguen pendientes de implementación o verificación. En 07-00 no se ejecutaron migraciones ni operaciones destructivas.
+
+**Acuerdos de 07-01 pendientes de aplicar o verificar.** Se conserva la nomenclatura SQL de la migración local. Ajustar Health para devolver `null` sin crear fila si se solicita `false` y aún falta la fila diaria, según el dossier §02.7. Revisar técnicamente la compatibilidad de los identificadores de zona de los navegadores según §02.4. Estos acuerdos no equivalen a una migración aplicada ni a pruebas de ejecución superadas.
 
 #### 07B. QA, despliegue y entrega (P0)
 
@@ -269,6 +271,8 @@ El calendario es una guía, **no una declaración de trabajo completado**, y deb
 ## 6. Flujo de trabajo y arranque de tarea
 
 Seguir el flujo de aprobación de `AGENTS.md`. El plan registra el alcance, las dependencias y el estado de cada objetivo. El propietario realiza personalmente el commit tras validar el objetivo.
+
+**Acuerdos de frontend para un objetivo posterior.** `TaskPages` sustituirá `LadderPage`. `TaskPages` y `TaskLadders` identificarán colectivamente Activities y Learning según corresponda. Conservar la lógica compartida y limitar la limpieza a carpetas vacías y código cuyo desuso se haya comprobado. La ejecución queda pendiente de autorización.
 
 ### DOC-01 · Actualización del flujo de desarrollo y revisión
 
