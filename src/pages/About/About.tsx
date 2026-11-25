@@ -41,8 +41,9 @@ export default function About() {
         <section aria-labelledby="about-creator">
           <h2 id="about-creator">About the Creator</h2>
           <p>
-            ADHD Ladder was created as a final project for the TripleTen web
-            development program. The creator’s bio is pending approval.
+            I'm Dara, a web development student focused on frontend. I built
+            ADHD Ladder as my final project for the TripleTen web development
+            program.
           </p>
         </section>
         {canGoBackToLanding && (

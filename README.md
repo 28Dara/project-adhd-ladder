@@ -1,10 +1,12 @@
 # ADHD Ladder
 
-Aplicación web para organizar hábitos y tareas en pasos pequeños y visualizar el progreso. Proyecto final de desarrollo web de TripleTen, Etapa 1. La base actual incluye las páginas públicas de inicio y acerca del proyecto.
+Aplicación web para organizar hábitos y tareas en pasos pequeños y visualizar el progreso. Proyecto final de desarrollo web de TripleTen, Etapa 1, y proyecto de portafolio frontend. Tras iniciar sesión puedes abrir Life, marcar tareas en Activities y Learning, registrar objetivos en Health y revelar una frase del día.
+
+Los cambios de tareas y Health se mantienen al navegar por el área privada. Se reinician al recargar o salir de esa sesión.
 
 ## Stack
 
-Vite, React, TypeScript y React Router en modo declarativo. Los estilos usan CSS, Normalize.css y fuentes locales empaquetadas por Fontsource. ESLint revisa el código y Prettier aplica el formato compartido.
+Vite, React, TypeScript y React Router en modo declarativo. Supabase Auth gestiona las sesiones. Los estilos usan CSS, Normalize.css y fuentes locales empaquetadas por Fontsource. ESLint revisa el código y Prettier aplica el formato compartido.
 
 ## Instalación y ejecución
 
@@ -25,7 +27,7 @@ Life consulta el [endpoint de frases aleatorias de DummyJSON](https://dummyjson.
 
 La frase revelada se conserva durante el día local al navegar. La aplicación evita frases reveladas en los seis días anteriores mediante un máximo de cinco solicitudes por intento y permite reintentar manualmente. El historial se guarda solo en memoria durante la sesión privada y se reinicia al recargar, cerrar sesión o cambiar de cuenta.
 
-## Configuración local de Supabase
+## Configuración de Supabase para desarrollo
 
 1. Crea un proyecto en el [panel de Supabase](https://supabase.com/dashboard).
 2. Abre **Connect** en el proyecto y copia la URL del proyecto y la clave **Publishable**. También puedes encontrar la clave en **Settings → API Keys**.
@@ -42,5 +44,5 @@ Durante la maquetación, usa `var(--font-body)` con Patrick Hand 400 para el tex
 
 ## Pendientes de la Etapa 1
 
-- URL de producción.
-- Configuración de Supabase.
+- Publicar la aplicación y registrar aquí su URL.
+- Conectar la persistencia de tareas y Health y verificar el aislamiento por cuenta.

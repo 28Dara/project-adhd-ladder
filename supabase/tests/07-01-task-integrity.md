@@ -1,6 +1,6 @@
 # 07-01 · Verificación pendiente de ejecución
 
-Ejecutar únicamente en un Supabase local aislado y verificado, con identidades desechables y sin datos reales. 07-02 completará la verificación de aislamiento con dos cuentas del servicio de autenticación.
+El procedimiento conserva los casos y la evidencia de la revisión local. Para el MVP, el destino previsto es el proyecto académico existente en Supabase Cloud. Antes de ejecutar una prueba allí, aprobar el SQL retenido y autorizar las operaciones, las cuentas de ensayo y los permisos correspondientes. Las instrucciones de concesiones temporales de esta guía eran para un entorno desechable y requieren un plan específico antes de aplicarse a Cloud. 07-02 completará la verificación de aislamiento con dos cuentas.
 
 ## Evidencia del 25 de noviembre de 2026
 

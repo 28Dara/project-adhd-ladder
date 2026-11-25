@@ -1,16 +1,14 @@
 import { useLayoutEffect, useRef, useState } from 'react'
+import { MAX_QUOTE_REQUESTS, QUOTE_HISTORY_DAYS } from '../config/constants'
 import type { DailyQuoteState, Quote } from '../types/quote'
 import { getPreviousLocalDateKey } from '../utils/dates'
 import { fetchRandomQuote } from '../utils/quotesApi'
-
-const HISTORY_DAYS = 6
-const MAX_REQUESTS = 5
 
 type RevealedQuote = { date: string; quote: Quote }
 type QuoteAttempt = { date: string; state: DailyQuoteState }
 
 function getRecentQuotes(history: readonly RevealedQuote[], date: string) {
-  const earliest = getPreviousLocalDateKey(date, HISTORY_DAYS)
+  const earliest = getPreviousLocalDateKey(date, QUOTE_HISTORY_DAYS)
   return history.filter((entry) => entry.date >= earliest && entry.date <= date)
 }
 
@@ -69,7 +67,7 @@ export function useDailyQuote(today: string, syncDate: () => string) {
         recent.map(({ quote }) => normalizeQuoteText(quote.text)),
       )
 
-      for (let index = 0; index < MAX_REQUESTS; index += 1) {
+      for (let index = 0; index < MAX_QUOTE_REQUESTS; index += 1) {
         const quote = await fetchRandomQuote(signal)
         if (!isCurrent()) return
 

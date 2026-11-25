@@ -8,6 +8,8 @@ Recover actual status using available project sources, relevant code, local Git 
 
 Define one coherent outcome, bounded files/consumers and non-goals. Search for existing equivalent responsibilities before proposing new ones; compare behavior, inputs, outputs, effects and domain intent, not just names. Reuse only genuinely shared responsibility; preserve distinct rules. Consider data shape, types, source of truth, ownership, lifecycle, failure paths and concurrency as relevant. Keep UI presentation separate from data access where project architecture requires it. Avoid storing redundant derived data. Prefer a minimal safe change over speculative redesign.
 
+Choose the simplest safe path that satisfies current requirements. Prefer a managed or native mechanism when it preserves the contract. Compare the benefit of simplification with the cost, delivery impact and regression risk of changing working code. Retain existing mechanisms when removal costs more or weakens an essential guarantee.
+
 Explain meaningful alternatives and tradeoffs. For frontend decisions reserved by the owner, group choices with recommendation and custom option. For backend delegated decisions, present the overall technical approach and explain what/how/why/purpose, affected files/resources, risks and validation; no approval per internal name. Do not force the owner to verify advanced backend implementation details outside their knowledge.
 
 ## Resource budget

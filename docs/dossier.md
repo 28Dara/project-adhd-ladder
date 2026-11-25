@@ -53,11 +53,17 @@ Las cuatro escaleras comparten criterios visuales, pero **no** necesariamente la
 
 ### Alcance y prioridades
 
-**MVP comprometido:** rutas, Auth, CRUD de tareas por usuario, marcación por día, cálculos derivados, Health, API independiente de frases con carga/error/reintento, responsive, README, despliegue, pruebas RLS y PR. La entrega corresponde a **Etapa 1**, aunque utiliza Supabase como backend gestionado. La Etapa 2 (backend propio) no se está desarrollando.
+**[DECIDIDO] Propósito al 25 de noviembre de 2026.** MVP académico de frontend y pieza de portafolio para un grupo pequeño de usuarios de demostración. La entrega debe ser funcional, comprensible, mantenible y defendible por una desarrolladora especializada en frontend. El backend académico previsto es el proyecto existente en Supabase Cloud. La autorización de cualquier operación remota se mantiene separada del diseño.
 
-**Fuera de alcance:** backend Express, MongoDB, JWT propio, notificaciones, analítica clínica, gamificación compleja y estadísticas no previstas.
+| Capa de alcance | Qué comprende |
+|---|---|
+| Requisitos académicos | Rúbrica oficial de TripleTen Etapa 1. Ver §04 para su resumen, la API real mediante `fetch()`, el README, el despliegue recargable y el enlace al PR. |
+| Producto esencial | Auth, aislamiento por cuenta con RLS, tareas y completaciones por día, archivo con historial, progreso derivado, Health y los flujos aprobados que los sostienen. |
+| Comportamiento adicional aprobado | Racha, antigüedad, tareas iniciales y comportamiento de la frase según §§02.6–02.10. La persistencia de frases está aprobada en DEC-07-03. Un aplazamiento que cambie el alcance de la entrega necesita decisión explícita. |
+| Mejoras opcionales | Pulido cosmético y controles adicionales justificados por evidencia. El plan conserva los pendientes P2. |
+| Fuera del MVP | Operación comercial, infraestructura de carga, Docker, WSL, Supabase CLI, servicios separados, backend propio de Etapa 2, JWT propio, analítica clínica y funciones especulativas. |
 
-Ante presión de tiempo, recortar mejoras estéticas o funciones P2 antes que seguridad RLS, API de frases, persistencia necesaria, deploy o PR.
+Priorizar la conformidad académica y una versión demostrable con seguridad e integridad verificadas. Mantener las decisiones de producto del capítulo 02 hasta que el propietario autorice un cambio concreto.
 
 ---
 
@@ -255,10 +261,13 @@ Ilustraciones de producción en WebP, iconos/logo en SVG según conveniencia, de
 
 ### A · Condiciones críticas de entrega de TripleTen (Etapa 1)
 
+La fuente de la rúbrica es `Etapa_1_aplicacion_front_end.pdf`. La revisión de entrega debe contrastarla con las lecciones 1.1 y 1.2 cuando estén disponibles. Confirmar el acceso del revisor a la funcionalidad desde `/`.
+
 - [ ] Entregar URL del PR `stage-frontend` → `main` antes del plazo.
 - [ ] `npm install`, `npm run dev`, `npm run build` y `npm run lint` sin fallos.
 - [ ] API third-party consumida realmente con `fetch()`, datos visibles y estados de carga/error.
 - [ ] Aplicación desplegada y rutas internas recargables sin 404.
+- [ ] Errores críticos de una revisión académica anterior corregidos, si aplica.
 - [ ] README con nombre, propósito, stack, proveedor de API y URL pública.
 
 ### B · Calidad frontend

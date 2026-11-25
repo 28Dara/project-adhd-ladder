@@ -1,8 +1,7 @@
+import { MAX_ACTIVE_TASKS } from '../config/constants'
 import type { Task, TaskData, TaskLadder } from '../types/task'
 import { getLocalDateKey } from './dates'
 import { updateTaskCompletion } from './taskCompletions'
-
-export const MAX_ACTIVE_TASKS = 4
 
 function normalizeTaskTitle(title: string): string {
   return title.trim().replace(/^./u, (first) => first.toUpperCase())

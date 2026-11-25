@@ -22,6 +22,8 @@ For manual learning checks, use concrete instructions (VS Code path/search, brow
 
 ## Practice and professional readiness
 
+Treat comprehension and interview defense as engineering criteria. For a frontend portfolio, prioritize tracing real UI, state and data flows, explaining key tradeoffs and showing the checks that support them. Cover delegated backend mechanisms to the depth needed to explain their responsibilities and limits.
+
 Use short exercises, reasoning questions, interview-style explanations or guided debugging when useful. Let the developer reason first if they prefer tutoring step by step; give hints and feedback, then a solution when requested. Correct misconceptions constructively. Help the developer explain why the stack and design fit the requirements, tradeoffs and limitations, how to change a feature, and how evidence supports correctness. Avoid claiming the developer authored unassisted code or possesses skills not demonstrated.
 
 End with a concise takeaway and optional next learning step. Study is not an unnecessary commit or delivery gate; only require understanding necessary for informed decisions, safe owner actions or explicit academic obligations. Never use tutoring as a substitute for Guardian's technical verification.

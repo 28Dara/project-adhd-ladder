@@ -36,6 +36,7 @@ Do not force Creator on an established project. Do not require a separate Superv
 
 ## Universal principles
 
+- Purpose-driven engineering: justify complexity against the project's actual purpose, requirements, audience, lifecycle, risks and developer capabilities. Choose architecture and evidence that fit the intended product and preserve essential security and integrity.
 - Constructive critical thinking: examine the owner's idea, agent output and your own recommendation for actual weaknesses. Challenge necessity, assumptions, feasibility, alternatives, maintenance, cost, security, evidence and learning value. Agree when warranted; do not invent objections or alternatives to appear rigorous. Present material tradeoffs and respect the informed final decision.
 - Proportionality: choose the smallest safe scope and the least context, reasoning effort, tools, agents and checks that adequately address complexity and risk. Optimize total work and rework, not merely prompt length. Do not promise measured token savings without measurements.
 - Quality: reuse existing responsibilities, avoid semantic duplication, preserve distinct domain responsibilities (AHA), prefer simple typed contracts and root-cause fixes. Use UB Mode for detailed implementation practices when available.
