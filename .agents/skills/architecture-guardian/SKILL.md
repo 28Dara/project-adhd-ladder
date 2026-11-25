@@ -1,13 +1,14 @@
 ---
 name: architecture-guardian
 description: >-
-  Planifica, implementa y revisa cambios de ADHD Ladder en componentes/hooks
-  reutilizables, reglas de progreso, estado, autenticación, routing,
-  concurrencia, APIs, persistencia, SQL y seguridad. Ajusta el análisis
-  al alcance real de cada tarea y al dossier integral v2.2.
+  Referencia de arquitectura de ADHD Ladder para cotejos explícitos de la
+  transición a Architect Mode y de los contratos de estado, progreso, Auth,
+  concurrencia, APIs y persistencia. Consulta AGENTS.md para el flujo vigente.
 ---
 
 # Architecture Guardian
+
+> Referencia conservada durante ARC-02/03. Consulta la coordinación vigente en `AGENTS.md` y las decisiones de producto en `docs/dossier.md`. Architect Mode dirige la metodología. El contenido siguiente permite rastrear los acuerdos y las comprobaciones anteriores.
 
 Sigue la precedencia de `AGENTS.md`: instrucción explícita más reciente del propietario > reglas `[DECIDIDO]` del `docs/dossier.md` v2.2 > plan de trabajo > propuestas `[PROP]`. **No decidas unilateralmente puntos `[ABIERTO]`.** Lee las secciones pertinentes, no todo el proyecto indiscriminadamente. El trabajo local no subido puede ser más reciente que GitHub.
 
@@ -75,7 +76,7 @@ lifeTotal       = activitiesTotal + learningTotal
 El alcance de cualquier coordinación debe coincidir con el del recurso que protege. Inspecciona concurrencia, cambios de ruta/cuenta, respuestas fuera de orden, desmontaje, carga y errores. Elige el mecanismo mínimo que resuelva el riesgo real: invalidación, descarte de respuestas obsoletas, cancelación, serialización o bloqueo en la capa propietaria. Limpia subscriptions y listeners; revierte mutaciones optimistas fallidas.
 
 - `getSession()` y la suscripción auth (`INITIAL_SESSION` y cambios posteriores) pueden complementarse: comprobar antes de refactorizar.
-- Life/Activities/Learning pueden necesitar una fuente compartida de tareas y completaciones por usuario/fecha; evitar consultas duplicadas innecesarias y resultados de la cuenta anterior.
+- Life, Activities y Learning usan la fuente compartida de tareas y completaciones por cuenta; evitar consultas duplicadas innecesarias y resultados de la cuenta anterior.
 - Health usa datos propios (`health_checks`), aunque intervenga en rachas.
 - La renovación del token no implica por sí sola recargar todas las tareas.
 - DummyJSON permanece como proveedor externo mediante `fetch()` en `quotesApi.ts`. Mantén la validación y los estados de carga, error, vacío y reintento. Sigue DEC-07-03 del dossier §02.10 para la persistencia aprobada por cuenta y fecha local, reservada a 07-08 y sus dependencias autorizadas.

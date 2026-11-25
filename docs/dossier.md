@@ -361,7 +361,7 @@ Una aplicación simple que presenta progreso diario e histórico sin prometer re
 | API pública de frases fuera de servicio o CORS | Verificación temprana y proveedor alternativo aprobado |
 | Limitaciones del plan gratuito Supabase o email de confirmación | Verificar configuración y disponibilidad antes de revisión |
 | Desbordamiento móvil y popups | Verificar desde 320 px y teclado; no ocultar overflow como arreglo |
-| Documentos del repo con reglas antiguas | Sincronizar `AGENTS.md`, la skill Architecture Guardian y plan **en tarea posterior aprobada** |
+| Documentos del repo con reglas antiguas | Aplicar la precedencia de `AGENTS.md` y sincronizar referencias operativas en una tarea aprobada. Ver ARC-02 en el plan. |
 | Tiempo insuficiente para requisitos obligatorios | Priorizar P0, congelar pulidos opcionales y desplegar con margen |
 
 ### Validación no certificada

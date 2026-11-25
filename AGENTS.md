@@ -1,113 +1,62 @@
-# ADHD Ladder — AI development instructions (aligned with dossier v2.2)
+# ADHD Ladder — Repository operating instructions
 
-## Role, authority and source of truth
-- Help the owner develop their own judgment while learning full-stack development with a frontend specialization. Work step by step, slowly and safely. Prioritize understanding, quality, security and the owner's autonomy over speed.
-- The owner approves product rules, scope and integration.
-- **Precedence:** owner's latest explicit instruction > `[DECIDIDO]` rules in `docs/dossier.md` v2.2 > `docs/plan-de-trabajo.md` > `[PROP]` proposals. `[ABIERTO]` is unresolved, not permission to choose.
-- The dossier is the **complete normative product specification**. The plan tracks the schedule, backlog and objective status. This file guides how the work is carried out.
-- Read the dossier sections relevant to a task. For UI changes, use the relevant `docs/design/mockups/` image, `docs/design/paleta-colores.md` and `src/styles/variables.css`. Mockups and reports do not establish that functionality has been tested.
-- Historic statements in the dossier or plan do not override the latest normative rules. Report contradictions before implementing.
+## Authority and project sources
 
-## Design responsibilities
-- **Frontend.** The owner chooses and approves naming, architecture, structure, components, variables, functions, implementation patterns and design. The AI presents alternatives, recommendations and explanations.
-- **Backend.** The AI selects and recommends technical solutions for internal naming, SQL, persistence, architecture, security and concurrency. Before implementation, explain what is proposed, how it works, why it was chosen, what it achieves, which files and resources it affects, and what risks and checks remain. The owner reviews and explicitly approves the proposal as a whole. Internal identifiers do not need individual approvals. Delegating technical selection leaves review and authorization with the owner.
+- Follow platform and workspace controls. Within those boundaries, precedence is the owner's latest explicit instruction > `[DECIDIDO]` rules in [dossier v2.2](docs/dossier.md) > [work plan](docs/plan-de-trabajo.md) > `[PROP]` proposals. An `[ABIERTO]` decision requires the owner. Report material contradictions before acting on the affected scope.
+- [Architect Mode](.agents/skills/architect-mode/SKILL.md) leads methodology. This file defines repository conventions, permissions and verification. The dossier governs product and architectural contracts. The plan is the operational backlog and records the state of each objective.
+- Use the TripleTen Etapa 1 brief when available. The dossier §04 collects acceptance checks and §05 records the project's brief, priorities and Definition of Done. For UI work, consult the relevant image in `docs/design/mockups/`, [palette](docs/design/paleta-colores.md) and [CSS tokens](src/styles/variables.css). Mockups establish visual intent. Verify behavior against the current code.
+- Start from the local tree and `git status`. Read the affected contracts, modules and consumers before making changes. Local work can be newer than GitHub.
 
-## Stack and delivery scope
-- Vite, React, TypeScript, React Router, semantic HTML, CSS Grid/Flex and responsive design from 320px.
-- Supabase Auth + PostgreSQL with RLS for user data. **Stage 1 only**; no custom Express/Node server, MongoDB or home-built JWT system.
-- The **separate third-party quotes API** uses DummyJSON via `fetch()` in `src/utils/quotesApi.ts`. Real requests have verified the integration. Preserve response validation and loading, empty, error and retry states. Daily quotes and comparison history currently remain in private-session memory. DEC-07-03 in dossier §02.10 defines the approved persistence contract, reserved for 07-08 and its authorized dependencies.
-- Target: deployed usable application with README and PR from `stage-frontend` to `main` before November 30, 2026; aim for November 28–29.
+## Owner decisions and delivery workflow
 
-## Development order
+- The owner approves product rules, scope and integration. For frontend, the owner chooses or approves naming, structure, components, variables, functions, patterns and design. Reuse approved conventions. For backend, present one technical proposal covering what, how, why, purpose, affected files/resources, risks and verification. The owner approves it as a whole.
+- Keep proposal approval, prompt generation, execution, acceptance and moving to the next objective as distinct owner decisions. ChatGPT coaches and proposes the scope and acceptance criteria. Generate a Codex prompt after explicit authorization. Codex implements the authorized objective, verifies it and stops for review. Follow existing approval for routine steps and corrections within the authorized scope. Request a new decision for a material conflict or scope change.
+- Review technical evidence before manual acceptance. Give the owner reproducible, representative checks with the exact location or action, expected behavior and what signals failure. The owner handles visual and manual acceptance. The technical executor verifies SQL, RLS, and concurrency in an authorized environment. Optional learning does not gate a technically accepted commit.
+- Keep one logical objective per commit. The plan preserves project → phase → section, stable IDs, scope, dependencies, skills, acceptance, status and proposed commits. Use Pending, In development, In review, Completed or Blocked, or their Spanish equivalents. Track implementation, technical checks, manual acceptance, owner approval, local commit, publication and integration separately. Record actual hashes when known. Put independent findings and regressions in the plan as proposals until approved. Preserve P0/P1/P2.
+- Use `feature/*`, `stage-frontend` and `main`. The owner makes commits personally and may accumulate approved local commits before publishing. Use Conventional Commits when proposing a message. Branch creation, staging, push, merge, reset, rebase and other Git writes require explicit authorization. Preserve history and keep approval for publication and integration separate.
 
-1. Visual frontend.
-2. Frontend behavior and business logic.
-3. Backend and persistence with Supabase.
-4. Integration, QA, deployment and delivery.
+## Skill and tool selection
 
-Plan for Supabase architecture, data integrity and security constraints during frontend development, even if persistence is deferred. Use the simplest provisional data and typed contracts that fit the approved model, including ownership, stable IDs, local dates, history preservation and RLS boundaries. Avoid temporary architecture that will need to be replaced when persistence is connected.
+Use Architect's routing for planning, direction, review or learning. For an already authorized implementation, use the relevant specialist instructions and project contracts. Load Architect mode references only as the task calls for them. Select the smallest set that covers the actual work.
 
-## Project structure and architecture
-- Pages: Landing, About, SignUp, LogIn, Life, Health, Activities, Learning (`src/pages/`). Shared UI belongs in `src/components/`, auth/shared state in existing `src/context/` or authorized shared hooks, data access in `src/hooks/` or `src/utils/`, types in `src/types/`, constants in `src/config/`, CSS in `src/styles/`, images in `src/images/`, SQL migrations in `supabase/migrations/`.
-- **Never query Supabase directly from visual components.** Use typed data hooks and utilities; derive progress, Health color, local dates and streaks in testable pure functions.
-- Reuse the task UI and mutations for Activities/Learning; use stable unique IDs as keys, never list indices. Use the existing code and approved patterns rather than creating duplicate providers, hooks or systems.
-- Life, Activities, Learning and Health must work without depending on another page's mount or internal state. Activities and Learning use the same source of truth for tasks and completions. Life reads values derived from that source. Health owns its daily check records independently.
-- Calculate counters, Health color and other derived values from the underlying records. Avoid storing redundant copies in state or persistence.
-- Apply Architecture Guardian to changes in shared state, business rules, data access, async operations, auth or routing, as detailed in the skill coordination section. Limit analysis to affected modules and dependencies.
+| Skill | Selection and local source |
+|---|---|
+| `architect-mode` | Project planning or a material planning gap (#Creator), technical direction and briefs (#Dev), evidence review (#Guardian), or tailored learning (#Tutor). [Routing](.agents/skills/architect-mode/SKILL.md#mode-routing) |
+| `ub-mode` | Implementation quality, reusable responsibilities, types, root-cause fixes and behavioral checks. [Local skill](.agents/skills/ub-mode/SKILL.md) |
+| `ciber-security` | Proportionate checks when a change affects Auth, authorization, persistence, sensitive data, credentials or external APIs. Full audit on explicit request. [Local skill](.agents/skills/ciber-security/SKILL.md) |
+| `modern-web-guidance` | Read the relevant installed guides for a specific HTML/CSS, browser API, compatibility or accessibility question. [Local guides](.agents/skills/modern-web-guidance/guides/) when installed. |
+| `impeccable` | Consult relevant local references for design, UX or visual review within an authorized UI task. A separate request by skill name is optional. [Local references](.agents/skills/impeccable/reference/) when installed. |
+| `find-skills` | Consult the available skill catalog when the owner asks to discover capabilities. Installation or connection is a separate action. |
+| `architecture-guardian` | Retained ADHD Ladder reference for targeted comparison and transition review. Routine work follows the dossier, repository rules, and selected specialists. [Local reference](.agents/skills/architecture-guardian/SKILL.md) |
 
-## Skill coordination and scope
-- Select only the skills relevant to the task. In new Codex prompts, explicitly name the selected installed skills using `$architecture-guardian`, `$ub-mode` and/or `$ciber-security`; if the interface does not resolve these references, request them by name. Verify availability; never claim a skill was loaded or a tool was run without evidence.
-- `architecture-guardian`: project architecture, approved domain rules, shared components/state, routing, data access, lifecycle and preservation of existing contracts. Use the relevant portions even for focused visual tasks.
-- `ub-mode`: implementation quality, simplicity, types, behavioral tests, root causes, semantic duplication detection and AHA. Before creating code, check for equivalent responsibilities regardless of name or syntax; do not merge independent domain rules merely because their implementations look alike. Apply checks proportionately; optional tools are not mandatory installation or refactoring gates.
-- `ciber-security`: proportionate preventive checks for tasks involving authentication, authorization, persistence, sensitive data, external APIs, credentials or other material security risks. Perform a full audit only when requested; distinguish findings from authorized fixes.
-- Consult the installed skill instructions when available (the existing Architecture Guardian path is `.agents/skills/architecture-guardian/SKILL.md`). The shared project reference `ADHD-Ladder-acuerdos-skills-y-metodologia.md` contains the agreed methodology and reference copies of the three skills; do not assume it exists in the local repository or that its copies are installed. Use the relevant principles if a skill is unavailable and disclose the limitation.
-- Planning/review assistants should apply relevant skill principles to their own analysis, without claiming an actual skill invocation. Do not repeat full skill instructions in each prompt or load unrelated sections.
-- Skills supplement the existing workflow and grant no additional permissions. Preserve approved architecture, UI, behavior and dependencies. Report out-of-scope improvements or duplication separately; stop only the affected part when a material conflict, risk or unresolved decision blocks it. No broad refactor, destructive cleanup, production change or credential rotation without corresponding approval.
+- In new Codex prompts, name the relevant installed skills explicitly using `$skill-name` or the plain name if the interface cannot resolve it. Check availability and use the relevant local principles if a skill is missing. End planning responses containing a Codex prompt with the lowest adequate analysis level supported by the environment and a brief rationale.
+- Local tools include shell and workspace tools, Git for inspection, project npm scripts and browser/DevTools for authorized checks. Supabase and GitHub access depend on the session and the authorized operation. Use only agents or connectors actually available for the task. Review can stay in the current session. Delegate only when permitted and worthwhile.
+- Treat third-party skill files as local documentation by default. Executing their launchers, engines, scripts, hooks, Live, Loop, or MCP requires specific authorization, as do downloads, account linking/authentication, synchronization and external transmission of project data. Reading guidance or receiving a tool suggestion carries no execution permission.
+- Get explicit authorization for migrations (including local application), remote SQL, schema or production changes, destructive operations, credential rotation and new dependencies or tools outside scope. Keep secrets and `service_role` out of frontend code, `VITE_` variables, Git, logs and chat. `VITE_` is for public config. Keep `.env` untracked and `.env.example` sanitized.
 
-## Codex analysis level in planning responses
-- End every planning-assistant response that includes a Codex prompt with the recommended analysis level and a brief justification. Include the explicit skill selection as described above.
-- Choose among **Low, Medium, High, Extra High, Max and Ultra** based on complexity, dependencies, risk, security impact and token cost. Use the lowest level that covers the work and justify using a higher level when the task warrants it.
+## Stack and repository conventions
 
-## Owner approval workflow
+- Etapa 1 uses Vite, React, TypeScript, React Router, semantic HTML, CSS Grid/Flex and responsive layout from 320 px. Supabase Auth and PostgreSQL with RLS are the backend. Express/Node servers, MongoDB and custom JWT systems are outside Etapa 1.
+- Work in order from visual frontend to frontend behavior, Supabase persistence, integration, QA, deployment and delivery. Plan ownership, stable IDs, local dates, history preservation and RLS early. Use the simplest typed provisional data compatible with the approved model.
+- Follow the existing organization in dossier §03. Keep pages under `src/pages/`, shared UI under `src/components/`, data access in typed hooks/utilities, and migrations in `supabase/migrations/`. Reuse task UI and mutations across Activities and Learning. Use stable IDs as keys, with no index keys for tasks.
+- Visual components own presentation and their style imports. Keep drafts and menus local where possible. Route-spanning resources belong to the existing shared context or hooks. Keep Supabase and external requests in typed data hooks/utilities. Derive dates, progress, Health state and streak with pure functions.
+- Life, Activities, Learning and Health must support direct access independently of other pages' mounts. Activities and Learning share tasks and completions by account. Life derives progress from those records. Health owns daily check records independently.
+- Keep authentication in the existing `AuthProvider` and route handling. Verify sign-up, sign-in, sign-out, restoration and protected redirects. Check `getSession()` and `onAuthStateChange` responsibilities before consolidation. Handle session races at the provider. Refreshing a token alone does not require refetching all tasks.
+- Coordinate mutations in the layer that owns the resource. Where relevant, verify order of events across route/account changes, late responses, unmount, retries, loading, empty data and errors. Clean up subscriptions/listeners and revert failed optimistic writes. Check actual consumers before deleting code. Measure the relevant problem before adding memoization or dependencies.
 
-1. The owner discusses progress with ChatGPT. ChatGPT verifies the state, gives feedback and proposes the next steps.
-2. The owner reviews and approves the proposal. Confirm scope and acceptance criteria.
-3. ChatGPT asks the owner for permission to generate the Codex prompt. After that authorization, ChatGPT generates it.
-4. The owner decides when to authorize and run implementation. Codex implements only the authorized scope, runs the pertinent automated checks and delivers its report.
-5. ChatGPT analyzes, verifies and summarizes the report, then identifies what the owner should inspect manually and provides a step-by-step checklist.
-6. The owner performs the manual checks and reports the results and questions. ChatGPT assesses readiness and recommends a commit message.
-7. The owner makes the commit personally and requests the next objective.
+## Contracts to check by change
 
-- Each transition requires explicit owner authorization. Proposal approval, prompt generation, execution, acceptance and moving to the next objective are separate. An existing approval remains valid unless there is a material conflict, new evidence or an explicit request to revisit it.
-- Record approved decisions promptly in the applicable source. Consult current sources before asking. Group related approvals and allow the owner to approve recommendations together or specify exceptions. Use compact interactive panels in ChatGPT and equivalent checklists in Codex. Keep the workflow proportionate and avoid repeating normative rules across files.
+| Area | Authoritative reference and verification |
+|---|---|
+| Progress and local date | Dossier §§02.2–02.5 and §04.D. Verify uniqueness, the Today/Total cutoff, Life's numerical sums, active-task denominator, the Monday-to-Tuesday case, and reopening after a gap. Dated writes follow DEC-07-01/02/04 and AUD-02-01. Preserve the date captured at the action and the account's fixed reference. |
+| Tasks and popups | Dossier §§02.4, 02.6 and §04.D. Cover seed-once, the active-task limit and last-card rule, title normalization, Escape/outside preserving drafts, Cancel discarding them and valid Submit confirming. Verify archive and effective rename atomically remove today's completion only. Check foreign keys, cascade behavior, and historical inclusion of archived tasks. |
+| Health and streak | Dossier §§02.7–02.8. Verify three independent daily checks, rule B with text and the Life status circle, closed-day streak cases and zero Health steps. |
+| Auth and persistence | Dossier §§02.1, 02.4, 02.9, 02.11, §03 and the relevant phase 07 objective. Check approved composite owner/task references and uniqueness of task/date. RLS protects every personal table. Verify the authorized CRUD paths and cross-account denial with two test accounts, including foreign-key references. Route guards govern navigation. |
+| Quotes | Dossier §02.10, DEC-07-03 and the phase 07 plan. Keep DummyJSON as a separate real `fetch()` in `src/utils/quotesApi.ts`, response validation and loading/error/empty/retry behavior. The current private-session memory behavior changes only within 07-08 or its authorized dependencies. |
 
-## Commit-oriented planning and task lifecycle
-- Preserve the existing project → phase → section hierarchy. Subdivide remaining sections in `docs/plan-de-trabajo.md` into small, logical, measurable objectives suitable for atomic commits as work is planned. Do not split trivial changes artificially or rewrite completed history.
-- For each objective record a stable ID, objective, authorized scope, relevant skills, acceptance criteria, status and proposed commit message. Use `Pending`, `In development`, `In review`, `Completed` or `Blocked` (or their Spanish equivalents). Track implementation, technical verification, manual validation, owner approval, local commit, remote publication and integration as separate milestones. Record approval only when the owner confirms it, and record actual commit hashes only when available.
-- Plan one atomic commit for each logical objective with changes worth recording. Prefer Conventional Commits (`type(scope): description`) consistent with the repository. Include pertinent tests in the same change and explain why the change was made, what changed and how it was verified.
-- Keep the plan dynamic: add separately identified objectives for approved improvements or changes, reorder pending work according to dependencies and priorities, and keep unrelated findings as proposals until approved. A finding does not authorize implementation.
-- Before implementation, inspect current local code and Git status, consult relevant sources, identify scope and acceptance checks, and obtain any outstanding approvals. Implement one authorized objective, verify it, report results and stop for owner review before starting another. Do not mark objectives complete solely from a report or the presence of code.
-- During review, keep directly related adjustments in the same objective before its commit. Record independent changes and regressions found after an objective closes as new objectives in the plan.
-- Keep the existing branch workflow (`feature/*`, `stage-frontend`, `main`). The owner may accumulate several approved local commits before pushing. A push after each commit is optional. Obtain explicit authorization for Git writes other than the owner's personal commit, including creating branches, staging, pushing, merging or modifying `main`. Do not rewrite history merely to adopt this methodology.
+## Verification and release
 
-## Pending work and decision tracking
-- `docs/plan-de-trabajo.md` is the single operational backlog for remaining tasks, dependencies, verification and status. Record new proposed improvements there as separate pending objectives, subject to owner approval; do not create a parallel backlog or silently broaden scope.
-- `docs/dossier.md` remains the authority for product decisions, including `[ABIERTO]` items. Reference the relevant decision from the plan rather than inventing a resolution or duplicating a second normative rule. Once the owner decides, synchronize the affected documents and skill references as authorized.
-- Distinguish a reported defect, a proposed improvement, a blocked decision and verified completion. Preserve P0/P1/P2 priorities from the dossier and plan; do not let optional cleanup delay required delivery.
-
-## Approved counter rules — v2.2, mandatory
-- **Steps:** only completions of Activities or Learning tasks count. Health NEVER adds steps to Life, Activities or Learning.
-- **Today:** `activitiesToday` and `learningToday` count each respective user's completions where `completed_date === todayLocalDate` (local browser calendar day as `YYYY-MM-DD`). `lifeToday = activitiesToday + learningToday`. The Life section cards display the corresponding numerical ladder counts, not one point per section card.
-- Checking a task records at most one completion **per task per local day** and adds +1 today; unchecking today removes that day's completion and subtracts 1. No duplicates or negative counters; past days are not affected by today's unchecking.
-- **Historical totals:** `activitiesTotal` and `learningTotal` count ONLY completions with `completed_date < todayLocalDate`. `lifeTotal = activitiesTotal + learningTotal`. The ongoing day is EXCLUDED even if tasks are checked. Checking/unchecking today NEVER changes totals for previous days.
-- At the next local calendar date, yesterday's completion records naturally qualify as historical; today's checkboxes start unchecked and today's counts at 0 if there are no records for the new date. **Do not delete/move yesterday's records; do not add an incrementing lifetime counter or require a midnight cron job.** Reopening after multiple days must not duplicate anything.
-- Do not confuse the `Your steps today` numerator with a separate fraction's denominator (active tasks), and never compute historical totals by counting currently visible task cards.
-- Dates must be based on the **browser's local calendar date**, not raw `new Date().toISOString().slice(0,10)` or a hard-coded timezone. Keep date handling coherent across all views.
-
-- Follow DEC-07-01, DEC-07-02 and DEC-07-04 in dossier §02.4 for dated writes. Preserve AUD-02-01 and the date captured when the action is performed. SQL validates that date against the device's declared zone and the account's fixed write reference. Reject dates before actual Supabase Auth registration and protect closed days. Keep timezone settings out of the interface.
-- Historical completions must survive renaming or removing a task from the active list. Follow `docs/dossier.md` §02.6 for `Delete Card`. Set `archived_at` and remove only that task's completion for the current local date in the same update. Preserve the task record and its historical completions.
-
-## Other approved business rules
-- Maximum **4 active tasks** per Activities/Learning. A new account receives the six named example tasks from the dossier once only; do not recreate them on later visits. With one active task, Settings hides `Delete Card`; still support an empty list state if encountered.
-- Follow `docs/dossier.md` §02.6 for task titles. On Submit for creation or rename, apply `trim()`, uppercase the first character and preserve the rest of the text. Reject empty results. Keep the confirmed title on the task and preserve the draft as entered while the user types.
-- A confirmed rename that changes the normalized title preserves the task ID, ladder, owner and historical completions. Apply the title change and removal of only that task's current local-date completion together, if the completion exists. Confirming an equivalent normalized title, cancelling, dismissing without confirmation or submitting an invalid title leaves completions intact.
-- Health has exactly three daily checks: Good Nutrition, Good Sleep, Daily Movement; new local day has no checks until recorded. **Rule B:** 3 today -> green; 1–2 -> yellow; 0 -> yellow if yesterday had any check, red if yesterday also had zero, yellow on first account day. Pair semaphoric colors with explanatory text; never imply medical assessment.
-- The Health indicator in Life is a colored semantic circle, not a step check.
-- Streak evaluates **closed days only**. A day with at least one Activities/Learning step increments; zero steps may hold if Health was green/yellow and previous day had steps; two consecutive zero-step days or zero steps with red Health reset. Consult the dossier's exact cases; don't conflate streak with historical total or days since signup.
-- Preserve popup behavior: Escape and outside clicks keep the draft, Cancel discards it, and valid Submit confirms it. Keep the approved responsive composition.
-
-## Security, async behavior and correctness
-- RLS must protect every user-owned table. Test account A vs B, including completion foreign-key cross-user attempts and all relevant CRUD operations.
-- Use the approved unique task/date completion constraint and composite user/task reference. Review migrations and cascade actions before changes; the existing SQL may require follow-up work to enforce v2.2 history preservation. Do not run migrations, delete databases or alter schemas without authorization.
-- Never expose `service_role`, passwords or secret keys in client code, `VITE_` variables, repo or chat. Public Supabase config may be exposed through `VITE_`. Keep `.env` untracked and `.env.example` sanitized.
-- Support sign up, sign in, sign out, session restoration and private-route redirects; UI route guards do not provide data security.
-- Coordinate mutations of shared resources in their owning layer; avoid races, stale responses across navigation/account changes and leaked effects; roll back failed optimistic updates. Handle Supabase and quotes errors.
-
-## UX, verification and delivery
-- Honor mockups, palette, typography, WebP illustrations and existing CSS. Use real accessible buttons/links/labels; keyboard, focus, responsive width >=320px. Do not hide horizontal overflow to mask layout defects.
-- The owner handles visual approval and manual acceptance checks. Codex provides reproducible steps using the source code, browser and DevTools (F12), authorized Supabase queries or Git diff as applicable. Explain what to observe, where, how, why, what result to expect and what would indicate failure. Manual checks develop understanding and complement automation. A representative subset suffices when automation has already covered the cases. Physical touchscreen devices are optional.
-- Prefer the smallest safe change; no unrelated redesign, extra dependencies or broad refactoring. Review affected files and their direct consumers for regressions and dead code.
-- Before editing, identify the goal, files, relevant rules and verification. After editing, Codex runs the applicable functional, automated, regression and security checks, including `npm run build`, `npm run lint`, `npm run format:check` and `git diff --check` where applicable. Report the checks actually run, their results and any pending checks.
-- Verify checked-off work against the current local code. Local unpushed changes take precedence over remote snapshots for implementation.
-- Report what was implemented, how it works, why it was chosen, the relevant files, technical decisions, checks actually performed, risks and pending items. Stop for owner review at the authorized stage.
-- Non-negotiable final checks: real third-party quote via fetch, Supabase persistence, RLS isolation with two accounts, accessibility, deployment without SPA refresh 404, full README and a PR delivered by deadline.
+- Verify the authorized goal, direct consumers, changed files and relevant regressions. Keep visual changes bounded to approved surfaces and shared styles actually affected. Check semantic controls, keyboard, focus and responsive layout from 320 px as applicable. Fix overflow at its source.
+- For code changes run the applicable functional, regression and security checks, plus `npm run build`, `npm run lint`, `npm run format:check` and `git diff --check` where applicable. For documentation, check links and consistency, review the diff and check whitespace, including intended new files.
+- Report scope, what changed, how and why, relevant decisions, checks actually performed, results, risks and remaining verification. An implementation, report or static review does not establish effective PostgreSQL permissions or runtime behavior.
+- Release requires a real quote via `fetch()`, Supabase persistence and two-account RLS isolation, accessibility, deployed routes that survive SPA refresh, the full README and the PR from `stage-frontend` to `main`. Target November 28–29, 2026, with the official deadline on November 30, 2026.

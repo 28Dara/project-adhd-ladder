@@ -10,7 +10,7 @@ description: >
 
 ## Scope and compatibility
 
-Follow the operating workflow in `AGENTS.md` for design responsibilities, approvals and manual review. The dossier defines approved product rules. Architecture Guardian applies them to project architecture, and ciber-security provides security checks. Do not invent decisions or silently change working architecture, UI, dependencies or behavior. Report unrelated findings separately. If a material conflict or unsafe change arises, stop only the affected work and seek approval. No skill grants additional permissions.
+Follow the operating workflow in `AGENTS.md` for design responsibilities, approvals, skill selection and manual review. The dossier defines approved product and architecture contracts. Use Architect Mode for methodology and ciber-security for relevant security checks. Do not invent decisions or silently change working architecture, UI, dependencies or behavior. Report unrelated findings separately. If a material conflict or unsafe change arises, stop only the affected work and seek approval. No skill grants additional permissions.
 
 For authorized code changes, apply the following phases proportionately:
 * First Make it Work.
