@@ -150,21 +150,23 @@ create function adhd_ladder_private.authorize_day(
 )
 returns timestamptz
 language plpgsql volatile set search_path = ''
+set TimeZone = 'UTC'
 as $$
 declare
   reference_zone text;
   registration_time timestamptz := adhd_ladder_private.registration_instant();
   write_time timestamptz;
+  device_day date;
 begin
   if p_local_date is null or not pg_catalog.isfinite(p_local_date) then
     raise exception using errcode = '22023', message = 'invalid_local_date';
   end if;
-  if p_device_time_zone is null
-    or (p_device_time_zone <> 'UTC' and p_device_time_zone !~ '^[A-Za-z0-9_+-]+(/[A-Za-z0-9_+-]+)+$')
-    or not exists (
-      select 1 from pg_catalog.pg_timezone_names as tz where tz.name = p_device_time_zone
-    )
-  then
+  -- Named catalog entries include aliases without a slash. Keep free-form
+  -- offsets and POSIX specifications outside the accepted set.
+  if not exists (
+    select 1 from pg_catalog.pg_timezone_names as tz
+    where tz.name collate pg_catalog."C" = p_device_time_zone
+  ) then
     raise exception using errcode = '22023', message = 'invalid_device_time_zone';
   end if;
   if registration_time is null or not pg_catalog.isfinite(registration_time) then
@@ -190,13 +192,18 @@ begin
   if registration_time > write_time then
     raise exception using errcode = 'P0001', message = 'registration_time_unavailable';
   end if;
-  if p_local_date < pg_catalog.timezone(reference_zone, registration_time)::date then
+  -- TimeZone loads named zones without the abbreviation precedence of timezone(text, ...).
+  -- The function's SET clause restores the caller's TimeZone on exit.
+  perform pg_catalog.set_config('TimeZone', p_device_time_zone, true);
+  device_day := write_time::date;
+  perform pg_catalog.set_config('TimeZone', reference_zone, true);
+  if p_local_date < registration_time::date then
     raise exception using errcode = '22023', message = 'date_before_registration';
   end if;
-  if p_local_date <> pg_catalog.timezone(p_device_time_zone, write_time)::date then
+  if p_local_date <> device_day then
     raise exception using errcode = '22023', message = 'device_local_date_mismatch';
   end if;
-  if p_local_date <> pg_catalog.timezone(reference_zone, write_time)::date then
+  if p_local_date <> write_time::date then
     raise exception using errcode = '22023', message = 'account_local_date_mismatch';
   end if;
 
@@ -338,6 +345,13 @@ begin
   end if;
   perform adhd_ladder_private.authorize_day(account_id, action_day, p_device_time_zone);
 
+  if not p_completed and not exists (
+    select 1 from public.health_checks as h
+    where h.user_id = account_id and h.date = action_day
+  ) then
+    return null;
+  end if;
+
   -- Each branch only names the requested goal's column on insert and update.
   case p_goal
     when 'nutrition' then
@@ -409,9 +423,12 @@ create function public.set_health_goal(
   p_goal text, p_completed boolean, p_local_date text, p_device_time_zone text
 )
 returns public.health_checks
-language sql volatile security invoker set search_path = ''
+language plpgsql volatile security invoker set search_path = ''
 as $$
-  select * from adhd_ladder_private.set_health_goal(p_goal, p_completed, p_local_date, p_device_time_zone);
+begin
+  -- Return the composite value directly, including a SQL NULL.
+  return adhd_ladder_private.set_health_goal(p_goal, p_completed, p_local_date, p_device_time_zone);
+end;
 $$;
 
 revoke all on function
