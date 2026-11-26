@@ -34,6 +34,12 @@ Use Architect's routing for planning, direction, review or learning. For an alre
 - Treat third-party skill files as local documentation by default. Executing their launchers, engines, scripts, hooks, Live, Loop, or MCP requires specific authorization, as do downloads, account linking/authentication, synchronization and external transmission of project data. Reading guidance or receiving a tool suggestion carries no execution permission.
 - Get explicit authorization for data migrations (including local application), remote database operations, schema or production changes, destructive operations, credential rotation and new dependencies or tools outside scope. Keep database credentials and JWT secrets out of frontend code, `VITE_` variables, Git, logs and chat. `VITE_` is for public config. Keep `.env` untracked and `.env.example` sanitized.
 
+## Understand Anything
+
+- Start with the [onboarding guide](.ua/ONBOARDING.md). Check the graph's analyzed commit against the local tree, then consult the relevant nodes and consumers. Use `$understand-chat` for focused questions, `$understand-explain` for a file or symbol, and `$understand-diff` for changes that affect shared contracts or multiple consumers. Skip graph consultation for trivial isolated changes.
+- After an approved commit made by the owner, use `$understand --no-auto-update` to update the graph as needed. Keep `autoUpdate=false` and rebuild only when the official workflow requires it. Understand Anything supports Architect Mode's review with dependency evidence. See [MAP-02](.ua/MAP-02.md#flujo-incremental-y-metodología).
+- On the configured Windows machine, open the dashboard with `.\.ua\launch-dashboard.cmd` on loopback port 5174. The launcher is local. Direct `$understand-dashboard` defaults to port 5173.
+
 ## Stack and repository conventions
 
 - Stage 1 uses Vite, React, TypeScript, React Router, Supabase Auth, Node.js and Express with TypeScript, and npm Workspaces. The browser uses native Fetch for DummyJSON. Use semantic HTML, CSS Grid/Flex and responsive layout from 320 px.
