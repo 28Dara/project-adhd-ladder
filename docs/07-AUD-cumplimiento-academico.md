@@ -10,10 +10,10 @@
 
 | ID | Estado | Evidencia o archivo | Acción y objetivo |
 |---|---|---|---|
-| E1-D01 | Pendiente | Existe `stage-frontend`. La consulta GitHub no devolvió PR con base `main`. | Publicar la revisión correspondiente y entregar la URL del PR, 07-10. |
-| E1-D02 | Parcial | Build con dependencias existentes. En `npm run dev` arranca Vite y `tsx` falla en `os.userInfo` con `uv_os_get_passwd ENOMEM`. Express compilado y proxy responden. | Volver a probar instalación limpia y arranque exacto en entorno autorizado, 07-10. |
-| E1-D03 | Parcial | DummyJSON devolvió JSON desde la consulta web. Prueba del adaptador con respuestas controladas exitosa. La solicitud local real fue bloqueada por red (EACCES); falta verla en Life. | Acreditar datos reales visibles en Life con acceso de evaluador, 07-10. |
-| E1-D04 | Sin verificar | El PDF activa este motivo si Etapa 1 es entrega final frontend. La lección 1.2 permite desplegar después si sigue full stack. El proyecto aún exige evidencia de despliegue. | Confirmar modalidad y momento del despliegue con TripleTen. Verificar recarga SPA en la URL pública cuando corresponda, 07-10 y 07-11. |
+| E1-D01 | Pendiente | Candidata local `62583da` en `stage-frontend`. La consulta de GitHub para esa rama hacia `main` no devolvió PR. | Publicar la candidata y entregar el enlace específico del PR, con autorización, 07-10. |
+| E1-D02 | Verificado | `npm ci --offline` desde un árbol aislado exportado de `62583da` y lockfile intacto. `npm run dev` inicia Vite y Express, con `/api/healthz` directo y por proxy. El error ENOMEM del sandbox en 07-AUD no se reprodujo en esta ejecución autorizada. | Conservar la evidencia de la candidata, 07-10. |
+| E1-D03 | Verificado | Edge recibió HTTP 200 real de DummyJSON tras pulsar Retry y mostró el texto en Life. La sesión que habilitó la ruta privada fue simulada. | Demostrar acceso con cuenta real de revisión antes del envío, 07-10. |
+| E1-D04 | Sin verificar | La lista de Etapa 1 aplica este rechazo a la entrega final frontend. La lección 1.2 permite diferir el despliegue si la trayectoria continúa full stack. Esta verificación fue local. | Confirmar el requisito aplicable con TripleTen. Si exige publicación, añadir URL pública al README y probar recarga SPA, 07-10. |
 | E1-D05 | Sin verificar | No se aportó retroalimentación académica anterior. | Confirmar si existe y cerrar errores críticos aplicables, 07-10. |
 
 ## Etapa 1 · Criterios puntuados
@@ -21,28 +21,28 @@
 | ID | Criterio | Estado | Evidencia o archivo | Acción y objetivo |
 |---|---|---|---|---|
 | E1-C01 | Vite y TypeScript | Verificado | `client/package.json`, `client/src`, `server/src`. | Conservar, 07-10. |
-| E1-C02 | Build sin errores TS | Verificado | `npm run build` pasó en ambos workspaces. | Repetir en la versión candidata, 07-10. |
-| E1-C03 | Lint sin errores | Verificado | `npm run lint` pasó en ambos workspaces. | Repetir en la versión candidata, 07-10. |
+| E1-C02 | Build sin errores TS | Verificado | `npm run build` pasó en ambos workspaces tras instalación limpia de `62583da`. | Conservar, 07-10. |
+| E1-C03 | Lint sin errores | Verificado | `npm run lint` pasó en ambos workspaces tras instalación limpia de `62583da`. | Conservar, 07-10. |
 | E1-C04 | Estructura de carpetas | Verificado | `client/src/{components,styles,images,utils,vendors}` y fuentes Fontsource. | Conservar, 07-10. |
-| E1-C05 | README nombre, descripción, stack y URL si desplegado | Parcial | README contiene nombre, propósito, stack e instalación. Falta confirmar la condición de publicación y su URL. | Añadir URL cuando corresponda, 07-10 y 07-12. |
-| E1-C06 | Responsive desde 320 px sin scroll horizontal encubierto | Parcial | Reglas responsive comprobadas en CSS. La revisión anterior informó pruebas de 320–1440 px. Falta repetir en navegador para esta revisión. | Revisar visualmente la candidata, 07-10. |
+| E1-C05 | README nombre, descripción, stack y URL si desplegado | Verificado | El README de la candidata documenta nombre, propósito, stack, instalación y acceso con Supabase Auth. Añade el flujo de revisión y el alcance en memoria de Etapa 1. | Añadir URL pública si se publica. El despliegue se sigue en E1-D04, 07-10. |
+| E1-C06 | Responsive desde 320 px sin scroll horizontal encubierto | Verificado | Edge comprobó rutas públicas y privadas representativas a 320, 768 y 1440 px. La verificación anterior de `62583da` confirma Health a 320, 375, 425, 768 y 1440 px. | Aceptación visual final de la propietaria, 07-10. |
 | E1-C07 | HTML semántico | Verificado | `Landing`, `Life`, `AuthPage`, `Health` y `LadderSelector` usan estructura y controles semánticos. | Conservar, 07-10. |
 | E1-C08 | Flex o Grid | Verificado | CSS de Landing, Health y LadderPage. | Conservar, 07-10. |
 | E1-C09 | Reset y fuentes | Verificado | `main.tsx` importa `vendors/normalize.css` y Fontsource. | Conservar, 07-10. |
 | E1-C10 | Reuso y props tipadas | Verificado | `AuthPage`, `TaskCard`, `LadderPopup` y páginas de escaleras. | Conservar, 07-10. |
-| E1-C11 | Rutas de funcionalidad y About, navegación | Parcial | `App.tsx`, `AuthRoutes.tsx` y React Router 8.5.2. La funcionalidad exige sesión. La guía oficial confirma la transición desde `react-router-dom`. | Acreditar navegación y acceso del evaluador. Confirmar equivalencia académica del paquete, 07-10. |
+| E1-C11 | Rutas de funcionalidad y About, navegación | Verificado | Edge abrió Landing, About y las rutas privadas con sesión simulada. Sin sesión, Activities deriva a Log In. React Router 8.5.2 proporciona los componentes de navegación equivalentes. | Confirmar acceso real del evaluador y, si exige el nombre literal del paquete, la equivalencia académica, 07-10. |
 | E1-C12 | Hooks sin condicionales ni bucles | Verificado | Revisión de componentes y hooks, más lint con reglas de hooks. | Conservar, 07-10. |
 | E1-C13 | Claves de lista estables | Verificado | `LadderPage`, `Life`, `Health` y `LadderSelector` usan IDs, rutas o claves de dominio. | Conservar, 07-10. |
 | E1-C14 | Fetch externo en utils | Verificado | `client/src/utils/quotesApi.ts` llama a DummyJSON directamente. | Conservar separado del cliente privado, 07-AUTH-UI y 07-10. |
 | E1-C15 | Respuesta third-party tipada | Verificado | `quotesApi.ts` valida `unknown` y transforma a `Quote`. | Conservar, 07-10. |
-| E1-C16 | Carga visible y retirada al resolver | Parcial | `useDailyQuote.ts` y `Life.tsx`, código de estado visible y transición a éxito inspeccionados. | Verificar transición en Life, 07-10. |
-| E1-C17 | Error visible al fallar | Parcial | `useDailyQuote.ts` y `Life.tsx`, el adaptador rechaza un HTTP 503 simulado y el componente tiene mensaje y reintento. | Verificar fallo y reintento, 07-10. |
+| E1-C16 | Carga visible y retirada al resolver | Verificado | Edge demoró temporalmente la solicitud de navegador. Verificó mensaje de carga y botón deshabilitado. Al continuar la misma petición real, el texto sustituyó al control. | Conservar, 07-10. |
+| E1-C17 | Error visible al fallar | Verificado | Con el endpoint bloqueado en Edge, Life mostró el error y Retry. Al retirar el bloqueo, Retry obtuvo una frase real. | Conservar, 07-10. |
 | E1-C18 | Clave externa en variable y ejemplo | N/A | DummyJSON es público. Supabase tiene su propio ejemplo saneado. | Registrar que el proveedor de frases funciona sin clave, 07-10. |
 | E1-C19 | Artefactos excluidos de Git | Verificado | `.gitignore` y `git ls-files`, con ejemplos de entorno versionados. | Revalidar antes del PR, 07-10. |
 | E1-M01 | Estado inicial tipado | Verificado | `AuthContext.tsx`, `useDailyQuote.ts`, estado privado y borradores. | Conservar, 07-10. |
 | E1-M02 | Tipos compartidos en archivos propios | Verificado | `client/src/types` y `authContextValue.ts`. | Conservar, 07-10. |
 | E1-M03 | Paginación para listas largas | N/A | El endpoint de frases devuelve un resultado por solicitud. | Conservar, 07-10. |
-| E1-M04 | Aviso cuando no hay resultados | Parcial | `useDailyQuote.ts` y `Life.tsx`, el adaptador devuelve `null` en respuesta vacía o inválida y el código presenta un mensaje. | Verificar respuesta vacía, 07-10. |
+| E1-M04 | Aviso cuando no hay resultados | Verificado | En Edge, una respuesta vacía controlada mostró «No usable quote was received» y Retry. | Conservar, 07-10. |
 | E1-M05 | Constantes en mayúsculas en configuración | Parcial | `client/src/config/constants.ts` reúne límites. La URL externa vive en `quotesApi.ts`. | Revisar solo constantes que incumplan el criterio al preparar 07-10. |
 | E1-M06 | Retiro de listeners al desmontar | Verificado | `LadderSelector`, `LadderPopup`, `LadderTooltip` y `useLocalDateKey` limpian las suscripciones. | Conservar, 07-10. |
 | E1-M07 | Placeholders, required y foco | Verificado | `AuthPage.tsx`, `AuthPage.css` y `EditBubble.tsx`. | Verificar foco en la candidata, 07-10. |
@@ -52,10 +52,17 @@
 | E1-R01 | Fallback de fuentes | Verificado | `client/src/styles/variables.css` y fuentes del sistema. | Conservar, 07-10. |
 | E1-R02 | Texto alternativo adecuado | Verificado | `LadderArtwork` y `Landing` usan `alt=""` en ilustraciones decorativas. | Conservar, 07-10. |
 | E1-R03 | Hover visible | Verificado | CSS de Header, Life, Landing, formularios y popups. | Conservar, 07-10. |
-| E1-R04 | Formato y código limpio | Parcial | Formato y lint pasan. Revisión de fuentes representativas, sin certificación de código muerto en todo el cliente. | Revisar solo consumidores con cambios y defectos observados, 07-10. |
-| E1-R05 | Mensajes de commit descriptivos | Verificado | Los cinco commits locales por delante describen arquitectura, rutas, reubicación y Express. | Mantener mensajes descriptivos, 07-10. |
+| E1-R04 | Formato y código limpio | Parcial | Formato y lint pasan con archivos LF. La salida de Git convertida a CRLF advierte en Prettier. La revisión de código muerto fue representativa. | Si se necesita uniformidad entre checkouts, acordar una regla de fin de línea para las extensiones formateadas, 07-10. |
+| E1-R05 | Mensajes de commit descriptivos | Verificado | `966ceba`, `4928eb3` y `62583da` documentan, respectivamente, README, progresión de Health y disposición móvil. | Conservar, 07-10. |
 
-**Puntuación provisional respaldada.** **69,23 de 99,99** nominales (13 de desempeño, 7 de mejores procedimientos y 4 recomendaciones verificados). Es un mínimo de puntos con evidencia, sin crédito para parciales, desconocidos o N/A y sin reescalar. Los motivos de rechazo se evalúan aparte. [Equivalencia oficial de React Router](https://reactrouter.com/upgrading/v7#react-router-dom).
+**Puntuación provisional respaldada.** **91,78 de 99,99** nominales (18 de desempeño, 8 de mejores procedimientos y 4 recomendaciones verificados). Es un mínimo de puntos con evidencia, sin crédito para parciales, desconocidos o N/A y sin reescalar. Los motivos de rechazo se evalúan aparte. [Equivalencia oficial de React Router](https://reactrouter.com/upgrading/v7#react-router-dom).
+
+### Cierre técnico 07-10 · candidata `62583da`
+
+- **Verificación técnica.** Node 24.15.0 y npm 12.0.2. Instalación aislada desde el caché con `npm ci --offline --no-audit --no-fund` (281 paquetes) y lockfile intacto. Pasaron dev, build, lint y formato (con el LF de los blobs) y `git diff --check`. La primera exportación usó el `core.autocrlf=true` local y Prettier reportó esos CRLF. El mismo árbol exportado con `core.autocrlf=false` pasó formato, igual que la instalación de trabajo. La instalación existente y los archivos privados se preservaron.
+- **Validación pendiente de la propietaria.** Con la configuración real de Supabase y una cuenta de revisión, arrancar `npm run dev`, abrir Sign Up, registrar una cuenta de prueba y confirmar el correo si se solicita. En Log In, comprobar que unas credenciales incorrectas muestran un error y que las correctas abren Life. Revelar una frase, entrar a Activities, Learning y Health, cerrar sesión y comprobar el regreso a Landing. Abrir `/life` directamente tras salir y comprobar la redirección a Log In. Proveer esa vía de acceso a la persona evaluadora. La prueba automatizada verificó validación de los formularios y guardas con una sesión simulada y reprodujo un fin de sesión local. El alta, login y logout reales de Supabase quedan pendientes.
+- **Despliegue.** Pendiente de confirmar si es exigible para esta entrega. Si aplica, abrir la URL pública y recargar `/about` y `/life`, comprobar que la SPA responde sin 404, y registrar la URL en el README.
+- **Entrega académica.** Pendientes la confirmación sobre posibles observaciones previas y el enlace al PR `stage-frontend → main`. El resultado técnico respalda la candidata local. El cierre de entrega depende del acceso real y de las condiciones de publicación aplicables.
 
 ## Etapa 2 · Motivos de rechazo
 
@@ -132,7 +139,7 @@
 | Conservar como lógica reutilizable | `AuthProvider`, `useAuth`, `AuthRoutes`, `AuthPage`, `useRegistrationDate` y consumidores como About. Mantener tipos de dominio y compatibilidad de `created_at`, IDs y propietarios desde DTOs según corresponda. `taskCompletions.ts`, `dates.ts`, `progress.ts`, `health.ts` y DummyJSON tienen consumidores vigentes. | 07-AUTH-UI y 07-09A/B. |
 | Conservar como evidencia histórica | `supabase/migrations/20261123000000_create_user_tables.sql`, `20261123000100_add_user_table_policies.sql`, `20261124000000_enforce_task_and_completion_integrity.sql` y `supabase/tests/07-01-task-integrity.md`. Dossier, plan, `docs/Architect.md` y referencias de skills registran evolución y contratos. RLS y SQL quedan fuera del flujo MongoDB. Las referencias de skills están en `.agents/skills/architecture-guardian/SKILL.md` y `.agents/skills/architect-mode/references/guardian.md`. | 07-MIG coteja estado remoto con autorización separada. Los artefactos se conservan. |
 
-## Verificaciones y límites
+## Verificaciones y límites de la auditoría inicial
 
 - Node 24.15.0, npm 12.0.2 y dependencias ya instaladas. Pasaron build, lint y formato en raíz. Vite emitió un aviso de bundle JS mayor a 500 kB y completó el build. No se reinstaló.
 - Arranque exacto con `npm run dev` parcial por error `uv_os_get_passwd ENOMEM` del entorno al cargar `tsx`. Alternativa verificada: `npm run start --workspace server` con Vite, salud 200 por acceso directo y proxy, y errores JSON 400/404.

@@ -187,7 +187,7 @@ La inteligencia artificial funciona como una herramienta de asistencia y colabor
 
 ### Requisitos
 
-- Node.js
+- Node.js 24.x
 - npm
 - Git
 
@@ -205,7 +205,7 @@ Desde la raíz del proyecto:
 
 ### Variables de entorno
 
-Consultar los archivos `.env.example` correspondientes a cada parte del proyecto y configurar las variables necesarias para la etapa de desarrollo actual.
+Para Etapa 1, copia `client/.env.example` a `client/.env.local` y configura `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` con la URL y la clave publicable del proyecto Supabase que usará la revisión. Express usa el puerto 3000 por defecto. Si necesitas otro, copia `server/.env.example` a `server/.env` y configura `PORT`.
 
 Las credenciales y los archivos de entorno privados no deben incorporarse al repositorio.
 
@@ -225,6 +225,12 @@ Direcciones locales predeterminadas:
 
 - Frontend: http://localhost:5173
 - Backend: http://127.0.0.1:3000
+
+### Revisar Etapa 1
+
+Abre la URL del frontend. **About** es pública. Para ver la funcionalidad, entra por **Sign Up** o **Log In** con una cuenta de revisión. Si Supabase solicita confirmar el correo, completa ese paso antes de entrar. En **Life**, pulsa **Click to reveal** para consultar una frase real de DummyJSON. El selector permite abrir **Activities**, **Learning** y **Health**.
+
+Las tareas, las marcas, el historial de Health y las frases se mantienen en memoria durante la sesión privada. Se reinician al recargar, al cerrar sesión o al cambiar de cuenta.
 
 ### Comprobaciones técnicas
 
@@ -312,7 +318,7 @@ La segunda etapa amplía estos conocimientos hacia el modelado de bases de datos
 
 ## Autor
 
-*_28Dara_
+**Dara Rangel (28Dara)**
 
 Desarrollador Web Full Stack.
 
