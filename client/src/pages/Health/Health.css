@@ -7,23 +7,15 @@
 
 .health__layout {
   display: grid;
-  grid-template-areas: 'status' 'goals' 'artwork';
+  grid-template-areas: 'status' 'goals' 'streak' 'legend' 'artwork' 'back';
   grid-template-columns: minmax(0, 1fr);
-  column-gap: var(--health-gap);
+  gap: var(--health-gap);
   max-width: 100rem;
   margin-inline: auto;
 }
 
-.health__overview,
-.health__goals {
-  display: grid;
-  gap: var(--health-gap);
-}
-
-.health__overview {
-  grid-area: status;
-  grid-template-rows: auto 1fr auto;
-  margin-block-end: var(--health-gap);
+.health__layout > .ladder-artwork {
+  margin-block-start: 0;
 }
 
 .health__status,
@@ -33,16 +25,19 @@
 }
 
 .health__status {
+  grid-area: status;
   row-gap: calc(var(--health-gap) - 0.5rem);
 }
 
 .health__legend-card {
+  grid-area: legend;
   align-content: center;
 }
 
 .health__goals {
+  display: grid;
   grid-area: goals;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   row-gap: 0.5rem;
 }
 
@@ -146,11 +141,12 @@
 
 .health__streak {
   display: grid;
+  grid-area: streak;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   justify-self: center;
   gap: 0.65rem;
-  inline-size: min(100%, 18rem);
+  inline-size: 100%;
   padding: 0.45rem 0.85rem;
   background: var(--health-label);
   color: #000;
@@ -213,6 +209,7 @@
 
 .health__back {
   display: flex;
+  grid-area: back;
   min-height: clamp(2.75rem, 4.8vw, 4.5rem);
   align-items: center;
   justify-content: center;
@@ -244,14 +241,23 @@
   }
 
   .health__layout {
-    grid-template-areas: 'status goals' 'artwork artwork';
+    grid-template-areas:
+      'status goals'
+      'legend goals'
+      'streak back'
+      'artwork artwork';
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto auto;
     width: 100%;
     margin-block: auto;
   }
 
-  .health__overview {
-    margin-block-end: 0;
+  .health__streak {
+    inline-size: min(100%, 18rem);
+  }
+
+  .health__back {
+    align-self: end;
   }
 }
 
@@ -279,8 +285,12 @@
   }
 
   .health__layout {
-    grid-template-areas: 'artwork status goals';
+    grid-template-areas:
+      'artwork status goals'
+      'artwork legend goals'
+      'artwork streak back';
     grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.1fr) minmax(0, 1.05fr);
+    grid-template-rows: auto 1fr auto;
   }
 
   .health .ladder-artwork img {
