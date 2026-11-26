@@ -1,0 +1,55 @@
+
+Llegaste a la parte más importante: hacer que la aplicación realmente funcione.
+
+Continúa trabajando en la rama stage-frontend.
+
+Tendrás que hacer lo siguiente:
+
+implementar la funcionalidad requerida, que verás en detalle más abajo;
+realizar solicitudes asíncronas a la API third-party;
+configurar la gestión de errores de la API y mostrar un mensaje de error a la persona que usa la aplicación;
+gestionar el estado de carga hasta que llegue la respuesta del servidor, por ejemplo con un texto de "Cargando..." o un preloader.
+Interacción con una API
+Ya elegiste qué servicio de API third-party vas a utilizar. Lo primero es abrir su documentación y buscar cómo se autentica, porque de eso depende cómo armas cada petición. Hay servicios que no piden nada: llamas al endpoint y listo. Otros te dan una clave al registrarte y la esperan como parámetro en la dirección de la petición. Otros piden esa misma clave en un encabezado, casi siempre Authorization. Y unos pocos usan esquemas más elaborados, con tokens que caducan y hay que renovar.
+
+Si tu servicio te da una clave, guárdala en una variable de entorno con el prefijo VITE_, por ejemplo VITE_API_KEY: Vite solo expone al navegador las variables que empiezan así. En el repositorio queda el .env.example, no el .env. Eso saca la clave del repositorio, pero no la esconde: en la aplicación desplegada cualquiera puede leerla, así que usa la clave de un servicio gratuito y no la de una cuenta que te importe.
+
+Añade cierta funcionalidad a tu página web utilizando la API para proporcionar datos. Configura las solicitudes y sus endpoints. 
+
+Implementar las solicitudes
+Crea un archivo en la carpeta /utils para trabajar con el servicio third-party y ponle un nombre que diga de qué servicio se trata, por ejemplo weatherApi.ts o pokeApi.ts. Si más adelante haces la parte full stack, tu propia API vivirá en otro archivo, y así no se confunden.
+
+Este archivo contendrá las solicitudes al servicio third-party. Escribe estas solicitudes utilizando el método fetch(). Aprovecha TypeScript para describir con tipos o interfaces la forma de los datos que esperas recibir de la API. Puedes utilizar funciones regulares o clases para estructurar tu código.
+
+Visualizar los datos
+Guarda la respuesta en una variable de estado con useState: el componente se vuelve a renderizar solo con los datos nuevos. Si quieres conservarlos entre visitas, escríbelos también en localStorage.
+
+Hasta que se reciban los datos se puede mostrar un preloader. Si la búsqueda no devuelve resultados, en lugar del preloader aparece el mensaje "No se encontró nada".
+
+Si algo falla al pedir los datos, muestra este mensaje: "Algo salió mal con la solicitud. Puede ser un problema de conexión o del servidor. Inténtalo de nuevo más tarde."
+
+Una vez recibidos los datos, el preloader debería desaparecer y deberían aparecer los elementos adecuados.
+
+Diseña cuidadosamente cómo se mostrarán los datos recibidos. Si tu API devuelve una lista muy larga de elementos (como tarjetas o artículos), te recomendamos no mostrarlos todos a la vez para no saturar la pantalla. Puedes implementar una forma de mostrarlos gradualmente: por ejemplo, mostrando los primeros resultados y agregando un botón "Mostrar más", o utilizando una paginación sencilla.
+
+Si el usuario ha cerrado la pestaña y luego ha vuelto a la página, puedes leer los datos de localStorage al montar el componente App. Tendrás que configurar la interacción con localStorage y la variable de estado en el orden correcto.
+
+Qué queda a tu criterio
+Estas son las funcionalidades que la Etapa 1 tiene que cubrir. Todo lo demás lo decides tú: crea los componentes que necesites, agrega las variables de estado donde hagan falta o elévalas al componente que corresponda, y usa hooks donde tengan sentido. La lista de comprobación te sirve para confirmar que no se te quedó nada por el camino.
+
+Desplegar la aplicación front end
+Si te quedas en la opción front-end, esta es tu entrega final: despliega la aplicación antes de entregarla. Utiliza GitHub Pages, Vercel, Netlify, u otros servicios con los que estés familiarizado. Añade un enlace a la aplicación desplegada en el archivo README.
+
+Si sigues desarrollando una aplicación full stack en las próximas etapas, no necesitas desplegar tu aplicación en este mismo momento. En las siguientes etapas se desplegará el front end junto con el back end.
+
+Lista de comprobación
+Antes de entregar, revisa tu proyecto contra la lista de comprobación de la Etapa 1 y corrige todo lo que puedas:
+
+https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_17_refactored/ES/V10/Etapa_1_aplicacion_front_end.pdf 
+
+Con esta entrega queda cerrada la parte obligatoria del proyecto final: tienes una aplicación tuya, desplegada y funcionando con datos reales, y eso ya es una pieza de porfolio. Si elegiste el camino full stack, la siguiente etapa le suma tu propia API. Y si te quedas aquí, tu proyecto final está terminado.
+
+Una vez esté todo listo
+Envía el enlace al pull request (solicitud de extracción) abierto desde la rama stage-frontend a main.
+
+Asegúrate de adjuntar el enlace que lleva específicamente al pull request, no al repositorio. Una vez que un revisor apruebe el trabajo, haz clic en el botón "Merge pull request" para aplicar los cambios de la rama stage-frontend a main.
