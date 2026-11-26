@@ -70,12 +70,8 @@ El estado de Health también influye en la continuidad de la racha personal, inc
 
 ### Base de datos y autenticación
 
-Arquitectura seleccionada para la segunda etapa:
-
-- MongoDB Atlas
-- Mongoose
-- bcrypt
-- JSON Web Tokens (JWT)
+- Supabase Auth — Autenticación actual de Etapa 1.
+- Estado en memoria — Tareas, completaciones y Health durante la sesión privada.
 
 ### Herramientas de desarrollo
 
@@ -123,19 +119,13 @@ El proyecto utiliza una estructura Full Stack que separa las responsabilidades d
 
 El cliente se encarga de la presentación, la interacción y la experiencia del usuario.
 
-El servidor se encarga de la API, la validación de datos y el manejo centralizado de errores. Durante la segunda etapa también asumirá la autenticación, la autorización, la lógica de negocio y la comunicación con la base de datos.
+Express proporciona la base de la API propia en TypeScript, con un endpoint de estado y manejo centralizado de errores. Supabase Auth gestiona el registro, el inicio de sesión y la restauración de la sesión en el cliente.
 
 Esta separación permite desarrollar, verificar y mantener ambas partes de manera independiente, mientras npm Workspaces facilita la administración del proyecto desde la raíz del repositorio.
 
 ## Evolución y decisiones arquitectónicas
 
-ADHD Ladder comenzó como una aplicación Frontend desarrollada con React y TypeScript. Inicialmente se seleccionó Supabase para explorar una arquitectura relacional con PostgreSQL, aprovechando sus servicios de autenticación y persistencia.
-
-Durante el desarrollo se incorporó un servidor Express y se reevaluaron las responsabilidades de cada tecnología. Finalmente, se decidió migrar hacia MongoDB Atlas y Mongoose, junto con un sistema de autenticación propio mediante bcrypt y JWT.
-
-Esta decisión respondió a tres necesidades: consolidar los conocimientos adquiridos durante el bootcamp, demostrar la implementación de un Backend completo y cumplir con los requisitos académicos dentro del plazo disponible.
-
-La evolución del proyecto permitió comparar diferentes modelos de persistencia, comprender las ventajas de los servicios administrados y reconocer la importancia de seleccionar tecnologías según el contexto, las necesidades y los recursos de cada proyecto.
+ADHD Ladder comenzó como una aplicación Frontend con React y TypeScript e incorporó Supabase Auth y una base de servidor Express. Para Etapa 2, se evalúa continuar con PostgreSQL y Auth de Supabase o usar MongoDB Atlas, Mongoose y autenticación propia con bcrypt y JWT. La decisión final queda pendiente de confirmar los requisitos académicos de TripleTen en la tutoría del 26 de noviembre de 2026.
 
 ## Principios de desarrollo
 
@@ -278,24 +268,19 @@ En proceso de cierre y validación académica.
 
 ### Etapa 2 — Full Stack
 
-En desarrollo.
+Fundación técnica completada. La implementación de persistencia y autenticación de Etapa 2 queda pendiente de la decisión académica.
 
 - [x] Separación del cliente y el servidor.
 - [x] Configuración de Express y TypeScript.
 - [x] Configuración de npm Workspaces.
 - [x] Manejo centralizado de errores.
 - [x] Comunicación entre cliente y servidor en desarrollo.
-- [ ] Conexión con MongoDB Atlas.
-- [ ] Modelos de datos con Mongoose.
-- [ ] Registro de usuarios mediante bcrypt.
-- [ ] Autenticación y autorización mediante JWT.
+- [ ] Confirmar la arquitectura de persistencia y autenticación.
 - [ ] Persistencia de tareas y objetivos.
 - [ ] Integración completa entre Frontend y Backend.
 - [ ] Pruebas de seguridad y funcionalidad.
 - [ ] Despliegue.
 - [ ] Entrega académica.
-
-Durante la transición entre etapas, el Frontend conserva temporalmente su integración original con Supabase Auth hasta que el sistema de autenticación propio esté implementado y verificado.
 
 ## Aprendizajes y habilidades
 

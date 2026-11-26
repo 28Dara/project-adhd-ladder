@@ -1,6 +1,6 @@
 # 07-AUD · Cumplimiento académico y transición de autenticación
 
-**Línea base del 25/11/2026.** `stage-frontend` en `92643be`, cinco commits por delante de la referencia local `origin/stage-frontend`. 07-ARQ, 07-ROOT, 07-REL y 07-EXP conservan sus commits verificados. El cliente React/Vite usa Supabase Auth y mantiene tareas y Health en memoria. Express tiene un router base con `/api/healthz`, errores JSON y proxy de Vite. `server/package.json` declara Express como dependencia de ejecución. La arquitectura Atlas y JWT ya está aprobada y sus funciones permanecen pendientes.
+**Línea base del 25/11/2026.** `stage-frontend` en `92643be`, cinco commits por delante de la referencia local `origin/stage-frontend`. 07-ARQ, 07-ROOT, 07-REL y 07-EXP conservan sus commits verificados. El cliente React/Vite usa Supabase Auth y mantiene tareas y Health en memoria. Express tiene un router base con `/api/healthz`, errores JSON y proxy de Vite. `server/package.json` declara Express como dependencia de ejecución. La propuesta de Atlas y JWT se registró en esa línea base y quedó suspendida en 07-PRES.
 
 **Fuentes.** Etapa 1 cotejada con el PDF oficial de tres páginas, leído desde `../Resources/requirements/Etapa_1_aplicacion_front_end.pdf`, y con la lección local 1.2. El árbol local no contiene un checklist Markdown de Etapa 1. Sus IDs E1 se asignan aquí según orden y sección. La transcripción local `Etapa_2_checklist.md` conserva sus IDs y se cotejó con el PDF oficial de cuatro páginas. [PDF oficial de Etapa 1](https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_17_refactored/ES/V10/Etapa_1_aplicacion_front_end.pdf).
 
@@ -64,6 +64,8 @@
 - **Despliegue.** Pendiente de confirmar si es exigible para esta entrega. Si aplica, abrir la URL pública y recargar `/about` y `/life`, comprobar que la SPA responde sin 404, y registrar la URL en el README.
 - **Entrega académica.** Pendientes la confirmación sobre posibles observaciones previas y el enlace al PR `stage-frontend → main`. El resultado técnico respalda la candidata local. El cierre de entrega depende del acceso real y de las condiciones de publicación aplicables.
 
+**Vigencia de Etapa 2 · 07-PRES.** Las tablas siguientes conservan la rúbrica y su evidencia. Las acciones de su última columna registran la propuesta suspendida. La tutoría del 26/11/2026 aclarará si TripleTen admite Supabase PostgreSQL y Auth o exige MongoDB Atlas, Mongoose y autenticación propia con bcrypt y JWT. La propietaria decidirá después de esa aclaración.
+
 ## Etapa 2 · Motivos de rechazo
 
 | ID | Estado | Evidencia o archivo | Acción y objetivo |
@@ -124,20 +126,15 @@
 ## Decisiones de aceptación
 
 - **Ramas y plazo.** El envío de Etapa 1 usa `stage-frontend → main`. El de Etapa 2 usa `stage-fullstack → main`. Confirmar cuál es exigible antes del 30/11, secuencia de revisión e integración, necesidad de URL pública en Etapa 1 para esta trayectoria y acceso del evaluador a Life con una cuenta de prueba. Una sola entrega no acredita las dos etapas.
-- **Rutas y estados.** Conservar `/api` como base. Documentar `/signup` y `/signin` relativos a esa base. Si el evaluador exige las dos rutas literales desde la raíz, añadir alias POST a los mismos handlers y limitadores en una sola instancia de cada control. Proponer 403 genérico al rechazar DELETE fuera del conjunto autorizado, con el mismo mensaje para ID ajeno o ausente cuando sea necesario evitar revelar existencia. Mantener filtro de propietario y API 404 para rutas desconocidas. Confirmar la semántica académica y de producto.
-- **DELETE e historial.** Demostrar DELETE sobre una tarea propia, retiro inmediato del listado, persistencia tras recargar, rechazo de la última activa y conservación del histórico. Confirmar que ese resultado satisface E2-C08/C10/C22. Si la rúbrica exige borrado físico, elevarlo como conflicto de producto a la propietaria y al evaluador.
-- **Sesión.** E2-C17 exige explícitamente `localStorage`; la propuesta anterior usa `sessionStorage`. Para cumplimiento literal, proponer JWT breve, Bearer solo hacia la API propia y limpieza al cerrar sesión o recibir 401 del token vigente. Si se acepta equivalencia, conservar la opción de menor persistencia. Ambos guardan un token accesible a JavaScript. Reusar el único contexto y dejar `CurrentUserContext.Provider` como nombre del proveedor existente si se exige literalidad.
-- **Infraestructura.** Configurar `VITE_API_URL` y `CLIENT_ORIGIN` con los destinos reales, publicar URLs distinguibles de frontend y API y comprobar CORS. Confirmar si el producto puede usar un mismo origen con base `/api`. Ajustar `trust proxy` a la infraestructura real. Mantener `/api/healthz` público y sin consulta a Atlas. Si el arranque bloqueado por MongoDB impide ese requisito, proponer iniciar HTTP con estado de proceso y responder 503 en rutas dependientes hasta disponer de conexión. [Configuración de proxy de Express](https://expressjs.com/en/guide/behind-proxies/).
+- **Puntos para la tutoría.** Confirmar la arquitectura que admite la rúbrica y, para el diseño que se apruebe, la semántica de DELETE con archivo histórico, las rutas de autenticación publicadas y las exigencias de almacenamiento y restauración de sesión. El análisis técnico previo queda en `a04c426`.
 
 ## Inventario de Supabase
 
-| Clasificación | Elementos y consumidores comprobados | Objetivo |
-|---|---|---|
-| Seguro de retirar ahora | Ningún artefacto ejecutable confirmado como huérfano. `README.md` todavía documenta un setup que usa el cliente. | Mantener el arranque actual hasta 07-AUTH-UI. |
-| Retirar al integrar Auth propia | `client/src/utils/supabaseClient.ts` lo usa `AuthContext.tsx`. El SDK `@supabase/supabase-js` y sus transitivas están en `client/package.json` y `package-lock.json`. `AuthContext.tsx`, `authContextValue.ts` y `AuthRoutes.tsx` consumen sus tipos. `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` están en el ejemplo y la declaración Vite. Existe `client/.env.local`; solo se comprobó su presencia. | 07-AUTH-UI sustituye llamadas y tipos, limpia ejemplo y lockfile tras comprobar consumidores, y actualiza el arranque documentado. 07-12 completa las instrucciones de publicación. |
-| Retirar tras verificar conservación | Variables reales en el entorno de corte y uso del proyecto Supabase anterior. Inventariar usuarios, migraciones aplicadas, conteos y relaciones sin exponer información personal. Tareas, marcas y Health del cliente actual viven en memoria. Los artefactos SQL locales no acreditan el estado Cloud. | 07-MIG antes de sustituir un servicio anterior. Si hay cuentas o datos, aprobar respaldo, reconciliación y corte reversible, con prueba de control de identidad. |
-| Conservar como lógica reutilizable | `AuthProvider`, `useAuth`, `AuthRoutes`, `AuthPage`, `useRegistrationDate` y consumidores como About. Mantener tipos de dominio y compatibilidad de `created_at`, IDs y propietarios desde DTOs según corresponda. `taskCompletions.ts`, `dates.ts`, `progress.ts`, `health.ts` y DummyJSON tienen consumidores vigentes. | 07-AUTH-UI y 07-09A/B. |
-| Conservar como evidencia histórica | `supabase/migrations/20261123000000_create_user_tables.sql`, `20261123000100_add_user_table_policies.sql`, `20261124000000_enforce_task_and_completion_integrity.sql` y `supabase/tests/07-01-task-integrity.md`. Dossier, plan, `docs/Architect.md` y referencias de skills registran evolución y contratos. RLS y SQL quedan fuera del flujo MongoDB. Las referencias de skills están en `.agents/skills/architecture-guardian/SKILL.md` y `.agents/skills/architect-mode/references/guardian.md`. | 07-MIG coteja estado remoto con autorización separada. Los artefactos se conservan. |
+| Clasificación | Elementos y consumidores comprobados |
+|---|---|
+| Etapa 1 en uso | `AuthContext.tsx` usa `supabaseClient.ts` y `@supabase/supabase-js`. Los tipos se consumen en el contexto y las guardas. `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` configuran ese cliente. |
+| Lógica reutilizable | `AuthProvider`, `useAuth`, `AuthRoutes`, `AuthPage`, `useRegistrationDate`, utilidades de fechas, tareas, Health y progreso. DummyJSON opera de forma independiente. |
+| Evidencia histórica | Las tres migraciones en `supabase/migrations/`, `supabase/tests/07-01-task-integrity.md` y los antecedentes del dossier. Una futura transición de cuentas o datos requiere decisión e inventario autorizado. |
 
 ## Verificaciones y límites de la auditoría inicial
 
