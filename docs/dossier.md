@@ -1,12 +1,12 @@
-# ADHD Ladder — Dossier integral v2.4
+# ADHD Ladder — Dossier integral v2.5
 
-> **Documento normativo del producto · 25 de noviembre de 2026.** Consolida la arquitectura aprobada para el MVP académico, la rúbrica de Etapa 1 y los ajustes de alcance. La lógica de contadores de v2.2 sigue vigente.
+> **Documento normativo del producto · 25 de noviembre de 2026.** Consolida la arquitectura aprobada para el MVP académico, los requisitos académicos de las dos etapas y los ajustes de alcance. La lógica de contadores de v2.2 sigue vigente.
 >
 > **Precedencia de decisiones:** instrucción explícita más reciente del propietario > decisiones `[DECIDIDO]` de este dossier > plan de trabajo > propuestas `[PROP]`. Los puntos `[ABIERTO]` no autorizan implementaciones especulativas. El historial conserva su valor histórico, pero no sustituye las reglas vigentes.
 
-**Producto:** ADHD Ladder · **Entrega:** proyecto final TripleTen, Etapa 1. **Stack:** React, TypeScript, Vite, React Router, Node.js, Express, MongoDB Atlas, Mongoose, bcrypt, jsonwebtoken y Fetch nativo para Express y DummyJSON.
+**Producto:** ADHD Ladder · **Entrega:** proyecto final TripleTen, con Etapa 1 y Etapa 2 diferenciadas. **Stack:** React, TypeScript, Vite, React Router, Node.js, Express, MongoDB Atlas, Mongoose, bcrypt, jsonwebtoken y Fetch nativo para Express y DummyJSON.
 
-**Fecha de corte:** 25/11/2026 · **Plazo oficial:** 30/11/2026 · **Objetivo de entrega:** PR `stage-frontend` → `main` el 28 o 29/11. El calendario vigente está en el plan de trabajo.
+**Fecha de corte:** 25/11/2026 · **Plazo oficial:** 30/11/2026 · **Objetivo de entrega:** PR `stage-frontend` → `main` el 28 o 29/11. Etapa 2 usa su propio PR `stage-fullstack` → `main`. Confirmar su plazo aplicable. El calendario vigente está en el plan de trabajo.
 
 ## Qué cambió en v2.4 [DECIDIDO]
 
@@ -52,7 +52,7 @@ Las cuatro escaleras comparten criterios visuales, pero **no** necesariamente la
 
 | Capa de alcance | Qué comprende |
 |---|---|
-| Requisitos académicos | Rúbrica oficial de TripleTen Etapa 1. Ver §04 para su resumen, la API real mediante `fetch()`, el README, el despliegue recargable y el enlace al PR. |
+| Requisitos académicos | Etapa 1 exige frontend funcional y API externa mediante `fetch()`. Etapa 2 evalúa autenticación, API y persistencia propias. Ambas requieren su PR. Ver §04 y [07-AUD](07-AUD-cumplimiento-academico.md). |
 | Producto esencial | Auth, aislamiento por cuenta en la API, tareas y completaciones por día, archivo con historial, progreso derivado, Health y los flujos aprobados que los sostienen. |
 | Comportamiento adicional aprobado | Racha, antigüedad, tareas iniciales y frase de sesión según §§02.6–02.10. |
 | Mejoras opcionales | Pulido cosmético y controles adicionales justificados por evidencia. El plan conserva los pendientes P2. |
@@ -267,10 +267,12 @@ La base de 07-EXP vive en el workspace `server/`. `src/app.ts` inicia Express y 
 
 ### Implementación y despliegue [PROP]
 
-- **Conexión.** Reutilizar la carga de entorno de Node, los workspaces y los comandos de raíz. Validar `MONGODB_URI` en el servidor e iniciar Express tras una conexión Mongoose exitosa. Una conexión fallida produce un diagnóstico saneado y salida con error. Configurar `JWT_SECRET` de alta entropía en el servidor al incorporar la firma. `server/.env.example` solo lleva ejemplos ficticios. En Atlas, usar un usuario de base de datos con permisos limitados a la base de la app y autorizar las IP de desarrollo y alojamiento necesarias. Preparar una base de pruebas separada. [Conexión a Atlas](https://www.mongodb.com/docs/atlas/connect-to-database-deployment/).
-- **Credenciales y JWT.** Validar tipos, formato de correo y longitudes en Express. Normalizar el correo y usar el índice único incluso ante registros concurrentes. Guardar el hash bcrypt con factor de trabajo comprobado y rechazar contraseñas de más de 72 bytes UTF-8 para evitar truncamiento. Excluir el hash de consultas por defecto y de todas las respuestas. El login compara con bcrypt y devuelve un 401 genérico para correo desconocido o contraseña incorrecta. Limitar intentos de registro e inicio de sesión. Firmar un JWT de duración corta con el identificador en `sub`; verificar firma, algoritmo permitido, expiración e identidad antes de usarlo. Rechazar filtros, operadores o campos de propietario suministrados por el cliente. Usar respuestas privadas sin caché, errores JSON y logs saneados. Una indisponibilidad de datos se distingue de una credencial inválida.
-- **Sesión React.** Mantener `AuthProvider`, formularios, guardas y `PrivateLayout`. El alta confirma el registro y conserva el acceso a Log In del formulario actual. El login establece la sesión; un cliente tipado usa `Authorization: Bearer …` para Express. Propuesta de MVP: JWT en memoria y `sessionStorage` para restaurar al recargar la misma pestaña, validado con `GET /api/users/me`. Expiración o 401 de la sesión vigente la invalida; los fallos transitorios conservan el reintento. Logout borra token y estado de cuenta. El token es accesible desde JavaScript y un token copiado sigue vigente hasta expirar. Usar HTTPS, renderizado seguro y vida corta. Mantener las respuestas tardías de una sesión anterior fuera de la vigente, incluido un 401 tardío. Adaptar `useRegistrationDate` al instante real de alta devuelto por Express y calcular el día de alta en la referencia fija cuando esté disponible. Actualizar esa referencia en el estado de cuenta tras la primera escritura fechada. Preservar borradores, funciones derivadas, rutas directas y nombre editable del Header. DummyJSON conserva el calendario del navegador y su solicitud independiente.
-- **Publicación.** Mantener un origen HTTPS. En local Vite reenvía `/api`; en producción Express sirve `client/dist` y monta `/api` antes de los estáticos. El fallback de la SPA se limita a navegación GET y excluye la API y archivos inexistentes. Verificar el puerto y la interfaz de escucha que exige el alojamiento en 07-11.
+- **Conexión.** Reutilizar la carga de entorno de Node, los workspaces y los comandos de raíz. Validar `MONGODB_URI` y `PORT` en el servidor, y acotar el pool de Mongoose con `maxPoolSize`. La rúbrica exige salud HTTP independiente de Atlas. 07-01 evaluará iniciar HTTP con salud pública mientras se abre la conexión, devolver 503 en rutas dependientes cuando falte BD y emitir diagnósticos saneados. Configurar `JWT_SECRET` de alta entropía en el servidor al incorporar la firma. `server/.env.example` solo lleva ejemplos ficticios. En Atlas, usar un usuario de base de datos con permisos limitados a la base de la app y autorizar las IP de desarrollo y alojamiento necesarias. Preparar una base de pruebas separada. [Conexión a Atlas](https://www.mongodb.com/docs/atlas/connect-to-database-deployment/).
+- **Credenciales y JWT.** Validar en el controlador los campos obligatorios, tipos, formato de correo y longitud mínima de contraseña antes de operaciones de BD. Completar validación con el esquema Mongoose. Normalizar el correo y usar el índice único incluso ante registros concurrentes. Guardar el hash bcrypt con factor de trabajo comprobado y rechazar contraseñas de más de 72 bytes UTF-8 para evitar truncamiento. Excluir el hash de consultas por defecto y de todas las respuestas. El login compara con bcrypt y devuelve un 401 genérico para correo desconocido o contraseña incorrecta. Limitar intentos en registro e inicio de sesión con respuesta 429. Firmar un JWT de duración corta con el identificador en `sub`; verificar firma, algoritmo permitido, expiración e identidad antes de usarlo. Rechazar filtros, operadores o campos de propietario suministrados por el cliente. Usar respuestas privadas sin caché, errores JSON y logs saneados. Una indisponibilidad de datos se distingue de una credencial inválida.
+- **Sesión React.** Mantener `AuthProvider`, formularios, guardas y `PrivateLayout`. El alta confirma el registro y conserva el acceso a Log In del formulario actual. El login establece la sesión. El cliente tipado lee `VITE_API_URL` y adjunta el JWT vigente vía `Authorization: Bearer …` en cada petición privada. Restaurar con `GET /api/users/me`. E2-C17 exige `localStorage`; su adopción o la aceptación académica de `sessionStorage` queda abierta. E2-C19 nombra `CurrentUserContext.Provider`; adaptar el único contexto existente mediante el flujo de aprobación frontend. Expiración o 401 de la sesión vigente la invalida; los fallos transitorios conservan el reintento. Logout borra token y estado de cuenta. El token es accesible desde JavaScript y un token copiado sigue vigente hasta expirar. Usar HTTPS, renderizado seguro y vida corta. Mantener las respuestas tardías de una sesión anterior fuera de la vigente, incluido un 401 tardío. Adaptar `useRegistrationDate` al instante real de alta devuelto por Express y calcular el día de alta en la referencia fija cuando esté disponible. Actualizar esa referencia en el estado de cuenta tras la primera escritura fechada. Preservar borradores, funciones derivadas, rutas directas y nombre editable del Header. DummyJSON conserva el calendario del navegador y su solicitud independiente.
+- **Publicación.** En local Vite reenvía `/api`. Para Etapa 2, documentar las URLs públicas de frontend y API, conectar Atlas y configurar CORS con `CLIENT_ORIGIN` y `trust proxy` según la plataforma. Un mismo origen HTTPS con frontend servido por Express y API bajo `/api` queda sujeto a aceptación académica. El fallback de la SPA se limita a navegación GET y excluye rutas de API y archivos inexistentes. Verificar puerto, interfaz de escucha y origen real en 07-11.
+
+**[ABIERTO] Contratos evaluados de Etapa 2.** Ver decisiones de [07-AUD](07-AUD-cumplimiento-academico.md#decisiones-de-aceptación) para rutas literales de Auth, 403 en eliminación ajena y aceptación del DELETE archivado. Mantener los routers por recurso montados desde el índice, errores centralizados y `/api/healthz` público. Preservar el archivo y el histórico de §02.6.
 
 | REST propuesto | Responsabilidad |
 |---|---|
@@ -295,9 +297,9 @@ La base de 07-EXP vive en el workspace `server/`. `src/app.ts` inicia Express y 
 
 ### Transición desde Supabase [PENDIENTE DE INVENTARIO AUTORIZADO]
 
-- **Cliente.** 07-AUTH-UI retira `client/src/utils/supabaseClient.ts`, el SDK de `client/package.json` y sus entradas sin consumidores en `package-lock.json`, y la configuración `VITE_SUPABASE_*` de `client/.env.example` y `client/src/vite-env.d.ts`. Sustituye los tipos y llamadas del proveedor en `client/src/context/AuthContext.tsx`, `client/src/context/authContextValue.ts` y `client/src/app/AuthRoutes.tsx`; revisar también `useRegistrationDate` y el flujo de `AuthPage`. 07-12 sustituye las instrucciones anteriores de configuración en `README.md`. Retirar variables reales del cliente y alojamiento en el corte autorizado.
+- **Cliente.** 07-AUTH-UI retira `client/src/utils/supabaseClient.ts`, el SDK de `client/package.json` y sus entradas sin consumidores en `package-lock.json`, y la configuración `VITE_SUPABASE_*` de `client/.env.example` y `client/src/vite-env.d.ts`. Sustituye los tipos y llamadas del proveedor en `client/src/context/AuthContext.tsx`, `client/src/context/authContextValue.ts` y `client/src/app/AuthRoutes.tsx`; revisar también `useRegistrationDate` y el flujo de `AuthPage`. 07-AUTH-UI sustituye las instrucciones de arranque anteriores en `README.md`; 07-12 publica las instrucciones y URLs finales. Retirar variables reales del cliente y alojamiento en el corte autorizado.
 - **SQL histórico.** Retirar del flujo activo las tres migraciones de `supabase/migrations/` (`20261123000000`, `20261123000100`, `20261124000000`) y la [guía de pruebas](../supabase/tests/07-01-task-integrity.md). Sus archivos y antecedentes se conservan como evidencia. El cambio de stack deja retiradas las propuestas SQL de v2.3.
-- **Cuentas y datos.** 07-00 observó anteriormente cero tablas visibles en una consulta de `public`. El estado actual de Auth, esquema y datos sigue sin verificar. Antes de sustituir un servicio usado por cuentas existentes, inventariar con autorización y de solo lectura los usuarios de Auth, migraciones aplicadas, conteos por recurso y presencia de históricos. Compartir únicamente evidencia saneada. Si hay datos o usuarios, acordar y probar una transición separada con respaldo, reconciliación de propietarios, IDs de tarea, alta, zona, siembra, archivo, completaciones y Health, y corte reversible. Verificar control de la cuenta anterior mediante un procedimiento aprobado de reclamación o restablecimiento de credenciales. Durante el corte, evitar que el registro público reclame correos reservados a cuentas legadas. Una coincidencia de email por sí sola no demuestra propiedad. La portabilidad de hashes, credenciales federadas y cuentas sin confirmar requiere evaluación específica. Las sesiones anteriores deberán volver a autenticarse. El proyecto y los datos anteriores se conservan hasta que la propietaria apruebe su disposición.
+- **Cuentas y datos.** 07-00 observó anteriormente cero tablas visibles en una consulta de `public`. El estado actual de Auth, esquema y datos sigue sin verificar. Antes de sustituir un servicio usado por cuentas existentes, 07-MIG debe inventariar con autorización y de solo lectura los usuarios de Auth, migraciones aplicadas, conteos por recurso y presencia de históricos. Compartir únicamente evidencia saneada. Si hay datos o usuarios, acordar y probar una transición separada con respaldo, reconciliación de propietarios, IDs de tarea, alta, zona, siembra, archivo, completaciones y Health, y corte reversible. Verificar control de la cuenta anterior mediante un procedimiento aprobado de reclamación o restablecimiento de credenciales. Durante el corte, evitar que el registro público reclame correos reservados a cuentas legadas. Una coincidencia de email por sí sola no demuestra propiedad. La portabilidad de hashes, credenciales federadas y cuentas sin confirmar requiere evaluación específica. Las sesiones anteriores deberán volver a autenticarse. El proyecto y los datos anteriores se conservan hasta que la propietaria apruebe su disposición.
 
 ### Assets y calidad visual
 
@@ -311,12 +313,12 @@ Ilustraciones de producción en WebP, iconos/logo en SVG según conveniencia, de
 
 ### A · Condiciones críticas de entrega de TripleTen (Etapa 1)
 
-Fuente oficial consultada: `docs/Etapa_1_aplicacion_front_end.pdf` (copia local, tres páginas). La rúbrica evalúa el frontend de Etapa 1. Express y la persistencia son decisiones del proyecto. Verificar las lecciones 1.1 y 1.2 cuando estén disponibles y confirmar el acceso del evaluador a la funcionalidad desde `/`.
+Fuente oficial y lección 1.2 cotejadas en [07-AUD](07-AUD-cumplimiento-academico.md). La rúbrica evalúa el frontend. Confirmar la modalidad de entrega, la lección 1.1 si está disponible y el acceso del evaluador a la funcionalidad desde `/`.
 
 - [ ] Entregar URL del PR `stage-frontend` → `main` antes del plazo.
 - [ ] `npm install`, `npm run dev`, `npm run build` y `npm run lint` sin fallos.
 - [ ] API third-party consumida realmente con `fetch()`, datos visibles y estados de carga/error.
-- [ ] Aplicación desplegada y rutas internas recargables sin 404.
+- [ ] Si Etapa 1 es la entrega final frontend, aplicación desplegada y rutas internas recargables sin 404. Si continúa a Etapa 2, confirmar cuándo corresponde publicar.
 - [ ] Errores críticos de una revisión académica anterior corregidos, si aplica.
 - [ ] README con nombre, propósito, stack, proveedor de API y URL pública.
 
@@ -338,6 +340,8 @@ La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos 
 - [ ] Respuestas vacías explícitas y, si una API devuelve listas largas, paginación o «cargar más» cuando corresponda.
 - [ ] Estados hover y focus en controles; iconos SVG e imágenes optimizadas; fuentes alternativas y `alt` descriptivos.
 - [ ] Historial Git con mensajes descriptivos cuando el propietario autorice commits.
+
+**Etapa 2.** Entregar la URL del PR `stage-fullstack → main` y demostrar Express, autenticación y persistencia en el entorno publicado, con frontend, API y Atlas accesibles según la rúbrica. [07-AUD](07-AUD-cumplimiento-academico.md#etapa-2--motivos-de-rechazo) registra los requisitos y su evidencia por ID.
 
 ### D · QA funcional obligatorio del producto
 
@@ -362,7 +366,7 @@ La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos 
 
 - [ ] `git diff --check`, `npm run format:check` si existe, build y lint; reportar pruebas realmente ejecutadas.
 - [ ] Despliegue con rewrite SPA, restauración de sesión en HTTPS, dos cuentas probadas y README final.
-- [ ] PR final creado y enviado; revisar cambios antes de fusionar. No comprometer ramas ni subir commits sin aprobación del propietario.
+- [ ] URL del PR de cada etapa entregada cuando corresponda. Revisar cambios y solicitar autorización antes de publicar o fusionar.
 
 ---
 
@@ -370,7 +374,7 @@ La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos 
 
 ### Objetivo y Definition of Done
 
-Publicar una aplicación operativa para administrar pequeñas metas en Health, Activities y Learning, registrar completaciones por fecha y consultar pasos de hoy e históricos coherentes en Life. Está completa cuando la autenticación y el aislamiento de cuentas mediante Express funcionan, los datos reales persisten, los contadores respetan la regla de días cerrados, la API externa de frases aporta contenido real, la app es responsive y accesible, está desplegada y el PR llega antes del 30/11.
+Publicar una aplicación operativa para administrar pequeñas metas en Health, Activities y Learning, registrar completaciones por fecha y consultar pasos de hoy e históricos coherentes en Life. Está completa cuando la autenticación y el aislamiento de cuentas mediante Express funcionan, los datos reales persisten, los contadores respetan la regla de días cerrados, la API externa de frases aporta contenido real, la app es responsive y accesible y se verifican el despliegue y la entrega de Etapa 2. El cierre de Etapa 1 tiene su propio PR y las condiciones de §04.A.
 
 ### Priorización
 
@@ -382,7 +386,7 @@ La UI de popups implementada provisionalmente en 06A no es prueba de que exista 
 
 ### Calendario
 
-El [plan vigente](plan-de-trabajo.md) mantiene el camino crítico y el estado verificable. Meta de entrega el 28–29 de noviembre y plazo oficial el 30 de noviembre de 2026.
+El [plan vigente](plan-de-trabajo.md) mantiene el camino crítico y el estado verificable. Meta del PR de Etapa 1 el 28–29 de noviembre, con el 30/11/2026 como fecha indicada de cierre del programa. Confirmar el plazo aplicable a Etapa 2 y los tiempos de revisión.
 
 ### Flujo de trabajo
 
