@@ -10,14 +10,14 @@ Vite, React, TypeScript y React Router en modo declarativo. Supabase Auth gestio
 
 ## Instalación y ejecución
 
-Usa Node.js 24.x con npm. Esta es la versión mayor elegida para el proyecto y es compatible con Vite, ESLint y React Router. La versión utilizada para verificar la instalación es Node.js 24.15.0.
+Usa Node.js 24.x con npm. Esta es la versión mayor elegida para el proyecto y es compatible con Vite, ESLint y React Router. La versión utilizada para verificar la instalación es Node.js 24.15.0. Ejecuta los comandos desde la raíz del repositorio. npm instala el workspace de `client/` usando el lockfile de la raíz.
 
 ```sh
-npm ci
+npm install
 npm run dev
 ```
 
-- `npm run build` comprueba los tipos y genera la versión de producción.
+- `npm run build` comprueba los tipos y genera la versión de producción en `client/dist/`.
 - `npm run lint` revisa el código con ESLint.
 - `npm run format` aplica el formato y `npm run format:check` lo verifica.
 
@@ -31,12 +31,12 @@ La frase revelada se conserva durante el día local al navegar. La aplicación e
 
 1. Crea un proyecto en el [panel de Supabase](https://supabase.com/dashboard).
 2. Abre **Connect** en el proyecto y copia la URL del proyecto y la clave **Publishable**. También puedes encontrar la clave en **Settings → API Keys**.
-3. Copia `.env.example` como `.env.local` en la raíz del repositorio. Reemplaza los valores de ejemplo de `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` con los de tu proyecto. Usa solo la clave publicable, ya que Vite expone las variables `VITE_` al navegador.
-4. Ejecuta `npm run dev`. Si Vite ya estaba en ejecución, reinícialo para que lea `.env.local`.
+3. Copia `client/.env.example` como `client/.env.local`. Reemplaza los valores de ejemplo de `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` con los de tu proyecto. Usa solo la clave publicable, ya que Vite expone las variables `VITE_` al navegador.
+4. Ejecuta `npm run dev`. Si Vite ya estaba en ejecución, reinícialo para que lea `client/.env.local`.
 
 ## Formato en VS Code
 
-Con la extensión Prettier - Code formatter, ejecuta **Format Document With...** y selecciona **Prettier**. Puedes elegirlo como formateador predeterminado para TypeScript y TSX. La extensión usa la versión local instalada con `npm ci` y lee la configuración de `.prettierrc`.
+Con la extensión Prettier - Code formatter, ejecuta **Format Document With...** y selecciona **Prettier**. Puedes elegirlo como formateador predeterminado para TypeScript y TSX. La extensión usa la versión local instalada con `npm install` y lee la configuración de `client/.prettierrc`.
 
 ## Tipografía
 

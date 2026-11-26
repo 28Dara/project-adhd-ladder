@@ -1,6 +1,6 @@
 # ADHD Ladder — Paleta de color v1.0
 
-> Conversión de `ADHD-Ladder-Paleta-v1.pdf`. Referencia de producción: 20 de noviembre de 2026. Las muestras gráficas están representadas por sus valores HEX. El archivo `src/styles/variables.css` es la fuente de verdad para implementar los colores.
+> Conversión de `ADHD-Ladder-Paleta-v1.pdf`. Referencia de producción: 20 de noviembre de 2026. Las muestras gráficas están representadas por sus valores HEX. El archivo `client/src/styles/variables.css` es la fuente de verdad para implementar los colores.
 
 Identidad orgánica, acogedora y minimalista: verdes naturales, fondos crema y beige, acentos naranja y tonos pastel. Esta guía conserva los valores propuestos en el chat.
 

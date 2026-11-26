@@ -266,7 +266,7 @@ project-adhd-ladder/
   .gitignore
 ```
 
-El frontend aún vive en la raíz. En la reubicación, mover entrada HTML, assets, configuraciones de Vite/TypeScript, lint y ejemplos de entorno con sus consumidores. Conservar internos `app`, `pages`, `components`, `context`, `hooks`, `utils`, `types`, `config` y estilos. Las migraciones permanecen en la raíz.
+El frontend vive en el workspace `client/` con su entrada HTML, assets, configuración y ejemplo de entorno. Conserva sus módulos internos bajo `client/src/`. El lockfile de npm y las migraciones permanecen en la raíz.
 
 ### Implementación y despliegue [PROP]
 
