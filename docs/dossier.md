@@ -1,23 +1,19 @@
-# ADHD Ladder — Dossier integral v2.2
+# ADHD Ladder — Dossier integral v2.3
 
-> **Documento normativo del producto · 24 de noviembre de 2026.** Revisión integral de la v2.1 (22/11/2026). Conserva el propósito, el stack, el alcance de TripleTen y las decisiones vigentes. **La lógica de contadores de esta versión reemplaza cualquier formulación incompatible de v2.0/v2.1.**
+> **Documento normativo del producto · 25 de noviembre de 2026.** Consolida la arquitectura aprobada para el MVP académico, la rúbrica de Etapa 1 y los ajustes de alcance. La lógica de contadores de v2.2 sigue vigente.
 >
 > **Precedencia de decisiones:** instrucción explícita más reciente del propietario > decisiones `[DECIDIDO]` de este dossier > plan de trabajo > propuestas `[PROP]`. Los puntos `[ABIERTO]` no autorizan implementaciones especulativas. El historial conserva su valor histórico, pero no sustituye las reglas vigentes.
 
-**Producto:** ADHD Ladder · **Entrega:** proyecto final TripleTen, Etapa 1 (frontend con API third-party). **Stack:** React, TypeScript, Vite, React Router, Supabase Auth y PostgreSQL con RLS; API pública de frases independiente, consumida con `fetch()`. Sin servidor Express/Node propio ni MongoDB.
+**Producto:** ADHD Ladder · **Entrega:** proyecto final TripleTen, Etapa 1. **Stack:** React, TypeScript, Vite, React Router, Node.js, Express, Supabase Auth, PostgreSQL con RLS, `@supabase/supabase-js` y DummyJSON mediante Fetch nativo.
 
-**Fecha de corte:** 24/11/2026 · **Plazo oficial:** 30/11/2026 · **Objetivo de entrega:** PR `stage-frontend` → `main` el 28 o 29/11. El calendario original es orientativo: verificar progreso real antes de asignar nuevas tareas.
+**Fecha de corte:** 25/11/2026 · **Plazo oficial:** 30/11/2026 · **Objetivo de entrega:** PR `stage-frontend` → `main` el 28 o 29/11. El calendario vigente está en el plan de trabajo.
 
-## Qué cambió en v2.2 [DECIDIDO]
+## Qué cambió en v2.3 [DECIDIDO]
 
-- **Contadores diarios:** solo completaciones del día calendario local actual. Una casilla marcada aporta +1; desmarcarla revierte −1. Activities y Learning son independientes. Life es la **suma de sus valores numéricos**, nunca un contador de tarjetas de Life.
-- **Totales históricos:** `Your total steps` incluye **solo pasos de fechas anteriores a hoy**; los pasos actuales no forman parte del total hasta cambiar el día calendario. Totales propios de Activities y Learning; Life total = suma de ambos históricos.
-- **Cambio de fecha:** al consultar el nuevo día, sus casillas están desmarcadas y sus contadores diarios son 0; los registros de días anteriores permanecen y ya pertenecen al histórico. **No exige cron a medianoche, transferencia física, ni que la aplicación esté abierta.**
-- **Integridad histórica:** renombrar o retirar una tarjeta nunca reduce los pasos de días cerrados. El retiro usa `archived_at` y elimina solo la completación de hoy, según §02.6.
-- **Health:** tiene tres chequeos diarios independientes y no aporta pasos. Las casillas de hoy se inician vacías; el semáforo se **calcula** con la regla B, no se fuerza a rojo al comenzar el día.
-- **Estado de implementación:** la etapa 06A incluye popups, edición temporal y frases de ejemplo, según el reporte de implementación del 24/11. Estos datos transitorios **no equivalen** a persistencia real ni a la integración obligatoria de la API de frases. El resultado local no puede certificarse desde este documento.
-
-**Decisiones que permanecen:** tres escaleras; cuentas con tareas de ejemplo; límite de cuatro tareas activas por Activities/Learning; Health regla B; racha evaluada por días cerrados; fecha local; autenticación y RLS; API externa real y despliegue.
+- Arquitectura `client/` y `server/` basada en Around. Express es la API de datos privados, con lógica de aplicación en TypeScript y garantías de integridad en PostgreSQL.
+- Entrada por `/` según sesión y alias privado `/life`. Ambas vistas de Life comparten el estado de cuenta.
+- DummyJSON conserva su comportamiento en memoria de la sesión. La persistencia de frases 07-08 pasa al trabajo posterior al MVP.
+- El proyecto existente de Supabase Cloud es el destino académico. La propuesta SQL de §03 requiere aceptación de sus ajustes y autorización de ejecución. Las reglas de §§02.2–02.8 permanecen vigentes hasta que se apruebe un cambio explícito.
 
 ---
 
@@ -40,28 +36,28 @@ Las herramientas de productividad pueden convertir las metas en listas largas y 
 
 | Pantalla | Contenido y función | Alcance vigente |
 |---|---|---|
-| Landing (`/`) | Logo, navegación pública, escalera, CTA hacia registro | Diseño aprobado |
+| Landing (`/`, sin sesión) | Logo, navegación pública, escalera, CTA hacia registro | Diseño aprobado |
 | Sign Up / Log In | Email/contraseña, navegación de retorno, autenticación Supabase | Rutas públicas |
-| Life (`/life`) | Hoy, total histórico, racha, días desde alta, secciones Health/Activities/Learning, frase del día | Privada; Life = Activities + Learning |
+| Life (`/` con sesión o `/life`) | Hoy, total histórico, racha, días desde alta, secciones Health/Activities/Learning, frase del día | Privada. Life = Activities + Learning |
 | Health (`/health`) | Semáforo textual y tres objetivos fijos | Privada; no suma pasos |
 | Activities (`/activities`) | Tareas activas, pasos de hoy, total histórico, añadir y gestionar | Privada; máximo cuatro activas |
 | Learning (`/learning`) | Mismas reglas de tareas y contadores que Activities | Privada; máximo cuatro activas |
 | About (`/about`) | Misión del producto y presentación del autor | Pública |
-| Popups | Edición de nombre, menú de tareas, diálogo de añadir, confirmaciones, tooltips | UI de 06A parcial; alta real pendiente |
+| Popups | Edición de nombre, menú de tareas, diálogo de añadir, confirmaciones, tooltips | UI implementada. Alta persistente pendiente |
 
 Las cuatro escaleras comparten criterios visuales, pero **no** necesariamente la misma maquetación interna. Las páginas públicas mantienen sus propios márgenes. Diseño responsive a partir de 320 px; consultar mockups y CSS existente para detalles.
 
 ### Alcance y prioridades
 
-**[DECIDIDO] Propósito al 25 de noviembre de 2026.** MVP académico de frontend y pieza de portafolio para un grupo pequeño de usuarios de demostración. La entrega debe ser funcional, comprensible, mantenible y defendible por una desarrolladora especializada en frontend. El backend académico previsto es el proyecto existente en Supabase Cloud. La autorización de cualquier operación remota se mantiene separada del diseño.
+**[DECIDIDO] Propósito al 25 de noviembre de 2026.** MVP académico y pieza de portafolio para un grupo pequeño de usuarios de demostración. La aplicación debe cumplir la rúbrica, mostrar una implementación funcional y permitir que la desarrolladora mantenga y defienda sus decisiones en una entrevista. Express expone la API de la aplicación y usa el proyecto existente de Supabase Cloud para identidad y datos. La operación remota requiere su autorización correspondiente.
 
 | Capa de alcance | Qué comprende |
 |---|---|
 | Requisitos académicos | Rúbrica oficial de TripleTen Etapa 1. Ver §04 para su resumen, la API real mediante `fetch()`, el README, el despliegue recargable y el enlace al PR. |
 | Producto esencial | Auth, aislamiento por cuenta con RLS, tareas y completaciones por día, archivo con historial, progreso derivado, Health y los flujos aprobados que los sostienen. |
-| Comportamiento adicional aprobado | Racha, antigüedad, tareas iniciales y comportamiento de la frase según §§02.6–02.10. La persistencia de frases está aprobada en DEC-07-03. Un aplazamiento que cambie el alcance de la entrega necesita decisión explícita. |
+| Comportamiento adicional aprobado | Racha, antigüedad, tareas iniciales y frase de sesión según §§02.6–02.10. |
 | Mejoras opcionales | Pulido cosmético y controles adicionales justificados por evidencia. El plan conserva los pendientes P2. |
-| Fuera del MVP | Operación comercial, infraestructura de carga, Docker, WSL, Supabase CLI, servicios separados, backend propio de Etapa 2, JWT propio, analítica clínica y funciones especulativas. |
+| Fuera del MVP | Operación comercial, pruebas de carga, Docker, WSL, Supabase CLI, MongoDB, JWT propio, analítica clínica e historial de frases entre sesiones y dispositivos. |
 
 Priorizar la conformidad académica y una versión demostrable con seguridad e integridad verificadas. Mantener las decisiones de producto del capítulo 02 hasta que el propietario autorice un cambio concreto.
 
@@ -71,13 +67,15 @@ Priorizar la conformidad académica y una versión demostrable con seguridad e i
 
 ### 02.1 Rutas, sesión y seguridad
 
-`/`, `/about`, `/signup`, `/login` son públicas. `/life`, `/health`, `/activities` y `/learning` requieren sesión. React Router controla acceso a vistas; **la privacidad de datos depende de RLS**, no de un guard de React. Restaurar sesión con mecanismos aprobados de Supabase y evitar estados de autenticación duplicados.
+`/` muestra Landing sin sesión y Life con sesión, tras completar la restauración. `/about` es pública. `/signup` y `/login` son para visitantes y mantienen la redirección a `/life` para sesiones activas. `/life`, `/health`, `/activities` y `/learning` requieren sesión y, sin ella, redirigen a `/login`. El cierre exitoso vuelve a `/`. Life en `/` y `/life` usa el mismo layout privado y estado de cuenta que las demás escaleras.
+
+React Router gobierna navegación. La API autentica cada petición privada y PostgreSQL aplica RLS con esa identidad. Una llamada HTTP puede llegar sin pasar por React. Restaurar sesión con Supabase Auth en el `AuthProvider` existente.
 
 ### 02.2 Definiciones normativas de los contadores [DECIDIDO]
 
 **Paso:** una completación válida de una tarea de **Activities o Learning** para una fecha calendario local concreta. Una tarea puede aportar como máximo **un paso por día**, aunque se marque repetidamente.
 
-**Fecha local actual (`todayLocalDate`):** `YYYY-MM-DD` calculado con la fecha del navegador. No usar `new Date().toISOString().slice(0, 10)` como fecha local, pues emplea UTC. La misma referencia de fecha local debe utilizarse en las tres páginas para una misma vista de progreso.
+**Fecha local actual (`todayLocalDate`):** `YYYY-MM-DD` calculado con la fecha local del navegador. La misma referencia se usa en las vistas de progreso. La propuesta de §03 llevaría las vistas y escrituras al calendario fijo de la cuenta tras su aprobación.
 
 **Pasos de hoy (`Your steps today`):** número de completaciones de **hoy**; puede subir y bajar al marcar/desmarcar. No es la cantidad de tarjetas creadas ni la cantidad total de hábitos configurados.
 
@@ -183,7 +181,7 @@ Los casos límite deben comprobarse según estas condiciones; no modificar esta 
 
 | Tabla o concepto | Campos clave propuestos | Responsabilidad / precaución |
 |---|---|---|
-| `profiles` | `id` (FK `auth.users`), `display_name`, `created_at` | Perfil; nombre temporal del Header en 06A no representa una escritura persistida |
+| `profiles` | `id` (FK `auth.users`), `display_name`, `created_at`, `write_time_zone`; metadatos de alta y siembra propuestos en §03 | Perfil y referencia de cuenta. El nombre visible del Header se edita en sesión. |
 | `tasks` | `id`, `user_id`, `ladder` (`activities`/`learning`), `title`, `archived_at`, `created_at` | Identidad estable de tarea, estado activo/retirado; Health no usa esta tabla |
 | `task_completions` | `id`, `user_id`, `task_id`, `completed_date` | Fuente de pasos diarios e históricos; `UNIQUE(task_id, completed_date)`; FK compuesta para impedir referencias de otra cuenta |
 | `health_checks` | `user_id`, `date`, `nutrition`, `sleep`, `movement` | Una fila por fecha y persona; no cuenta como pasos |
@@ -203,13 +201,11 @@ Supabase guarda cuentas y datos personales, pero **no sustituye** la API de fras
 
 **Prevención de repeticiones [DECIDIDO]** — Comparar cada frase recibida con las revelaciones exitosas de la cuenta durante hoy y los seis días calendario locales anteriores. Se considera repetición si coincide el identificador o el texto al ignorar mayúsculas, minúsculas y espacios redundantes. Conservar el texto original al mostrarlo. Solicitar alternativas de forma secuencial y mantener la carga hasta obtener una frase válida y diferente o alcanzar cinco solicitudes totales por intento. Si las cinco se repiten, informar y permitir un reintento manual. Una frase revelada hace siete días o más vuelve a ser elegible.
 
-**DEC-07-03 [DECIDIDO] · Persistencia.** Una revelación exitosa guarda una única frase por cuenta y fecha local, incluso con solicitudes concurrentes. Al recargar, volver a iniciar sesión o entrar desde otro dispositivo en la misma fecha, mostrar directamente la frase asignada. Una nueva fecha admite revelar si todavía falta una asignación. Aislar por cuenta y conservar el historial completo. Consultar únicamente la ventana de hoy y los seis días anteriores para evitar repeticiones. La asignación guardada determina si la frase está revelada, sin un estado persistente adicional ni limpieza automática del historial. La implementación corresponde a 07-08 y sus dependencias autorizadas.
-
-**Estado actual de 06B-08** — La frase y la ventana de comparación se mantienen en memoria de la sesión privada y se reinician al recargar, cerrar sesión o cambiar de cuenta. La persistencia sigue pendiente.
+**[DECIDIDO] Alcance del MVP.** La frase y la ventana de comparación se mantienen en memoria de la sesión privada. Recargar, cerrar sesión o cambiar de cuenta reinicia esa memoria. DEC-07-03 y 07-08 quedan aplazados para después de la entrega. DummyJSON y su gestión de errores siguen en el navegador.
 
 ### 02.11 Estado, persistencia y accesibilidad
 
-- `useState` y estado compartido solo donde corresponda; tareas, completaciones y Health definitivos deben persistirse por cuenta en Supabase. Los componentes visuales no consultan Supabase directamente: usar hooks/utilidades tipados.
+- Mantener el estado compartido de las rutas privadas y los borradores en React. Tareas, completaciones y Health persisten en Supabase a través de Express. Los hooks usan utilidades tipadas y los componentes se encargan de la presentación.
 - Funciones puras para fechas, progreso, Health y racha. UI consistente en Life/Activities/Learning desde la misma fuente de completaciones por usuario y fecha.
 - RLS en todas las tablas personales, verificada con dos cuentas; controlar carrera de solicitudes, respuestas antiguas tras cambio de cuenta y reversión de actualizaciones optimistas fallidas.
 - Accesibilidad: `button`, `a`, `label`, teclado, foco visible, estados de carga/error, indicadores de color acompañados de texto, popups cerrables y formularios con validación.
@@ -219,35 +215,162 @@ Supabase guarda cuentas y datos personales, pero **no sustituye** la API de fras
 
 ## 03 · Tecnologías, arquitectura y diseño
 
-### Stack
+### Stack y referencia [DECIDIDO]
 
-- Vite + React + TypeScript; React Router para rutas públicas y privadas.
-- CSS por componente/compartido, Flex/Grid, normalize o reset; `src/styles/variables.css` como fuente de la paleta.
-- `@supabase/supabase-js` para Auth, datos PostgreSQL y RLS; ninguna clave de servicio en frontend.
-- API externa de frases con Fetch nativo y tipos explícitos.
-- Git/GitHub, ramas `stage-frontend` y `main`; despliegue en Vercel o Netlify con fallback para rutas SPA.
+- El cliente usa Vite, React, TypeScript y React Router, con CSS, Grid/Flex, normalize y tokens de color propios.
+- El servidor usa Node.js y Express con TypeScript. Supabase Auth gestiona las credenciales y emite los tokens. Supabase JS conecta con Auth y PostgreSQL mediante la Data API con RLS.
+- DummyJSON se consume con Fetch nativo desde el navegador.
+- La referencia oficial es [Around, rama `main` inspeccionada en `5d7db78`](https://github.com/28Dara/web_project_around_full/tree/5d7db784f0443a4c9f72a6b24515f2b217c5fe67). Sus tres `package.json` separan cliente y servidor. `client/src/utils/api.ts` centraliza Fetch. En el servidor, `app.ts` compone middleware y rutas, `routes/index.ts` monta recursos, los controladores orquestan operaciones, `types/express/index.d.ts` tipa el contexto y `utils/errors.ts` construye errores HTTP. Los modelos de Around pertenecen a Mongoose. Aquí se usa Supabase JS y solo se añade `models/` si hay una responsabilidad de datos real. Supabase Auth asume las responsabilidades que Around resolvía con contraseñas y JWT propios.
 
-### Separación de responsabilidades
+### Separación de responsabilidades [DECIDIDO]
+
+| Capa | Responsabilidad |
+|---|---|
+| React | Presentación, formularios, navegación, sesión Supabase, borradores y estado privado compartido. Los hooks llaman a Express para datos privados. Las funciones puras existentes calculan fechas, progreso, Health y racha. |
+| Express | Enrutamiento y controladores TypeScript. Verifica identidad, valida cuerpos, UUID, fechas, zona y valores, normaliza títulos, orquesta lecturas y escrituras, adapta filas a respuestas tipadas y traduce errores. |
+| PostgreSQL | Tablas, relaciones, RLS, restricciones, permisos mínimos, escritura fechada autorizada y las transacciones imprescindibles. Persiste datos fuente de progreso e historial. |
+| DummyJSON | Provee la frase pública. El cliente realiza la solicitud independiente y conserva la UX de §02.10. |
+
+**Acceso privado.** React toma el token vigente del `AuthProvider` y lo envía como `Authorization: Bearer …`. El middleware de Express lo verifica con `supabase.auth.getUser(token)`. Deriva `user.id` del resultado y rechaza campos de identidad en el cuerpo. Para las consultas crea un SDK por petición con la clave publicable y el mismo Bearer, sin persistencia ni refresco de sesión del lado servidor. Las consultas incluyen el propietario donde corresponda y RLS aplica `auth.uid()` también frente al acceso directo a la Data API. Las operaciones de datos del usuario se ejecutan con su identidad, sin `service_role`. Supabase Auth conserva todas sus responsabilidades de registro, login y logout. [Verificación del usuario](https://supabase.com/docs/reference/javascript/auth-getuser) · [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security).
+
+### Organización objetivo [DECIDIDO]
 
 ```text
-UI React → hooks / estado compartido → cliente Supabase → PostgreSQL con RLS
-UI React → utils/quotesApi.ts → fetch → API third-party de frases
-Completaciones + fecha local → funciones puras de progreso → contadores derivados
-Health checks (hoy/ayer) → función pura de regla B → semáforo
-Días cerrados + pasos + Health → función pura de racha
+project-adhd-ladder/
+  client/
+    src/                         # conserva las carpetas actuales
+    public/
+    index.html
+    package.json
+    tsconfig*.json
+    vite.config.ts
+    .env.example
+  server/
+    src/
+      app.ts
+      controllers/
+      middleware/
+      routes/
+        index.ts
+      types/
+      utils/
+    package.json
+    tsconfig.json
+    .env.example
+  supabase/migrations/
+  docs/
+  .agents/
+  AGENTS.md
+  package.json
+  README.md
+  .gitignore
 ```
 
-Reutilizar componentes comunes de Activities y Learning. Estado local para formularios/popups; estado compartido solo para recursos que cruzan rutas. El sistema de popup 06A utiliza `EditBubble`, `LadderPopup`, `LadderTooltip` según reporte de implementación; la existencia real y el funcionamiento final se verifican en el repositorio local.
+El frontend aún vive en la raíz. En la reubicación, mover entrada HTML, assets, configuraciones de Vite/TypeScript, lint y ejemplos de entorno con sus consumidores. Conservar internos `app`, `pages`, `components`, `context`, `hooks`, `utils`, `types`, `config` y estilos. Las migraciones permanecen en la raíz.
 
-### Organización orientativa
+### Implementación y despliegue [PROP]
 
-`src/app/`, `src/pages/`, `src/components/`, `src/context/`, `src/hooks/`, `src/utils/` (`quotesApi`, `progress`, `dates`, `supabaseClient`), `src/types/`, `src/config/`, `src/styles/`, `src/images/`, `supabase/migrations/`, `docs/`.
+- **Paquetes y comandos.** Mantener manifiestos y TypeScript independientes. Usar workspaces nativos de npm y lockfile de raíz para que `npm install` incluya ambos paquetes desde el punto de entrada académico. Reusar las dependencias actuales del cliente. En el servidor, `express` y `@supabase/supabase-js` en ejecución. En desarrollo, TypeScript, `tsx`, `@types/node`, `@types/express` y las herramientas ESLint/Prettier existentes. Coordinar dos procesos de desarrollo con `concurrently` en la raíz a partir de la fundación del servidor. Mantener `npm run dev`, `npm run build`, `npm run lint` y `npm run format:check` en la raíz.
+- **Entorno y publicación.** Usar la misma convención que ya lee el cliente, `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` en el entorno de `client/`. El servidor recibe `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` y `PORT`. Usar carga de entorno nativa de Node para desarrollo y variables del alojamiento al publicar. Ignorar todas las variantes de entorno reales y versionar ejemplos ficticios. Verificar paths de configuración, variables de compilación, instalación y artefactos al mover carpetas. No se encontró configuración de alojamiento en el árbol actual.
+- **Un origen HTTPS.** En desarrollo Vite reenvía `/api` a Express. En el alojamiento Node, Express sirve `client/dist` y monta `/api` antes de los estáticos. Las rutas de la SPA tienen fallback a `index.html` para navegación GET, con exclusión de la API, archivos estáticos inexistentes y métodos de mutación. La API devuelve sus propios 404 JSON. Verificar URLs de sitio y redirección de Supabase Auth con ese origen. La elección del alojamiento se confirma en 07-11.
+- **Errores y datos privados.** Estandarizar errores JSON del API. Usar 400 para entrada inválida, 401 para token ausente o inválido, 404 para recurso propio inexistente o no visible, 409 para reglas en conflicto y 503 si Auth o datos están indisponibles. Limitar el cuerpo JSON, evitar cachear respuestas privadas y omitir tokens, credenciales y datos personales de los logs.
 
-No forzar renombrados para ajustarse a esta lista; prevalece el código existente cuando cumple el objetivo.
+| REST propuesto | Responsabilidad |
+|---|---|
+| `GET /api/healthz` | Estado de arranque del proceso. Respuesta pública sin datos de cuenta. |
+| `POST /api/account/bootstrap` | Recibir `timeZone` al iniciar por primera vez. Inicializar de forma idempotente y devolver `registeredAt` y la zona de cuenta. |
+| `GET /api/tasks` | Obtener tareas y completaciones del propietario, incluidas archivadas para el histórico. Leer con Supabase JS y paginar internamente si la API limita filas. |
+| `POST /api/tasks` | Validar escalera, normalizar título, crear y devolver la tarea confirmada. |
+| `PATCH /api/tasks/:taskId` | Recibir `title` y `date`. Renombrar una tarea activa y devolver la tarea confirmada y si se retiró su marca. |
+| `DELETE /api/tasks/:taskId?date=YYYY-MM-DD` | Retirar una tarea activa sin borrado físico. Devolver la tarea confirmada y si se retiró su marca. |
+| `PUT /api/tasks/:taskId/completions/:date` | Recibir `completed: boolean`. Aplicar el estado deseado del día, idempotente ante reintentos. |
+| `GET /api/health` | Leer checks propios para Health y racha, con paginación interna si procede. |
+| `PUT /api/health/:date/:goal` | Recibir `completed: boolean`. Cambiar solo el objetivo indicado y devolver la fila confirmada o `null` según §02.7. |
 
-### Seguridad y configuración
+**Reuso React.** Conservar `AuthProvider`, `PrivateLayout`, `useLadderSession`, `useTasks`, `useHealth`, las funciones puras de `dates`, `progress` y `health`, y las páginas y popups actuales. `useRegistrationDate` usa la fecha real de Auth en la zona aprobada para persistencia. Incorporar un cliente Fetch tipado para Express junto a las utilidades existentes. Hidratar por cuenta, esperar la confirmación de escrituras, preservar borradores ante fallos y descartar respuestas tardías al cambiar de cuenta. Mantener el nombre editable del Header y las frases en sesión. Para las frases se conserva el calendario del navegador.
 
-Variables públicas posibles: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_QUOTES_API_URL` si aplica. Nunca exponer `service_role`, claves secretas o `.env`; mantener `.env.example` ficticio. La `anon key` pública no reemplaza políticas RLS. Confirmación de correo y URLs de redirección deben comprobarse en producción.
+### Diseño SQL mínimo y cambios de contrato [PROP]
+
+La cadena local `20261123000000`, `20261123000100` y `20261124000000` crea las cuatro tablas personales de §02.9, establece RLS y configura escrituras. La segunda concede DML directo a `authenticated` y la tercera revoca las escrituras de tareas, marcas y Health. La tercera añade `write_time_zone`, el rol escritor y cinco pares de funciones con ejecución pública revocada a clientes. Esto es evidencia del código. El estado efectivo de Cloud se comprueba por separado.
+
+| Mecanismo | Decisión propuesta y consecuencia |
+|---|---|
+| Tablas, propiedad e historial | Conservar `profiles`, `tasks`, `task_completions` y `health_checks`. Usar FK a Auth, FK compuesta tarea/propietario, unicidad tarea/fecha y clave Health cuenta/fecha. Mantener RLS, lecturas propias directas vía SDK, `archived_at` y la prohibición de borrado físico ordinario. Los totales, la racha y el semáforo se derivan. |
+| Inicialización única | Añadir un marcador de siembra a `profiles` separado de su existencia. Una transacción crea o bloquea el perfil, fija la zona si hace falta, inserta las seis tareas fijas solo para una cuenta sin actividad previa y marca el éxito. Los reintentos devuelven los metadatos existentes. Con datos previos, conservar filas y solo reconciliar el marcador y referencias verificadas. Siembra y escrituras ordinarias comparten la misma puerta de integridad. |
+| Límite y última tarjeta | Retener las reglas de cuatro activas y mínimo de una al retirar. Contar bajo el lock del perfil en las operaciones SQL de alta y retiro. Evitar columnas de contador, posiciones artificiales y un preconteo remoto desde Express. |
+| Títulos | Normalizar en TypeScript con `trim()` y mayúscula inicial, conservando el resto. Sustituir el normalizador SQL con ICU por una restricción de texto no vacío, incluida la presencia exclusiva de whitespace. En SQL, comparar el título recibido con el almacenado dentro de la transacción para decidir si hay cambio efectivo. **Cambio propuesto:** el formato canónico lo ofrece la API Express. Una llamada directa autorizada a la RPC sobre una tarea de su cuenta podría guardar una variante no canónica, con las mismas restricciones de propiedad e historial. |
+| Fecha y zona | **Cambio propuesto a DEC-07-01/04:** fijar la zona IANA detectada al inicializar la cuenta, o conservar la ya registrada. Usar esa zona para Today, fecha real del alta y escrituras en todos los dispositivos. Mantener la captura de fecha al actuar de AUD-02-01. PostgreSQL verifica la fecha contra el reloj y zona de cuenta tras adquirir el lock, rechaza fechas cerradas o anteriores al alta y conserva fechas existentes. En cambios de zona del dispositivo, prevalece el calendario de la cuenta. Si la solicitud cruza medianoche se rechaza y la UI refresca el día para reintento explícito. Validar zonas de navegador en TypeScript y sus equivalentes de catálogo en PostgreSQL. Pasar un parámetro PostgreSQL `date` y retirar el parser textual duplicado. La garantía de DEC-07-02 se conserva. |
+| Archivo, edición y completaciones | Mantener operaciones atómicas. Archivar o renombrar efectivamente borra solo la marca de la fecha autorizada en la misma transacción. Marcar usa la clave única con inserción idempotente, desmarcar borra la fila del mismo día. La tarea debe seguir activa. Un renombrado sin cambio deja la marca intacta. |
+| Health | Mantener una fila por cuenta y fecha y escribir exclusivamente la columna del objetivo pedido con actualización atómica. Conservar `false` sobre un día sin fila como `null`, el corte de fechas y la independencia de objetivos. Calcular la regla B y la racha en React. |
+| Roles, esquema y RPC | Conservar un único rol escritor sin login ni bypass de RLS y un esquema de implementación sin exposición en la Data API. Mantener envoltorios públicos `SECURITY INVOKER` mínimos solo para siembra y cinco mutaciones protegidas. Otorgar solo los permisos necesarios sobre esos puntos de entrada y sus funciones internas, con `search_path` fijo, identidad de `auth.uid()` y privilegios por operación/columna. Revocar DML ordinario de tablas y ejecución de auxiliares. Este límite evita que un usuario omita las transacciones mediante DML directo y conserva el aislamiento con un propietario de funciones acotado. |
+| Bloqueos y Auth interno | Sustituir el lock asesor y su helper por `SELECT … FOR UPDATE` sobre el perfil de la cuenta dentro de las transacciones de escritura. Inicializar primero de forma segura con `INSERT … ON CONFLICT`. Leer el instante de alta de Auth con un auxiliar de alcance mínimo al inicializar y conservarlo como metadato no editable. Probar visibilidad de escrituras concurrentes bajo `READ COMMITTED`. |
+| Frases y ampliaciones | Aplazar cualquier esquema de frases, cambios de zona, restauración de tareas, pruebas de carga y endurecimiento para operación comercial. |
+
+**Orden de migración.** Cotejar historial, permisos y conteos con el árbol local. Preparar solo la cadena mínima para un destino comprobado sin migraciones de la app. Si hay migraciones registradas o datos existentes, diseñar una migración correctiva hacia adelante y preservar histórico, identidades y fechas. Confirmar la reconciliación antes de tocar datos. Mantener las escrituras cerradas durante la transición y verificar con dos cuentas antes de habilitarlas. La ejecución del SQL requiere autorización separada. [Funciones y privilegios de Supabase](https://supabase.com/docs/guides/database/functions).
+
+### Inspección de Supabase Cloud [PENDIENTE DE EVIDENCIA]
+
+La configuración local apunta a un host HTTPS de Supabase Cloud y tiene clave publicable. Esta sesión carece de acceso de catálogo o Dashboard. La observación histórica de 07-00 solo indicaba que entonces la consulta del propietario no devolvió tablas visibles en `public`. La aplicación, los permisos y el volumen de datos actuales siguen sin verificar.
+
+En Supabase Dashboard, abrir el proyecto académico y comparar en privado su **Reference ID** en **Project Settings → General** con el prefijo del host de `VITE_SUPABASE_URL`. Confirmar los esquemas expuestos en **Integrations → Data API → Settings**. Abrir **SQL Editor → New query** y ejecutar estas consultas de solo lectura. Compartir versiones, definiciones y conteos sin claves, identificadores de cuentas ni filas de usuario. [Guía de Data API de Supabase](https://supabase.com/docs/guides/api/quickstart).
+
+```sql
+select current_setting('server_version') as postgres,
+       to_regclass('supabase_migrations.schema_migrations') as migration_history;
+
+select c.relname as table_name, c.relrowsecurity as rls,
+       pg_get_userbyid(c.relowner) as table_owner, r.role_name,
+       has_table_privilege(r.role_name, c.oid, 'SELECT') as can_select,
+       has_any_column_privilege(r.role_name, c.oid, 'INSERT, UPDATE')
+         or has_table_privilege(r.role_name, c.oid, 'DELETE, TRUNCATE') as can_write
+from pg_class c
+join pg_namespace n on n.oid = c.relnamespace
+cross join (values ('anon'), ('authenticated')) r(role_name)
+where n.nspname = 'public' and c.relkind in ('r', 'p')
+order by c.relname, r.role_name;
+
+select table_name, column_name, data_type, is_nullable
+from information_schema.columns
+where table_schema = 'public'
+order by table_name, ordinal_position;
+
+select c.relname as table_name, con.conname, pg_get_constraintdef(con.oid) as definition
+from pg_constraint con
+join pg_class c on c.oid = con.conrelid
+join pg_namespace n on n.oid = c.relnamespace
+where n.nspname = 'public'
+order by table_name, con.conname;
+
+select tablename, policyname, roles, cmd, qual, with_check
+from pg_policies
+where schemaname = 'public'
+order by tablename, policyname;
+
+select n.nspname as schema_name, p.oid::regprocedure as routine,
+       pg_get_userbyid(p.proowner) as owner_role, p.prosecdef as is_definer,
+       has_schema_privilege(r.role_name, n.oid, 'USAGE') as schema_usage,
+       has_function_privilege(r.role_name, p.oid, 'EXECUTE') as can_execute
+from pg_proc p
+join pg_namespace n on n.oid = p.pronamespace
+cross join (values ('anon'), ('authenticated')) r(role_name)
+where n.nspname = 'adhd_ladder_private'
+   or (n.nspname = 'public' and p.proname in
+       ('bootstrap_account', 'create_task', 'rename_task', 'archive_task',
+        'set_task_completion', 'set_health_goal'))
+order by schema_name, routine, r.role_name;
+```
+
+Si existe la tabla de historial, ejecutar `select version from supabase_migrations.schema_migrations order by version;`. Ejecutar solo las líneas de conteo cuyas tablas aparezcan en el inventario. La última devuelve solo una cifra de Auth.
+
+```sql
+select count(*) as profiles from public.profiles;
+select count(*) as tasks, count(archived_at) as archived from public.tasks;
+select count(*) as task_completions from public.task_completions;
+select count(*) as health_checks from public.health_checks;
+select count(*) as auth_accounts from auth.users;
+```
+
+Para permisos de columna o diferencias en el rol escritor, usar las consultas de catálogo del [procedimiento histórico de 07-01](../supabase/tests/07-01-task-integrity.md) sobre objetos existentes, sin ejecutar sus concesiones de prueba. Un historial ausente y conteos vacíos se interpretan junto al inventario de esquema. Cualquier fila existente requiere evaluar el impacto antes de autorizar la migración.
 
 ### Assets y calidad visual
 
@@ -261,7 +384,7 @@ Ilustraciones de producción en WebP, iconos/logo en SVG según conveniencia, de
 
 ### A · Condiciones críticas de entrega de TripleTen (Etapa 1)
 
-La fuente de la rúbrica es `Etapa_1_aplicacion_front_end.pdf`. La revisión de entrega debe contrastarla con las lecciones 1.1 y 1.2 cuando estén disponibles. Confirmar el acceso del revisor a la funcionalidad desde `/`.
+Fuente oficial consultada: `docs/Etapa_1_aplicacion_front_end.pdf` (copia local, tres páginas). La rúbrica evalúa el frontend de Etapa 1. Express y la persistencia son decisiones del proyecto. Verificar las lecciones 1.1 y 1.2 cuando estén disponibles y confirmar el acceso del evaluador a la funcionalidad desde `/`.
 
 - [ ] Entregar URL del PR `stage-frontend` → `main` antes del plazo.
 - [ ] `npm install`, `npm run dev`, `npm run build` y `npm run lint` sin fallos.
@@ -278,7 +401,7 @@ La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos 
 - [ ] Estructura de componentes, estilos, assets, utilidades, configuración y recursos externos clara; constantes organizadas en configuración; listeners limpiados al desmontar.
 - [ ] Responsive desde 320 px, teclado/focus, semántica HTML, imágenes optimizadas con `alt`, fuentes conectadas con fallback de sistema, normalize/reset y contraste suficiente.
 - [ ] Formularios con placeholder, required cuando corresponda, validación y foco; cuenta con estados carga/error y restauración de sesión; enlaces y botones semánticos.
-- [ ] Ruta `/` y `/about`, más rutas protegidas y navegación funcional.
+- [ ] Ruta de funcionalidad y ruta sobre la autora con navegación completa, según el PDF. En este proyecto son Life accesible desde `/` con sesión y `/about` pública. El PDF nombra `react-router-dom`. La versión 8 instalada lo reemplaza por `react-router` y sus entradas DOM. Documentar la equivalencia y confirmar el criterio con el evaluador en 07-10. [Migración oficial de React Router](https://reactrouter.com/upgrading/v7#react-router-dom).
 - [ ] Fetch con respuesta tipada, manejo de fallos y estado vacío; paginación/cargar más solo si el servicio lo requiere y tiene sentido.
 - [ ] `.env` excluido del repo; `.env.example` sin credenciales; sin build ni `node_modules` versionados; sin archivos sobrantes de Vite.
 
@@ -330,20 +453,9 @@ Publicar una aplicación operativa para administrar pequeñas metas en Health, A
 
 La UI de popups implementada provisionalmente en 06A no es prueba de que exista CRUD persistente.
 
-### Calendario base (referencia v2.1, no registro de ejecución)
+### Calendario
 
-| Fecha 2026 | Objetivo originalmente planeado | Cierre necesario |
-|---|---|---|
-| 22–23 nov. | Setup, rutas, Auth y vistas públicas | Dev/build/lint y rutas navegables |
-| 24 nov. | Supabase, tablas, RLS, siembra | Aislamiento probado con dos cuentas |
-| 25 nov. | Escaleras, popups, responsive | UI verificable desde 320 px |
-| 26 nov. | CRUD, marcación diaria, contadores, Health y racha | Persistencia y pruebas de fechas/histórico |
-| 27 nov. | `quotesApi.ts` e integración | Frase real con carga/error/reintento |
-| 28 nov. | QA, README, deploy y PR | URL pública y PR si todo pasa |
-| 29 nov. | Correcciones finales | PR enviado |
-| 30 nov. | Margen para evaluación | Sin funciones nuevas |
-
-**Reevaluar contra el repositorio real:** el calendario no certifica tareas completas. No sacrificar RLS ni la API real para terminar pulido estético.
+El [plan vigente](plan-de-trabajo.md) mantiene el camino crítico y el estado verificable. Meta de entrega el 28–29 de noviembre y plazo oficial el 30 de noviembre de 2026.
 
 ### Flujo de trabajo
 
@@ -355,7 +467,7 @@ El propietario aprueba las decisiones de producto y el alcance. El flujo operati
 
 ### Defensa técnica
 
-Una aplicación simple que presenta progreso diario e histórico sin prometer resultados clínicos. Como portafolio muestra React/TypeScript, accesibilidad, rutas, estado compartido, CRUD, autenticación, RLS, consumo de API externa y despliegue. Supabase es backend gestionado; no sustituye el requisito de Fetch API externa de TripleTen.
+La defensa recorre una acción real de React a Express y PostgreSQL. La vista conserva el estado compartido, el controlador valida y orquesta la operación y la base asegura propiedad y atomicidad. La frase pública enseña un segundo flujo independiente mediante Fetch. Around ofrece los equivalentes de routing, controladores y middleware para explicar el cambio a Supabase Auth y RLS.
 
 ### Riesgos y mitigaciones
 
@@ -367,6 +479,8 @@ Una aplicación simple que presenta progreso diario e histórico sin prometer re
 | Confundir reinicio de checks de Health con rojo automático | Evaluar regla B con hoy y ayer |
 | Inconsistencia entre vistas | Una fuente de completaciones por cuenta y funciones puras compartidas |
 | RLS insuficiente | Pruebas de aislamiento con dos usuarios y referencias cruzadas |
+| Acceso al catálogo o datos previos desconocidos | Inspección de solo lectura antes de elegir la cadena y reconciliación sin pérdida del histórico |
+| Desfase de despliegue entre cliente, API y Auth | Probar en el origen HTTPS final la recarga SPA, el API JSON y las redirecciones de Supabase |
 | API pública de frases fuera de servicio o CORS | Verificación temprana y proveedor alternativo aprobado |
 | Limitaciones del plan gratuito Supabase o email de confirmación | Verificar configuración y disponibilidad antes de revisión |
 | Desbordamiento móvil y popups | Verificar desde 320 px y teclado; no ocultar overflow como arreglo |
@@ -375,7 +489,7 @@ Una aplicación simple que presenta progreso diario e histórico sin prometer re
 
 ### Validación no certificada
 
-Esta versión es **una especificación documental**, no evidencia de pruebas de producción. Quedan por certificar en el código: operaciones reales de Supabase, RLS entre usuarios, fórmula de totales, cambio de fecha, API de frases real, estados de error, responsive, build, lint, deploy y PR.
+El plan registra comprobaciones existentes de frontend y las pendientes sobre el resultado integrado. Quedan por comprobar el catálogo de Supabase Cloud, las operaciones persistidas, RLS efectivo con dos cuentas, los escenarios representativos de concurrencia y el despliegue listo para la revisión académica.
 
 ---
 
@@ -410,8 +524,15 @@ Esta versión es **una especificación documental**, no evidencia de pruebas de 
 - [DECIDIDO] Health no genera pasos y sus checks diarios empiezan vacíos; su color continúa sujeto a regla B.
 - [DECIDIDO en 06B-05] El propietario aprobó `archived_at` y la eliminación exclusiva de la completación de hoy al retirar una tarjeta. Las reglas vigentes están en §02.6.
 
+### 25 de noviembre de 2026 — Arquitectura académica v2.3 [DECIDIDO]
+
+- La API propia Express y el contrato TypeScript-first de §03 sustituyen el acceso directo desde React a datos privados de Supabase como diseño final. Supabase Auth conserva el acceso desde React y PostgreSQL conserva RLS y las operaciones indivisibles.
+- Se aprueba el inicio por sesión en `/`, con `/life` y el estado privado compartido vigentes. La persistencia de frases prevista en DEC-07-03 queda aplazada con 07-08.
+- [HISTÓRICO] DEC-07-03 preveía conservar una sola asignación por cuenta y fecha, incluso ante concurrencia. La asignación se recuperaría tras recarga o cambio de dispositivo. El historial se conservaría y la prevención de duplicados consultaría hoy y los seis días anteriores. Su ejecución queda fuera de esta entrega.
+- La cadena SQL histórica aporta una línea base de revisión. La adopción de sus componentes se decide con la propuesta de §03 y la evidencia de Cloud. DEC-07-01, DEC-07-02 y DEC-07-04 siguen vigentes hasta aprobar cambios de producto.
+
 ### Referencias
 
-Requisitos de TripleTen Etapa 1 (API externa con Fetch), mockups 01–07 y popups, paleta y `variables.css`, `AGENTS.md`, Architecture Guardian y dossier v2.1. Esta actualización se basa en la explicación y confirmación directa del propietario sobre los contadores.
+Rúbrica local de TripleTen Etapa 1, [Around en `main`](https://github.com/28Dara/web_project_around_full/tree/main), mockups 01–07, paleta, tokens y [AGENTS.md](../AGENTS.md). La vigencia de las decisiones de producto se indica en este dossier y el plan registra su implementación.
 
 **Regla final para futuras implementaciones:** en caso de contradicción entre el relato histórico y las secciones normativas 02.2–02.6, prevalecen estas últimas y cualquier instrucción posterior explícita del propietario.

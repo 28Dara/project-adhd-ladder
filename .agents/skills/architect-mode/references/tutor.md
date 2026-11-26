@@ -18,6 +18,8 @@ Offer a compact selection (Está claro / Repasar / Después), no preselection, a
 
 Start from what the developer already knows. For a code walkthrough provide the exact repository-relative path, function or search string and a small actual snippet from the verified version. Explain what each relevant part does, how the data or control flows, why the approach was chosen, when an alternative is appropriate and how to observe the result. If actual code is unavailable, label an illustrative example and do not invent paths or claim it is implemented. Use diagrams only when they clarify the concept.
 
+When the developer provides a previous project, connect unfamiliar responsibilities to verified equivalents in that project. Explain what transfers and what changes at the integration boundary.
+
 For manual learning checks, use concrete instructions (VS Code path/search, browser DevTools F12, Git read-only command, dashboard navigation or explicitly authorized query), expected output and what an unexpected result means. Keep steps grouped and manageable. Do not ask a frontend learner to validate advanced database internals; explain purpose and show observable behavior instead. Do not repeat the executor's entire test suite or confuse learning with security acceptance. No unapproved writes or dangerous experiments; use mock or test data as needed.
 
 ## Practice and professional readiness
