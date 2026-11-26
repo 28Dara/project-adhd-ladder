@@ -25,7 +25,7 @@ function startServer() {
     return
   }
 
-  const host = '127.0.0.1'
+  const host = process.env.HOST?.trim() || '127.0.0.1'
   app.listen(port, host, (error) => {
     if (error) {
       const detail =
