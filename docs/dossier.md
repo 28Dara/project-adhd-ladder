@@ -1,19 +1,18 @@
-# ADHD Ladder — Dossier integral v2.3
+# ADHD Ladder — Dossier integral v2.4
 
 > **Documento normativo del producto · 25 de noviembre de 2026.** Consolida la arquitectura aprobada para el MVP académico, la rúbrica de Etapa 1 y los ajustes de alcance. La lógica de contadores de v2.2 sigue vigente.
 >
 > **Precedencia de decisiones:** instrucción explícita más reciente del propietario > decisiones `[DECIDIDO]` de este dossier > plan de trabajo > propuestas `[PROP]`. Los puntos `[ABIERTO]` no autorizan implementaciones especulativas. El historial conserva su valor histórico, pero no sustituye las reglas vigentes.
 
-**Producto:** ADHD Ladder · **Entrega:** proyecto final TripleTen, Etapa 1. **Stack:** React, TypeScript, Vite, React Router, Node.js, Express, Supabase Auth, PostgreSQL con RLS, `@supabase/supabase-js` y DummyJSON mediante Fetch nativo.
+**Producto:** ADHD Ladder · **Entrega:** proyecto final TripleTen, Etapa 1. **Stack:** React, TypeScript, Vite, React Router, Node.js, Express, MongoDB Atlas, Mongoose, bcrypt, jsonwebtoken y Fetch nativo para Express y DummyJSON.
 
 **Fecha de corte:** 25/11/2026 · **Plazo oficial:** 30/11/2026 · **Objetivo de entrega:** PR `stage-frontend` → `main` el 28 o 29/11. El calendario vigente está en el plan de trabajo.
 
-## Qué cambió en v2.3 [DECIDIDO]
+## Qué cambió en v2.4 [DECIDIDO]
 
-- Arquitectura `client/` y `server/` basada en Around. Express es la API de datos privados, con lógica de aplicación en TypeScript y garantías de integridad en PostgreSQL.
-- Entrada por `/` según sesión y alias privado `/life`. Ambas vistas de Life comparten el estado de cuenta.
-- DummyJSON conserva su comportamiento en memoria de la sesión. La persistencia de frases 07-08 pasa al trabajo posterior al MVP.
-- El proyecto existente de Supabase Cloud es el destino académico. La propuesta SQL de §03 requiere aceptación de sus ajustes y autorización de ejecución. Las reglas de §§02.2–02.8 permanecen vigentes hasta que se apruebe un cambio explícito.
+- MongoDB Atlas y Mongoose sustituyen Supabase como destino de persistencia. Express conserva su fundación TypeScript y asume autenticación propia con bcrypt y jsonwebtoken. El objetivo es completar TripleTen dentro del plazo con tecnologías del bootcamp que la desarrolladora pueda mantener y explicar.
+- Se conservan la estructura `client/` y `server/`, la entrada por `/` según sesión, el alias privado `/life` y los contratos de producto de §02.
+- DummyJSON conserva su comportamiento en memoria de la sesión. 07-08 queda aplazado. El inventario y la preservación de posibles cuentas y datos anteriores se tratan en §03.
 
 ---
 
@@ -37,7 +36,7 @@ Las herramientas de productividad pueden convertir las metas en listas largas y 
 | Pantalla | Contenido y función | Alcance vigente |
 |---|---|---|
 | Landing (`/`, sin sesión) | Logo, navegación pública, escalera, CTA hacia registro | Diseño aprobado |
-| Sign Up / Log In | Email/contraseña, navegación de retorno, autenticación Supabase | Rutas públicas |
+| Sign Up / Log In | Email/contraseña, navegación de retorno, autenticación mediante Express | Rutas públicas |
 | Life (`/` con sesión o `/life`) | Hoy, total histórico, racha, días desde alta, secciones Health/Activities/Learning, frase del día | Privada. Life = Activities + Learning |
 | Health (`/health`) | Semáforo textual y tres objetivos fijos | Privada; no suma pasos |
 | Activities (`/activities`) | Tareas activas, pasos de hoy, total histórico, añadir y gestionar | Privada; máximo cuatro activas |
@@ -49,15 +48,15 @@ Las cuatro escaleras comparten criterios visuales, pero **no** necesariamente la
 
 ### Alcance y prioridades
 
-**[DECIDIDO] Propósito al 25 de noviembre de 2026.** MVP académico y pieza de portafolio para un grupo pequeño de usuarios de demostración. La aplicación debe cumplir la rúbrica, mostrar una implementación funcional y permitir que la desarrolladora mantenga y defienda sus decisiones en una entrevista. Express expone la API de la aplicación y usa el proyecto existente de Supabase Cloud para identidad y datos. La operación remota requiere su autorización correspondiente.
+**[DECIDIDO] Propósito al 25 de noviembre de 2026.** MVP académico y pieza de portafolio para un grupo pequeño de usuarios de demostración. La aplicación debe cumplir la rúbrica, mostrar una implementación funcional y permitir que la desarrolladora mantenga y defienda sus decisiones en una entrevista. Express expone la API de la aplicación y gestiona la identidad. MongoDB Atlas persiste los datos. La operación remota requiere su autorización correspondiente.
 
 | Capa de alcance | Qué comprende |
 |---|---|
 | Requisitos académicos | Rúbrica oficial de TripleTen Etapa 1. Ver §04 para su resumen, la API real mediante `fetch()`, el README, el despliegue recargable y el enlace al PR. |
-| Producto esencial | Auth, aislamiento por cuenta con RLS, tareas y completaciones por día, archivo con historial, progreso derivado, Health y los flujos aprobados que los sostienen. |
+| Producto esencial | Auth, aislamiento por cuenta en la API, tareas y completaciones por día, archivo con historial, progreso derivado, Health y los flujos aprobados que los sostienen. |
 | Comportamiento adicional aprobado | Racha, antigüedad, tareas iniciales y frase de sesión según §§02.6–02.10. |
 | Mejoras opcionales | Pulido cosmético y controles adicionales justificados por evidencia. El plan conserva los pendientes P2. |
-| Fuera del MVP | Operación comercial, pruebas de carga, Docker, WSL, Supabase CLI, MongoDB, JWT propio, analítica clínica e historial de frases entre sesiones y dispositivos. |
+| Fuera del MVP | Operación comercial, pruebas de carga, Docker, WSL, analítica clínica e historial de frases entre sesiones y dispositivos. |
 
 Priorizar la conformidad académica y una versión demostrable con seguridad e integridad verificadas. Mantener las decisiones de producto del capítulo 02 hasta que el propietario autorice un cambio concreto.
 
@@ -69,7 +68,7 @@ Priorizar la conformidad académica y una versión demostrable con seguridad e i
 
 `/` muestra Landing sin sesión y Life con sesión, tras completar la restauración. `/about` es pública. `/signup` y `/login` son para visitantes y mantienen la redirección a `/life` para sesiones activas. `/life`, `/health`, `/activities` y `/learning` requieren sesión y, sin ella, redirigen a `/login`. El cierre exitoso vuelve a `/`. Life en `/` y `/life` usa el mismo layout privado y estado de cuenta que las demás escaleras.
 
-React Router gobierna navegación. La API autentica cada petición privada y PostgreSQL aplica RLS con esa identidad. Una llamada HTTP puede llegar sin pasar por React. Restaurar sesión con Supabase Auth en el `AuthProvider` existente.
+React Router gobierna la navegación. Express verifica cada JWT y aplica la identidad verificada a todas las consultas privadas. El `AuthProvider` existente restaura la sesión mediante el endpoint de cuenta actual según §03.
 
 ### 02.2 Definiciones normativas de los contadores [DECIDIDO]
 
@@ -115,13 +114,13 @@ lifeTotal       = activitiesTotal + learningTotal
 
 **Precisión temporal:** el histórico es relativo a la fecha local de consulta, no una cifra que se actualice por un proceso nocturno. Cambios posteriores en zona horaria deben manejarse coherentemente, sin reinterpretar silenciosamente fechas ya guardadas; los escenarios de cambio manual de reloj o zona horaria requieren pruebas adicionales, no una nueva regla inventada.
 
-**DEC-07-01 [DECIDIDO] · Fecha local.** Las operaciones fechadas conservan el día calendario local del dispositivo y preservan la sincronización de lectura y escritura corregida en AUD-02-01. Se validan en SQL según DEC-07-04. La interfaz sigue sin configuración de zona horaria y la fecha UTC no sustituye el día local.
+**DEC-07-01 [DECIDIDO] · Fecha local.** Las operaciones fechadas conservan el día calendario local del dispositivo y preservan la sincronización de lectura y escritura corregida en AUD-02-01. Express las valida según DEC-07-04. La interfaz sigue sin configuración de zona horaria y la fecha UTC no sustituye el día local.
 
-**DEC-07-02 [DECIDIDO] · Integridad temporal.** Rechazar registros fechados antes del alta. Usar la fecha real de registro de Supabase Auth según el contrato de fecha local y proteger los días cerrados. Al persistir un renombrado efectivo o un retiro, confirmar o revertir juntos el cambio de la tarjeta y la eliminación exclusiva de su completación de hoy, conforme a §02.6.
+**DEC-07-02 [DECIDIDO] · Integridad temporal.** Rechazar registros fechados antes del alta. Usar la fecha real de registro de la cuenta según el contrato de fecha local y proteger los días cerrados. Al persistir un renombrado efectivo o un retiro, confirmar o revertir juntos el cambio de la tarjeta y la eliminación exclusiva de su completación de hoy, conforme a §02.6.
 
-**DEC-07-04 [DECIDIDO] · Referencia fija de escritura.** La primera operación fechada exitosa fija para la cuenta la zona horaria detectada y declarada por el dispositivo. Durante el MVP se conserva esa referencia sin selector ni modificación posterior. La fecha capturada al realizar cada acción debe coincidir con el día que PostgreSQL calcula con su reloj tanto en la zona declarada como en la referencia fija. La referencia también determina la fecha local de alta real y protege los días cerrados. Si los días no coinciden, la escritura se rechaza sin trasladarla automáticamente a otro día. Esto puede impedir temporalmente escribir desde dispositivos con días locales distintos. PostgreSQL comprueba la coherencia de la fecha declarada, pero no puede certificar de forma independiente la ubicación ni la zona real del dispositivo.
+**DEC-07-04 [DECIDIDO] · Referencia fija de escritura.** La primera operación fechada exitosa fija para la cuenta la zona horaria detectada y declarada por el dispositivo. Durante el MVP se conserva esa referencia sin selector ni modificación posterior. La fecha capturada al realizar cada acción debe coincidir con el día que Express calcula con el reloj del servidor tanto en la zona declarada como en la referencia fija. La referencia también determina la fecha local de alta real y protege los días cerrados. Si los días no coinciden, la escritura se rechaza sin trasladarla automáticamente a otro día. Esto puede impedir temporalmente escribir desde dispositivos con días locales distintos. Express comprueba la coherencia de la fecha declarada a partir de los datos que recibe del navegador.
 
-**Compatibilidad de zonas [DECIDIDO].** Admitir los identificadores de zona horaria que devuelven los navegadores, previa revisión técnica de su compatibilidad con PostgreSQL. La implementación debe respetar las comprobaciones de DEC-07-04.
+**Compatibilidad de zonas [DECIDIDO].** Admitir los identificadores de zona horaria que devuelven los navegadores, previa revisión técnica de su compatibilidad con Node.js e Intl. La implementación debe respetar las comprobaciones de DEC-07-04.
 
 ### 02.5 Ejemplo vinculante: lunes → martes [DECIDIDO]
 
@@ -152,7 +151,7 @@ Histórico anterior al lunes: Activities 8, Learning 12, Life 20.
 
 Health tiene exactamente tres objetivos diarios fijos: **Good Nutrition, Good Sleep y Daily Movement**. Se marcan por fecha, con toda la tarjeta como área clicable. Sus marcas **no** suman pasos a ninguna escalera. Sus checkboxes están vacíos para la nueva fecha si aún no se registraron checks de ese día.
 
-**Escritura de un objetivo [DECIDIDO].** Si todavía no hay fila diaria y se solicita `false`, devolver `null` y dejar el día sin fila.
+**Escritura de un objetivo [DECIDIDO].** Si todavía no hay registro diario y se solicita `false`, devolver `null` y dejar el día sin registro.
 
 El semáforo **se calcula**, no se persiste como un valor independiente:
 
@@ -177,23 +176,21 @@ La racha se evalúa por **días cerrados**; mientras hoy no termina, se muestra 
 
 Los casos límite deben comprobarse según estas condiciones; no modificar esta lógica al ajustar los contadores. **Días en la escalera** = días calendario transcurridos desde el registro, contando el primero; no es la racha.
 
-### 02.9 Modelo de datos [PROP — sujeto a migraciones y pruebas reales]
+### 02.9 Modelo de datos [PROP]
 
-| Tabla o concepto | Campos clave propuestos | Responsabilidad / precaución |
+| Colección | Campos clave propuestos | Restricciones y uso |
 |---|---|---|
-| `profiles` | `id` (FK `auth.users`), `display_name`, `created_at`, `write_time_zone`; metadatos de alta y siembra propuestos en §03 | Perfil y referencia de cuenta. El nombre visible del Header se edita en sesión. |
-| `tasks` | `id`, `user_id`, `ladder` (`activities`/`learning`), `title`, `archived_at`, `created_at` | Identidad estable de tarea, estado activo/retirado; Health no usa esta tabla |
-| `task_completions` | `id`, `user_id`, `task_id`, `completed_date` | Fuente de pasos diarios e históricos; `UNIQUE(task_id, completed_date)`; FK compuesta para impedir referencias de otra cuenta |
-| `health_checks` | `user_id`, `date`, `nutrition`, `sleep`, `movement` | Una fila por fecha y persona; no cuenta como pasos |
-| Derivados, **sin tabla propia** | `today`, `total`, estado Health, racha, días desde alta | Se calculan de registros y fecha de consulta; no se guardan como verdad duplicada |
+| `users` | `_id` ObjectId, `email`, `passwordHash`, `createdAt`, `writeTimeZone`, `tasksInitializedAt`, `taskWriteVersion` | Índice único de correo normalizado. El alta real se fija al registrar la cuenta. Zona y siembra empiezan sin inicializar. La versión coordina transacciones de tareas. El nombre editable del Header sigue en sesión. |
+| `tasks` | `_id` UUID de texto, `ownerId`, `ladder`, `title`, `archivedAt`, `createdAt` | ID estable generado en el servidor para altas nuevas y preservado al importar. Índice por propietario, escalera y estado de archivo. El máximo de cuatro y el mínimo al archivar se verifican en la mutación coordinada. |
+| `taskCompletions` | `ownerId`, `taskId`, `date` | Índice único compuesto `(ownerId, taskId, date)`. Express verifica que la tarea pertenece al mismo propietario y está activa antes de marcar. |
+| `healthChecks` | `ownerId`, `date`, `nutrition`, `sleep`, `movement` | Índice único compuesto `(ownerId, date)`. Cada escritura modifica solo el objetivo solicitado. |
+| Derivados | Today, Total, estado de Health, racha y días desde alta | Se calculan a partir de tareas, completaciones, Health, fecha de consulta y alta real. |
 
-**Integridad crítica:** el retiro mediante `archived_at` debe preservar los registros históricos asociados. Mantener las claves foráneas y la protección RLS al conectar la persistencia. Se prohíbe el borrado físico de tareas como mecanismo de retiro.
-
-Las fechas se almacenan como días calendario `YYYY-MM-DD` según fecha local del usuario. No usar conversión UTC automática para decidir a qué día pertenece un check. La aplicación no está limitada a una zona horaria fija.
+Usar esquemas Mongoose y validación de colección para los tipos y valores básicos del documento, e índices únicos efectivos antes de aceptar escrituras. La propiedad de las referencias entre documentos y las reglas de negocio se verifican en Express. Las fechas de acción se guardan como días calendario `YYYY-MM-DD`. Las fechas de alta, creación y archivo son instantes. Los modelos persisten registros por fecha para conservar el histórico sin acumularlo dentro de un documento.
 
 ### 02.10 Quotes API — requisito externo de Etapa 1
 
-Supabase guarda cuentas y datos personales, pero **no sustituye** la API de frases de terceros. Una API pública real debe consumirse mediante `fetch()` en `src/utils/quotesApi.ts`, con respuesta verificada y tipada, transformación al tipo interno `Quote`, carga, error con reintento y estado vacío.
+La API de frases de terceros se consume mediante `fetch()` en `client/src/utils/quotesApi.ts`, con respuesta verificada y tipada, transformación al tipo interno `Quote`, carga, error con reintento y estado vacío.
 
 **Proveedor [DECIDIDO]** — DummyJSON, mediante `https://dummyjson.com/quotes/random`. Se consulta directamente desde el navegador, sin credenciales ni datos de cuenta. La respuesta debe contener `id` numérico, `quote` y `author` de texto. La aplicación conserva el texto original y lo muestra como texto plano. Se verifica CORS (intercambio de recursos entre orígenes) desde el navegador.
 
@@ -205,9 +202,9 @@ Supabase guarda cuentas y datos personales, pero **no sustituye** la API de fras
 
 ### 02.11 Estado, persistencia y accesibilidad
 
-- Mantener el estado compartido de las rutas privadas y los borradores en React. Tareas, completaciones y Health persisten en Supabase a través de Express. Los hooks usan utilidades tipadas y los componentes se encargan de la presentación.
+- Mantener el estado compartido de las rutas privadas y los borradores en React. Tareas, completaciones y Health persisten en MongoDB a través de Express. Los hooks usan utilidades tipadas y los componentes se encargan de la presentación.
 - Funciones puras para fechas, progreso, Health y racha. UI consistente en Life/Activities/Learning desde la misma fuente de completaciones por usuario y fecha.
-- RLS en todas las tablas personales, verificada con dos cuentas; controlar carrera de solicitudes, respuestas antiguas tras cambio de cuenta y reversión de actualizaciones optimistas fallidas.
+- Aislamiento en todas las consultas privadas, verificado con dos cuentas. Controlar carreras de solicitudes, respuestas antiguas tras cambio de cuenta y reversión de actualizaciones optimistas fallidas.
 - Accesibilidad: `button`, `a`, `label`, teclado, foco visible, estados de carga/error, indicadores de color acompañados de texto, popups cerrables y formularios con validación.
 - Responsive a partir de 320 px sin desbordamiento horizontal; no ocultar overflow como remedio para fallos de maquetación.
 
@@ -217,21 +214,19 @@ Supabase guarda cuentas y datos personales, pero **no sustituye** la API de fras
 
 ### Stack y referencia [DECIDIDO]
 
-- El cliente usa Vite, React, TypeScript y React Router, con CSS, Grid/Flex, normalize y tokens de color propios.
-- El servidor usa Node.js y Express con TypeScript. Supabase Auth gestiona las credenciales y emite los tokens. Supabase JS conecta con Auth y PostgreSQL mediante la Data API con RLS.
-- DummyJSON se consume con Fetch nativo desde el navegador.
-- La referencia oficial es [Around, rama `main` inspeccionada en `5d7db78`](https://github.com/28Dara/web_project_around_full/tree/5d7db784f0443a4c9f72a6b24515f2b217c5fe67). Sus tres `package.json` separan cliente y servidor. `client/src/utils/api.ts` centraliza Fetch. En el servidor, `app.ts` compone middleware y rutas, `routes/index.ts` monta recursos, los controladores orquestan operaciones, `types/express/index.d.ts` tipa el contexto y `utils/errors.ts` construye errores HTTP. Los modelos de Around pertenecen a Mongoose. Aquí se usa Supabase JS y solo se añade `models/` si hay una responsabilidad de datos real. Supabase Auth asume las responsabilidades que Around resolvía con contraseñas y JWT propios.
+- El cliente usa Vite, React, TypeScript y React Router, con CSS, Grid/Flex, normalize y tokens de color propios. Usa Fetch nativo para Express y, de forma independiente, para DummyJSON.
+- El servidor usa Node.js y Express con TypeScript, Mongoose para MongoDB Atlas, bcrypt para contraseñas y jsonwebtoken para sesiones.
+- La referencia principal es [Around, versión inspeccionada `5d7db78`](https://github.com/28Dara/web_project_around_full/tree/5d7db784f0443a4c9f72a6b24515f2b217c5fe67). Adaptar el arranque con `mongoose.connect` de `server/src/app.ts`, los esquemas de `models/user.ts` y `models/card.ts`, validación, bcrypt y firma JWT de `controllers/users.ts`, verificación Bearer de `middleware/auth.ts`, router y `routes/users.ts`, tratamiento central de `middleware/error-handler.ts` y `utils/errors.ts`, y Fetch de `client/src/utils/api.ts`.
+- Conservar el prefijo `/api`, el proxy Vite, `/healthz` bajo la API y el tratamiento de errores de 07-EXP. Adaptar Around a respuestas de cuenta propia, validación explícita de entradas, filtrado de propietarios, verificación estricta de JWT y logs sin datos sensibles.
 
 ### Separación de responsabilidades [DECIDIDO]
 
 | Capa | Responsabilidad |
 |---|---|
-| React | Presentación, formularios, navegación, sesión Supabase, borradores y estado privado compartido. Los hooks llaman a Express para datos privados. Las funciones puras existentes calculan fechas, progreso, Health y racha. |
-| Express | Enrutamiento y controladores TypeScript. Verifica identidad, valida cuerpos, UUID, fechas, zona y valores, normaliza títulos, orquesta lecturas y escrituras, adapta filas a respuestas tipadas y traduce errores. |
-| PostgreSQL | Tablas, relaciones, RLS, restricciones, permisos mínimos, escritura fechada autorizada y las transacciones imprescindibles. Persiste datos fuente de progreso e historial. |
-| DummyJSON | Provee la frase pública. El cliente realiza la solicitud independiente y conserva la UX de §02.10. |
-
-**Acceso privado.** React toma el token vigente del `AuthProvider` y lo envía como `Authorization: Bearer …`. El middleware de Express lo verifica con `supabase.auth.getUser(token)`. Deriva `user.id` del resultado y rechaza campos de identidad en el cuerpo. Para las consultas crea un SDK por petición con la clave publicable y el mismo Bearer, sin persistencia ni refresco de sesión del lado servidor. Las consultas incluyen el propietario donde corresponda y RLS aplica `auth.uid()` también frente al acceso directo a la Data API. Las operaciones de datos del usuario se ejecutan con su identidad, sin `service_role`. Supabase Auth conserva todas sus responsabilidades de registro, login y logout. [Verificación del usuario](https://supabase.com/docs/reference/javascript/auth-getuser) · [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security).
+| React | Presentación, formularios, navegación, sesión, borradores y estado privado compartido. Fetch tipado hacia Express. Las funciones puras existentes calculan fechas, progreso, Health y racha. |
+| Express | Autenticación, autorización, validación, normalización de entradas y reglas de negocio. Deriva el propietario del JWT verificado y lo incluye en cada lectura y escritura privada, incluidas referencias de tareas, upserts y operaciones dentro de una transacción. |
+| MongoDB | Persiste documentos, aplica restricciones de documento e índices y garantiza operaciones atómicas y transacciones. La conexión y las credenciales pertenecen al servidor. |
+| DummyJSON | Provee la frase pública. El navegador realiza la solicitud independiente y conserva la interacción de §02.10. |
 
 ### Organización objetivo [DECIDIDO]
 
@@ -250,6 +245,7 @@ project-adhd-ladder/
       app.ts
       controllers/
       middleware/
+      models/
       routes/
         index.ts
       types/
@@ -257,7 +253,6 @@ project-adhd-ladder/
     package.json
     tsconfig.json
     .env.example
-  supabase/migrations/
   docs/
   .agents/
   AGENTS.md
@@ -266,113 +261,43 @@ project-adhd-ladder/
   .gitignore
 ```
 
-El frontend vive en el workspace `client/` con su entrada HTML, assets, configuración y ejemplo de entorno. Conserva sus módulos internos bajo `client/src/`. El lockfile de npm y las migraciones permanecen en la raíz.
+El frontend vive en el workspace `client/` con su entrada HTML, assets, configuración y ejemplo de entorno. Conserva sus módulos internos bajo `client/src/`. El lockfile de npm permanece en la raíz.
 
 La base de 07-EXP vive en el workspace `server/`. `src/app.ts` inicia Express y monta el router de `src/routes/index.ts` bajo `/api`. `src/middleware/error-handler.ts` y `src/utils/errors.ts` definen las respuestas de error JSON. En desarrollo, Vite reenvía `/api` al puerto configurado mediante `PORT`, con `3000` como valor predeterminado. Ambos procesos leen el puerto del entorno o de `server/.env`.
 
 ### Implementación y despliegue [PROP]
 
-- **Paquetes y comandos.** Mantener manifiestos y TypeScript independientes. Usar workspaces nativos de npm y lockfile de raíz para que `npm install` incluya ambos paquetes desde el punto de entrada académico. Reusar las dependencias actuales del cliente. En el servidor, `express` y `@supabase/supabase-js` en ejecución. En desarrollo, TypeScript, `tsx`, `@types/node`, `@types/express` y las herramientas ESLint/Prettier existentes. Coordinar dos procesos de desarrollo con `concurrently` en la raíz a partir de la fundación del servidor. Mantener `npm run dev`, `npm run build`, `npm run lint` y `npm run format:check` en la raíz.
-- **Entorno y publicación.** Usar la misma convención que ya lee el cliente, `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` en el entorno de `client/`. El servidor recibe `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` y `PORT`. Usar carga de entorno nativa de Node para desarrollo y variables del alojamiento al publicar. Ignorar todas las variantes de entorno reales y versionar ejemplos ficticios. Verificar paths de configuración, variables de compilación, instalación y artefactos al mover carpetas. No se encontró configuración de alojamiento en el árbol actual.
-- **Un origen HTTPS.** En desarrollo Vite reenvía `/api` a Express. En el alojamiento Node, Express sirve `client/dist` y monta `/api` antes de los estáticos. Las rutas de la SPA tienen fallback a `index.html` para navegación GET, con exclusión de la API, archivos estáticos inexistentes y métodos de mutación. La API devuelve sus propios 404 JSON. Verificar URLs de sitio y redirección de Supabase Auth con ese origen. La elección del alojamiento se confirma en 07-11.
-- **Errores y datos privados.** Estandarizar errores JSON del API. Usar 400 para entrada inválida, 401 para token ausente o inválido, 404 para recurso propio inexistente o no visible, 409 para reglas en conflicto y 503 si Auth o datos están indisponibles. Limitar el cuerpo JSON, evitar cachear respuestas privadas y omitir tokens, credenciales y datos personales de los logs.
+- **Conexión.** Reutilizar la carga de entorno de Node, los workspaces y los comandos de raíz. Validar `MONGODB_URI` en el servidor e iniciar Express tras una conexión Mongoose exitosa. Una conexión fallida produce un diagnóstico saneado y salida con error. Configurar `JWT_SECRET` de alta entropía en el servidor al incorporar la firma. `server/.env.example` solo lleva ejemplos ficticios. En Atlas, usar un usuario de base de datos con permisos limitados a la base de la app y autorizar las IP de desarrollo y alojamiento necesarias. Preparar una base de pruebas separada. [Conexión a Atlas](https://www.mongodb.com/docs/atlas/connect-to-database-deployment/).
+- **Credenciales y JWT.** Validar tipos, formato de correo y longitudes en Express. Normalizar el correo y usar el índice único incluso ante registros concurrentes. Guardar el hash bcrypt con factor de trabajo comprobado y rechazar contraseñas de más de 72 bytes UTF-8 para evitar truncamiento. Excluir el hash de consultas por defecto y de todas las respuestas. El login compara con bcrypt y devuelve un 401 genérico para correo desconocido o contraseña incorrecta. Limitar intentos de registro e inicio de sesión. Firmar un JWT de duración corta con el identificador en `sub`; verificar firma, algoritmo permitido, expiración e identidad antes de usarlo. Rechazar filtros, operadores o campos de propietario suministrados por el cliente. Usar respuestas privadas sin caché, errores JSON y logs saneados. Una indisponibilidad de datos se distingue de una credencial inválida.
+- **Sesión React.** Mantener `AuthProvider`, formularios, guardas y `PrivateLayout`. El alta confirma el registro y conserva el acceso a Log In del formulario actual. El login establece la sesión; un cliente tipado usa `Authorization: Bearer …` para Express. Propuesta de MVP: JWT en memoria y `sessionStorage` para restaurar al recargar la misma pestaña, validado con `GET /api/users/me`. Expiración o 401 de la sesión vigente la invalida; los fallos transitorios conservan el reintento. Logout borra token y estado de cuenta. El token es accesible desde JavaScript y un token copiado sigue vigente hasta expirar. Usar HTTPS, renderizado seguro y vida corta. Mantener las respuestas tardías de una sesión anterior fuera de la vigente, incluido un 401 tardío. Adaptar `useRegistrationDate` al instante real de alta devuelto por Express y calcular el día de alta en la referencia fija cuando esté disponible. Actualizar esa referencia en el estado de cuenta tras la primera escritura fechada. Preservar borradores, funciones derivadas, rutas directas y nombre editable del Header. DummyJSON conserva el calendario del navegador y su solicitud independiente.
+- **Publicación.** Mantener un origen HTTPS. En local Vite reenvía `/api`; en producción Express sirve `client/dist` y monta `/api` antes de los estáticos. El fallback de la SPA se limita a navegación GET y excluye la API y archivos inexistentes. Verificar el puerto y la interfaz de escucha que exige el alojamiento en 07-11.
 
 | REST propuesto | Responsabilidad |
 |---|---|
-| `GET /api/healthz` | Estado de arranque del proceso. Respuesta pública sin datos de cuenta. |
-| `POST /api/account/bootstrap` | Recibir `timeZone` al iniciar por primera vez. Inicializar de forma idempotente y devolver `registeredAt` y la zona de cuenta. |
-| `GET /api/tasks` | Obtener tareas y completaciones del propietario, incluidas archivadas para el histórico. Leer con Supabase JS y paginar internamente si la API limita filas. |
-| `POST /api/tasks` | Validar escalera, normalizar título, crear y devolver la tarea confirmada. |
-| `PATCH /api/tasks/:taskId` | Recibir `title` y `date`. Renombrar una tarea activa y devolver la tarea confirmada y si se retiró su marca. |
-| `DELETE /api/tasks/:taskId?date=YYYY-MM-DD` | Retirar una tarea activa sin borrado físico. Devolver la tarea confirmada y si se retiró su marca. |
-| `PUT /api/tasks/:taskId/completions/:date` | Recibir `completed: boolean`. Aplicar el estado deseado del día, idempotente ante reintentos. |
-| `GET /api/health` | Leer checks propios para Health y racha, con paginación interna si procede. |
-| `PUT /api/health/:date/:goal` | Recibir `completed: boolean`. Cambiar solo el objetivo indicado y devolver la fila confirmada o `null` según §02.7. |
+| `GET /api/healthz` | Respuesta pública del proceso, sin datos de cuenta. |
+| `POST /api/signup` | Validar correo y contraseña, registrar y devolver datos de cuenta permitidos. |
+| `POST /api/signin` | Verificar credenciales y devolver JWT y cuenta. |
+| `GET /api/users/me` | Devolver la cuenta verificada y su fecha real de alta. |
+| `POST /api/account/bootstrap` | Sembrar tareas una sola vez y devolver metadatos de cuenta. La zona se fija en la primera operación fechada exitosa. |
+| `GET /api/tasks` | Leer tareas y completaciones propias, incluidas las archivadas para el histórico. |
+| `POST /api/tasks` | Crear una tarea con escalera válida, título normalizado e ID estable. |
+| `PATCH /api/tasks/:taskId` | Renombrar una tarea activa. Recibir título, fecha capturada y zona del dispositivo, y devolver la tarea y el resultado sobre su marca de hoy. |
+| `DELETE /api/tasks/:taskId` | Archivar una tarea activa. Recibir fecha capturada y zona del dispositivo como parámetros y devolver la tarea y el resultado sobre su marca de hoy. |
+| `PUT /api/tasks/:taskId/completions/:date` | Aplicar el estado deseado `completed: boolean` con la zona del dispositivo, de forma idempotente. |
+| `GET /api/health` | Leer checks propios para Health y racha. |
+| `PUT /api/health/:date/:goal` | Aplicar el estado deseado y la zona del dispositivo. Devuelve el registro confirmado o `null` según §02.7. |
 
-**Reuso React.** Conservar `AuthProvider`, `PrivateLayout`, `useLadderSession`, `useTasks`, `useHealth`, las funciones puras de `dates`, `progress` y `health`, y las páginas y popups actuales. `useRegistrationDate` usa la fecha real de Auth en la zona aprobada para persistencia. Incorporar un cliente Fetch tipado para Express junto a las utilidades existentes. Hidratar por cuenta, esperar la confirmación de escrituras, preservar borradores ante fallos y descartar respuestas tardías al cambiar de cuenta. Mantener el nombre editable del Header y las frases en sesión. Para las frases se conserva el calendario del navegador.
+### Atomicidad y concurrencia [PROP]
 
-### Diseño SQL mínimo y cambios de contrato [PROP]
+- **Tareas.** Dentro de cada transacción de siembra, alta, renombrado, archivo o marca, actualizar primero la versión de escritura del usuario autenticado. Esa escritura común hace competir las operaciones de tareas de la misma cuenta y fuerza a reintentar conflictos con una nueva lectura. Sembrar las seis tareas y el indicador de siembra en una transacción. Exigir la inicialización antes de permitir altas y contar activas dentro de la transacción tras coordinar el acceso. Así el orden de llamadas del cliente preserva las seis tareas iniciales y el límite. Renombrado efectivo y archivo eliminan solo la marca de hoy en la misma transacción. Marcar y desmarcar validan propiedad y estado activo ahí mismo. El índice único respalda la idempotencia. Una marca concurrente con archivo respeta el orden confirmado y jamás queda una marca de hoy en una tarea archivada por esa carrera.
+- **Fecha y Health.** Validar el día capturado con el reloj del servidor, la zona declarada y la referencia fija conforme a DEC-07-01/02/04. En las transacciones, evaluar tras obtener el acceso coordinado y volver a validar en cada reintento, con la fecha original. Si la zona aún no se fijó, confirmarla con la primera operación fechada exitosa en la misma transacción y coordinarla con las operaciones de tareas y Health mediante el mismo usuario. Con zona fija, Health usa una actualización atómica de un campo por cuenta y día. Revalidar la fecha antes de escribir y ante reintentos, por ejemplo si dos upserts intentan crear el mismo día. Para `false` usar una actualización sin insertar y devolver `null` si no existe el documento. [Atomicidad e índices únicos en MongoDB](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/).
+- **Lecturas.** `GET /api/tasks` obtiene las tareas y marcas de una misma vista coherente, con propietario en ambas lecturas. Las respuestas conservan los IDs y campos que necesita React. Usar respuestas confirmadas y conservar las fórmulas puras de progreso, semáforo y racha.
 
-La cadena local `20261123000000`, `20261123000100` y `20261124000000` crea las cuatro tablas personales de §02.9, establece RLS y configura escrituras. La segunda concede DML directo a `authenticated` y la tercera revoca las escrituras de tareas, marcas y Health. La tercera añade `write_time_zone`, el rol escritor y cinco pares de funciones con ejecución pública revocada a clientes. Esto es evidencia del código. El estado efectivo de Cloud se comprueba por separado.
+### Transición desde Supabase [PENDIENTE DE INVENTARIO AUTORIZADO]
 
-| Mecanismo | Decisión propuesta y consecuencia |
-|---|---|
-| Tablas, propiedad e historial | Conservar `profiles`, `tasks`, `task_completions` y `health_checks`. Usar FK a Auth, FK compuesta tarea/propietario, unicidad tarea/fecha y clave Health cuenta/fecha. Mantener RLS, lecturas propias directas vía SDK, `archived_at` y la prohibición de borrado físico ordinario. Los totales, la racha y el semáforo se derivan. |
-| Inicialización única | Añadir un marcador de siembra a `profiles` separado de su existencia. Una transacción crea o bloquea el perfil, fija la zona si hace falta, inserta las seis tareas fijas solo para una cuenta sin actividad previa y marca el éxito. Los reintentos devuelven los metadatos existentes. Con datos previos, conservar filas y solo reconciliar el marcador y referencias verificadas. Siembra y escrituras ordinarias comparten la misma puerta de integridad. |
-| Límite y última tarjeta | Retener las reglas de cuatro activas y mínimo de una al retirar. Contar bajo el lock del perfil en las operaciones SQL de alta y retiro. Evitar columnas de contador, posiciones artificiales y un preconteo remoto desde Express. |
-| Títulos | Normalizar en TypeScript con `trim()` y mayúscula inicial, conservando el resto. Sustituir el normalizador SQL con ICU por una restricción de texto no vacío, incluida la presencia exclusiva de whitespace. En SQL, comparar el título recibido con el almacenado dentro de la transacción para decidir si hay cambio efectivo. **Cambio propuesto:** el formato canónico lo ofrece la API Express. Una llamada directa autorizada a la RPC sobre una tarea de su cuenta podría guardar una variante no canónica, con las mismas restricciones de propiedad e historial. |
-| Fecha y zona | **Cambio propuesto a DEC-07-01/04:** fijar la zona IANA detectada al inicializar la cuenta, o conservar la ya registrada. Usar esa zona para Today, fecha real del alta y escrituras en todos los dispositivos. Mantener la captura de fecha al actuar de AUD-02-01. PostgreSQL verifica la fecha contra el reloj y zona de cuenta tras adquirir el lock, rechaza fechas cerradas o anteriores al alta y conserva fechas existentes. En cambios de zona del dispositivo, prevalece el calendario de la cuenta. Si la solicitud cruza medianoche se rechaza y la UI refresca el día para reintento explícito. Validar zonas de navegador en TypeScript y sus equivalentes de catálogo en PostgreSQL. Pasar un parámetro PostgreSQL `date` y retirar el parser textual duplicado. La garantía de DEC-07-02 se conserva. |
-| Archivo, edición y completaciones | Mantener operaciones atómicas. Archivar o renombrar efectivamente borra solo la marca de la fecha autorizada en la misma transacción. Marcar usa la clave única con inserción idempotente, desmarcar borra la fila del mismo día. La tarea debe seguir activa. Un renombrado sin cambio deja la marca intacta. |
-| Health | Mantener una fila por cuenta y fecha y escribir exclusivamente la columna del objetivo pedido con actualización atómica. Conservar `false` sobre un día sin fila como `null`, el corte de fechas y la independencia de objetivos. Calcular la regla B y la racha en React. |
-| Roles, esquema y RPC | Conservar un único rol escritor sin login ni bypass de RLS y un esquema de implementación sin exposición en la Data API. Mantener envoltorios públicos `SECURITY INVOKER` mínimos solo para siembra y cinco mutaciones protegidas. Otorgar solo los permisos necesarios sobre esos puntos de entrada y sus funciones internas, con `search_path` fijo, identidad de `auth.uid()` y privilegios por operación/columna. Revocar DML ordinario de tablas y ejecución de auxiliares. Este límite evita que un usuario omita las transacciones mediante DML directo y conserva el aislamiento con un propietario de funciones acotado. |
-| Bloqueos y Auth interno | Sustituir el lock asesor y su helper por `SELECT … FOR UPDATE` sobre el perfil de la cuenta dentro de las transacciones de escritura. Inicializar primero de forma segura con `INSERT … ON CONFLICT`. Leer el instante de alta de Auth con un auxiliar de alcance mínimo al inicializar y conservarlo como metadato no editable. Probar visibilidad de escrituras concurrentes bajo `READ COMMITTED`. |
-| Frases y ampliaciones | Aplazar cualquier esquema de frases, cambios de zona, restauración de tareas, pruebas de carga y endurecimiento para operación comercial. |
-
-**Orden de migración.** Cotejar historial, permisos y conteos con el árbol local. Preparar solo la cadena mínima para un destino comprobado sin migraciones de la app. Si hay migraciones registradas o datos existentes, diseñar una migración correctiva hacia adelante y preservar histórico, identidades y fechas. Confirmar la reconciliación antes de tocar datos. Mantener las escrituras cerradas durante la transición y verificar con dos cuentas antes de habilitarlas. La ejecución del SQL requiere autorización separada. [Funciones y privilegios de Supabase](https://supabase.com/docs/guides/database/functions).
-
-### Inspección de Supabase Cloud [PENDIENTE DE EVIDENCIA]
-
-La configuración local apunta a un host HTTPS de Supabase Cloud y tiene clave publicable. Esta sesión carece de acceso de catálogo o Dashboard. La observación histórica de 07-00 solo indicaba que entonces la consulta del propietario no devolvió tablas visibles en `public`. La aplicación, los permisos y el volumen de datos actuales siguen sin verificar.
-
-En Supabase Dashboard, abrir el proyecto académico y comparar en privado su **Reference ID** en **Project Settings → General** con el prefijo del host de `VITE_SUPABASE_URL`. Confirmar los esquemas expuestos en **Integrations → Data API → Settings**. Abrir **SQL Editor → New query** y ejecutar estas consultas de solo lectura. Compartir versiones, definiciones y conteos sin claves, identificadores de cuentas ni filas de usuario. [Guía de Data API de Supabase](https://supabase.com/docs/guides/api/quickstart).
-
-```sql
-select current_setting('server_version') as postgres,
-       to_regclass('supabase_migrations.schema_migrations') as migration_history;
-
-select c.relname as table_name, c.relrowsecurity as rls,
-       pg_get_userbyid(c.relowner) as table_owner, r.role_name,
-       has_table_privilege(r.role_name, c.oid, 'SELECT') as can_select,
-       has_any_column_privilege(r.role_name, c.oid, 'INSERT, UPDATE')
-         or has_table_privilege(r.role_name, c.oid, 'DELETE, TRUNCATE') as can_write
-from pg_class c
-join pg_namespace n on n.oid = c.relnamespace
-cross join (values ('anon'), ('authenticated')) r(role_name)
-where n.nspname = 'public' and c.relkind in ('r', 'p')
-order by c.relname, r.role_name;
-
-select table_name, column_name, data_type, is_nullable
-from information_schema.columns
-where table_schema = 'public'
-order by table_name, ordinal_position;
-
-select c.relname as table_name, con.conname, pg_get_constraintdef(con.oid) as definition
-from pg_constraint con
-join pg_class c on c.oid = con.conrelid
-join pg_namespace n on n.oid = c.relnamespace
-where n.nspname = 'public'
-order by table_name, con.conname;
-
-select tablename, policyname, roles, cmd, qual, with_check
-from pg_policies
-where schemaname = 'public'
-order by tablename, policyname;
-
-select n.nspname as schema_name, p.oid::regprocedure as routine,
-       pg_get_userbyid(p.proowner) as owner_role, p.prosecdef as is_definer,
-       has_schema_privilege(r.role_name, n.oid, 'USAGE') as schema_usage,
-       has_function_privilege(r.role_name, p.oid, 'EXECUTE') as can_execute
-from pg_proc p
-join pg_namespace n on n.oid = p.pronamespace
-cross join (values ('anon'), ('authenticated')) r(role_name)
-where n.nspname = 'adhd_ladder_private'
-   or (n.nspname = 'public' and p.proname in
-       ('bootstrap_account', 'create_task', 'rename_task', 'archive_task',
-        'set_task_completion', 'set_health_goal'))
-order by schema_name, routine, r.role_name;
-```
-
-Si existe la tabla de historial, ejecutar `select version from supabase_migrations.schema_migrations order by version;`. Ejecutar solo las líneas de conteo cuyas tablas aparezcan en el inventario. La última devuelve solo una cifra de Auth.
-
-```sql
-select count(*) as profiles from public.profiles;
-select count(*) as tasks, count(archived_at) as archived from public.tasks;
-select count(*) as task_completions from public.task_completions;
-select count(*) as health_checks from public.health_checks;
-select count(*) as auth_accounts from auth.users;
-```
-
-Para permisos de columna o diferencias en el rol escritor, usar las consultas de catálogo del [procedimiento histórico de 07-01](../supabase/tests/07-01-task-integrity.md) sobre objetos existentes, sin ejecutar sus concesiones de prueba. Un historial ausente y conteos vacíos se interpretan junto al inventario de esquema. Cualquier fila existente requiere evaluar el impacto antes de autorizar la migración.
+- **Cliente.** 07-AUTH-UI retira `client/src/utils/supabaseClient.ts`, el SDK de `client/package.json` y sus entradas sin consumidores en `package-lock.json`, y la configuración `VITE_SUPABASE_*` de `client/.env.example` y `client/src/vite-env.d.ts`. Sustituye los tipos y llamadas del proveedor en `client/src/context/AuthContext.tsx`, `client/src/context/authContextValue.ts` y `client/src/app/AuthRoutes.tsx`; revisar también `useRegistrationDate` y el flujo de `AuthPage`. 07-12 sustituye las instrucciones anteriores de configuración en `README.md`. Retirar variables reales del cliente y alojamiento en el corte autorizado.
+- **SQL histórico.** Retirar del flujo activo las tres migraciones de `supabase/migrations/` (`20261123000000`, `20261123000100`, `20261124000000`) y la [guía de pruebas](../supabase/tests/07-01-task-integrity.md). Sus archivos y antecedentes se conservan como evidencia. El cambio de stack deja retiradas las propuestas SQL de v2.3.
+- **Cuentas y datos.** 07-00 observó anteriormente cero tablas visibles en una consulta de `public`. El estado actual de Auth, esquema y datos sigue sin verificar. Antes de sustituir un servicio usado por cuentas existentes, inventariar con autorización y de solo lectura los usuarios de Auth, migraciones aplicadas, conteos por recurso y presencia de históricos. Compartir únicamente evidencia saneada. Si hay datos o usuarios, acordar y probar una transición separada con respaldo, reconciliación de propietarios, IDs de tarea, alta, zona, siembra, archivo, completaciones y Health, y corte reversible. Verificar control de la cuenta anterior mediante un procedimiento aprobado de reclamación o restablecimiento de credenciales. Durante el corte, evitar que el registro público reclame correos reservados a cuentas legadas. Una coincidencia de email por sí sola no demuestra propiedad. La portabilidad de hashes, credenciales federadas y cuentas sin confirmar requiere evaluación específica. Las sesiones anteriores deberán volver a autenticarse. El proyecto y los datos anteriores se conservan hasta que la propietaria apruebe su disposición.
 
 ### Assets y calidad visual
 
@@ -427,16 +352,16 @@ La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos 
 - [ ] Verificar el retiro de tarjetas marcadas y desmarcadas según §02.6, con Today correcto, histórico intacto y protección de la última activa.
 - [ ] Health mantiene tres checks por fecha; reinicio visual no fuerza rojo; tabla de semáforo B completa.
 - [ ] Racha de días cerrados conforme a su regla; no confundir con pasos totales ni días desde alta.
-- [ ] Pruebas adversariales RLS con dos usuarios y FK cruzada de completaciones; bloqueo de lecturas/mutaciones ajenas.
+- [ ] Pruebas de aislamiento con dos usuarios: lecturas y mutaciones ajenas rechazadas, incluidas completaciones con ID de tarea ajena. Verificar JWT ausente, inválido y expirado, y ausencia de credenciales en respuestas y logs.
 - [ ] API de frases real visible en Life, con carga, error, reintento y vacío; conservar UX de revelación diaria.
 - [ ] Popups: borrador de nombre conservado al cerrar afuera/Escape; Cancel descarta; Submit cambia en React; controles de Health clicables en toda la tarjeta.
-- [ ] Fallo de Supabase, recuperación de sesión, carga vacía, mutación optimista fallida y cambio de cuenta comprobados.
+- [ ] Fallo de Express o Atlas, recuperación de sesión, carga vacía, mutación optimista fallida y cambio de cuenta comprobados.
 - [ ] Revisar móvil/tablet, especialmente ilustración de Life y alineación del popup del Header; sin regresiones.
 
 ### E · Validación de código y release
 
 - [ ] `git diff --check`, `npm run format:check` si existe, build y lint; reportar pruebas realmente ejecutadas.
-- [ ] Despliegue con rewrite SPA, URL Auth correcta, dos cuentas probadas y README final.
+- [ ] Despliegue con rewrite SPA, restauración de sesión en HTTPS, dos cuentas probadas y README final.
 - [ ] PR final creado y enviado; revisar cambios antes de fusionar. No comprometer ramas ni subir commits sin aprobación del propietario.
 
 ---
@@ -445,11 +370,11 @@ La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos 
 
 ### Objetivo y Definition of Done
 
-Publicar una aplicación operativa para administrar pequeñas metas en Health, Activities y Learning, registrar completaciones por fecha y consultar pasos de hoy e históricos coherentes en Life. Está completa cuando la autenticación y el aislamiento RLS funcionan, los datos reales persisten, los contadores respetan la regla de días cerrados, la API externa de frases aporta contenido real, la app es responsive y accesible, está desplegada y el PR llega antes del 30/11.
+Publicar una aplicación operativa para administrar pequeñas metas en Health, Activities y Learning, registrar completaciones por fecha y consultar pasos de hoy e históricos coherentes en Life. Está completa cuando la autenticación y el aislamiento de cuentas mediante Express funcionan, los datos reales persisten, los contadores respetan la regla de días cerrados, la API externa de frases aporta contenido real, la app es responsive y accesible, está desplegada y el PR llega antes del 30/11.
 
 ### Priorización
 
-- **P0:** integridad de completaciones y fechas, Auth y RLS, CRUD mínimo, contadores correctos, API third-party, rutas, build/lint, deploy y PR.
+- **P0:** integridad de completaciones y fechas, Auth y aislamiento, CRUD mínimo, contadores correctos, API third-party, rutas, build/lint, deploy y PR.
 - **P1:** semáforo Health regla B, racha, pulido responsive y accesibilidad, confirmaciones de cambios destructivos.
 - **P2:** animaciones, estadísticas avanzadas y mejoras cosméticas que no bloquean el MVP.
 
@@ -469,7 +394,7 @@ El propietario aprueba las decisiones de producto y el alcance. El flujo operati
 
 ### Defensa técnica
 
-La defensa recorre una acción real de React a Express y PostgreSQL. La vista conserva el estado compartido, el controlador valida y orquesta la operación y la base asegura propiedad y atomicidad. La frase pública enseña un segundo flujo independiente mediante Fetch. Around ofrece los equivalentes de routing, controladores y middleware para explicar el cambio a Supabase Auth y RLS.
+La defensa recorre una acción real de React a Express y MongoDB Atlas. La vista conserva el estado compartido, Express verifica el JWT, aplica propiedad y ejecuta reglas, y MongoDB asegura unicidad y atomicidad. Around permite explicar los patrones de conexión, modelos, controladores y autenticación. La frase pública demuestra el segundo flujo independiente mediante Fetch.
 
 ### Riesgos y mitigaciones
 
@@ -480,18 +405,18 @@ La defensa recorre una acción real de React a Express y PostgreSQL. La vista co
 | Perder histórico al retirar una tarea | Archivar con `archived_at` y eliminar únicamente su completación de hoy según §02.6 |
 | Confundir reinicio de checks de Health con rojo automático | Evaluar regla B con hoy y ayer |
 | Inconsistencia entre vistas | Una fuente de completaciones por cuenta y funciones puras compartidas |
-| RLS insuficiente | Pruebas de aislamiento con dos usuarios y referencias cruzadas |
-| Acceso al catálogo o datos previos desconocidos | Inspección de solo lectura antes de elegir la cadena y reconciliación sin pérdida del histórico |
-| Desfase de despliegue entre cliente, API y Auth | Probar en el origen HTTPS final la recarga SPA, el API JSON y las redirecciones de Supabase |
+| Consulta sin filtro de propietario | Revisar todos los accesos privados y verificar dos cuentas con referencias cruzadas |
+| Cuentas o datos anteriores sin inventario | Inventario autorizado y decisión de preservación antes del corte |
+| Desfase de despliegue entre cliente, API y Auth | Probar en el origen HTTPS final la recarga SPA, la API JSON y la restauración de sesión |
 | API pública de frases fuera de servicio o CORS | Verificación temprana y proveedor alternativo aprobado |
-| Limitaciones del plan gratuito Supabase o email de confirmación | Verificar configuración y disponibilidad antes de revisión |
+| Conexión o transacciones de Atlas indisponibles | Verificar nivel de acceso, red y capacidades del entorno de prueba en 07-01 |
 | Desbordamiento móvil y popups | Verificar desde 320 px y teclado; no ocultar overflow como arreglo |
 | Documentos del repo con reglas antiguas | Aplicar la precedencia de `AGENTS.md` y sincronizar referencias operativas en una tarea aprobada. Ver ARC-02 en el plan. |
 | Tiempo insuficiente para requisitos obligatorios | Priorizar P0, congelar pulidos opcionales y desplegar con margen |
 
 ### Validación no certificada
 
-El plan registra comprobaciones existentes de frontend y las pendientes sobre el resultado integrado. Quedan por comprobar el catálogo de Supabase Cloud, las operaciones persistidas, RLS efectivo con dos cuentas, los escenarios representativos de concurrencia y el despliegue listo para la revisión académica.
+El plan registra comprobaciones existentes de frontend y las pendientes sobre el resultado integrado. Quedan por comprobar el inventario legado, la conexión y los índices de Atlas, las operaciones persistidas, el aislamiento con dos cuentas, la concurrencia representativa y el despliegue para la revisión académica.
 
 ---
 
@@ -526,15 +451,19 @@ El plan registra comprobaciones existentes de frontend y las pendientes sobre el
 - [DECIDIDO] Health no genera pasos y sus checks diarios empiezan vacíos; su color continúa sujeto a regla B.
 - [DECIDIDO en 06B-05] El propietario aprobó `archived_at` y la eliminación exclusiva de la completación de hoy al retirar una tarjeta. Las reglas vigentes están en §02.6.
 
-### 25 de noviembre de 2026 — Arquitectura académica v2.3 [DECIDIDO]
+### 25 de noviembre de 2026 — Arquitectura académica v2.3 [HISTÓRICO]
 
 - La API propia Express y el contrato TypeScript-first de §03 sustituyen el acceso directo desde React a datos privados de Supabase como diseño final. Supabase Auth conserva el acceso desde React y PostgreSQL conserva RLS y las operaciones indivisibles.
 - Se aprueba el inicio por sesión en `/`, con `/life` y el estado privado compartido vigentes. La persistencia de frases prevista en DEC-07-03 queda aplazada con 07-08.
 - [HISTÓRICO] DEC-07-03 preveía conservar una sola asignación por cuenta y fecha, incluso ante concurrencia. La asignación se recuperaría tras recarga o cambio de dispositivo. El historial se conservaría y la prevención de duplicados consultaría hoy y los seis días anteriores. Su ejecución queda fuera de esta entrega.
-- La cadena SQL histórica aporta una línea base de revisión. La adopción de sus componentes se decide con la propuesta de §03 y la evidencia de Cloud. DEC-07-01, DEC-07-02 y DEC-07-04 siguen vigentes hasta aprobar cambios de producto.
+- La cadena SQL histórica aporta una línea base de revisión. La aplicación de esa cadena quedó pendiente. DEC-07-01, DEC-07-02 y DEC-07-04 conservan sus reglas de producto en v2.4.
+
+### 25 de noviembre de 2026 — MongoDB y autenticación propia v2.4 [DECIDIDO]
+
+- La propietaria aprueba Atlas, Mongoose, bcrypt y jsonwebtoken como arquitectura de entrega. 07-ARQ, 07-ROOT, 07-REL y 07-EXP permanecen registrados como hitos locales. Los contratos y artefactos de Supabase quedan como antecedentes de transición.
 
 ### Referencias
 
 Rúbrica local de TripleTen Etapa 1, [Around en `main`](https://github.com/28Dara/web_project_around_full/tree/main), mockups 01–07, paleta, tokens y [AGENTS.md](../AGENTS.md). La vigencia de las decisiones de producto se indica en este dossier y el plan registra su implementación.
 
-**Regla final para futuras implementaciones:** en caso de contradicción entre el relato histórico y las secciones normativas 02.2–02.6, prevalecen estas últimas y cualquier instrucción posterior explícita del propietario.
+**Regla final para futuras implementaciones.** Aplicar las secciones normativas de producto y arquitectura y la precedencia indicada al inicio del dossier.
