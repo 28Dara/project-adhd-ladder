@@ -10,8 +10,9 @@ const destinations = {
 }
 
 export default function LadderSelector() {
+  const home = useMatch('/')
   const match = useMatch('/:ladder')
-  const slug = match?.params.ladder?.toLowerCase()
+  const slug = home ? 'life' : match?.params.ladder?.toLowerCase()
   const selectorRef = useRef<HTMLDetailsElement>(null)
 
   useEffect(() => {

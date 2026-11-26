@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import { Navigate, Outlet } from 'react-router'
+import { Navigate, Outlet, useMatch } from 'react-router'
 import Header from '../components/Header/Header'
 import LadderSelector from '../components/LadderSelector/LadderSelector'
 import RoutePanel from '../components/RoutePanel/RoutePanel'
@@ -47,8 +47,9 @@ type LogoutState =
   | { status: 'idle' | 'pending' | 'succeeded' }
   | { status: 'failed'; message: string }
 
-export function ProtectedRoute() {
+export function ProtectedRoute({ publicHome }: { publicHome: ReactNode }) {
   const { session, signOut } = useAuth()
+  const isHome = useMatch('/') !== null
   const [logout, setLogout] = useState<LogoutState>({ status: 'idle' })
   const isSigningOut = logout.status === 'pending'
 
@@ -61,15 +62,18 @@ export function ProtectedRoute() {
     )
   }
 
-  if (logout.status === 'succeeded') return <Navigate to="/" replace />
+  if (logout.status === 'succeeded' && !isHome) {
+    return <Navigate to="/" replace />
+  }
 
   if (!session) {
     // The auth event can arrive before the logout promise settles.
-    return isSigningOut ? (
-      <RoutePanel title="Logging out…" busy />
-    ) : (
-      <Navigate to="/login" replace />
-    )
+    if (isSigningOut) return <RoutePanel title="Logging out…" busy />
+    if (!isHome) return <Navigate to="/login" replace />
+
+    // The shared route stays mounted when navigation ends at the public home.
+    if (logout.status !== 'idle') setLogout({ status: 'idle' })
+    return publicHome
   }
 
   return (

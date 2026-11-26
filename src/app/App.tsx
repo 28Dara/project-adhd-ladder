@@ -16,11 +16,11 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route element={<AuthSessionBoundary />}>
           <Route element={<GuestRoute />}>
-            <Route path="/" element={<Landing />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<LogIn />} />
           </Route>
-          <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedRoute publicHome={<Landing />} />}>
+            <Route index element={<Life />} />
             <Route path="/life" element={<Life />} />
             <Route path="/health" element={<Health />} />
             <Route
