@@ -147,34 +147,32 @@ Histórico anterior al lunes: Activities 8, Learning 12, Life 20.
 - **[DECIDIDO] Completación de hoy al retirar.** En la misma actualización que establece `archived_at`, se elimina solo la completación de esa tarea de la fecha local actual, si existe. Today baja un paso en su escalera y en Life cuando la tarjeta estaba marcada. Total permanece intacto. Cancel, Escape y el clic exterior conservan la tarjeta y sus completaciones.
 - Las archivadas quedan fuera del límite de tareas activas y se mantienen disponibles para contar el historial. Las operaciones ordinarias de marcar, renombrar y retirar requieren una tarea activa. Una tarjeta nueva recibe un ID propio, aunque su nombre coincida con el de una archivada. La restauración queda fuera del alcance.
 
-### 02.7 Health — regla B [DECIDIDO]
+### 02.7 Health — progresión diaria [DECIDIDO en 07-10A]
 
-Health tiene exactamente tres objetivos diarios fijos: **Good Nutrition, Good Sleep y Daily Movement**. Se marcan por fecha, con toda la tarjeta como área clicable. Sus marcas **no** suman pasos a ninguna escalera. Sus checkboxes están vacíos para la nueva fecha si aún no se registraron checks de ese día.
+Los tres objetivos diarios son **Good Nutrition, Good Sleep y Daily Movement**. Cada fecha empieza con las tres casillas desmarcadas. El nivel efectivo se comparte entre Health y el círculo de Life. Los objetivos aportan cero pasos.
 
-**Escritura de un objetivo [DECIDIDO].** Si todavía no hay registro diario y se solicita `false`, devolver `null` y dejar el día sin registro.
-
-El semáforo **se calcula**, no se persiste como un valor independiente:
-
-| Ayer | Hoy | Estado mostrado |
+| Nivel | Color | Descripción |
 |---|---|---|
-| Cualquiera | 3 casillas | Verde |
-| Cualquiera | 1–2 casillas | Amarillo |
-| Al menos 1 casilla | 0 casillas | Amarillo |
-| 0 casillas | 0 casillas | Rojo |
-| Primer día de la cuenta, sin día anterior | 0 casillas | Amarillo |
+| 3 | Verde | You're doing great! |
+| 2 | Amarillo | You got it, keep it up! |
+| 1 | Naranja | Good start, but could be better |
+| 0 | Rojo | Take a look at your health! |
 
-La fecha nueva **no obliga** a mostrar rojo. Cada estado usa color **y texto**, sin diagnóstico ni valoración médica. El indicador de Health en Life es un círculo semántico, no un check de paso.
+Una cuenta nueva empieza en rojo. En un día sin interacciones, el nivel efectivo es el nivel final del día anterior menos uno, con mínimo de cero. Cada día adicional sin interacción resta un nivel hasta llegar a rojo. Con la primera interacción del día, el número de casillas actualmente marcadas pasa a determinar todo el nivel. Desmarcar las tres deja el día en rojo.
 
-### 02.8 Racha [DECIDIDO]
+La ausencia de un registro diario representa un día sin interacción. Un registro con tres valores `false` representa un día con interacción y cero marcas. Conservar esa diferencia por fecha y cuenta. En Etapa 1, los registros residen en la sesión privada en memoria y se pierden al recargar, cerrar sesión o cambiar de cuenta.
 
-La racha se evalúa por **días cerrados**; mientras hoy no termina, se muestra la racha calculada hasta ayer. **No confundir la racha con `lifeTotal` ni con días desde el alta.**
+La vista de Health resalta la descripción del nivel efectivo. Para verde o amarillo muestra «Your health is on track!». Para naranja o rojo muestra «Your streak is at risk!». En ambos casos incluye «Be honest with yourself.».
 
-- Un día con al menos un paso en Activities o Learning suma un día a la racha.
-- Sin pasos, Health verde o amarillo **y** el día anterior tuvo pasos: la racha se mantiene, sin sumar.
-- Sin pasos, si el día anterior tampoco tuvo pasos: la racha se reinicia, aunque Health sea verde.
-- Sin pasos con Health rojo: la racha se reinicia.
+### 02.8 Racha [DECIDIDO en 07-10A]
 
-Los casos límite deben comprobarse según estas condiciones; no modificar esta lógica al ajustar los contadores. **Días en la escalera** = días calendario transcurridos desde el registro, contando el primero; no es la racha.
+Life calcula la racha con **días cerrados**, hasta ayer. La racha acumulada permanece durante el día abierto y se evalúa al cambiar de fecha.
+
+- Health naranja o rojo al cierre reinicia la racha, aun si hubo pasos.
+- Con Health verde o amarillo, un día con al menos un paso en Activities o Learning suma un día a la racha.
+- Con Health verde o amarillo y cero pasos, la racha se mantiene sin sumar si el día anterior tuvo pasos. Dos días consecutivos sin pasos reinician la racha.
+
+**Días en la escalera** cuenta los días calendario desde el registro, incluido el primero. Today y Total siguen las fórmulas de §02.3.
 
 ### 02.9 Modelo de datos [PROP]
 
@@ -183,7 +181,7 @@ Los casos límite deben comprobarse según estas condiciones; no modificar esta 
 | `users` | `_id` ObjectId, `email`, `passwordHash`, `createdAt`, `writeTimeZone`, `tasksInitializedAt`, `taskWriteVersion` | Índice único de correo normalizado. El alta real se fija al registrar la cuenta. Zona y siembra empiezan sin inicializar. La versión coordina transacciones de tareas. El nombre editable del Header sigue en sesión. |
 | `tasks` | `_id` UUID de texto, `ownerId`, `ladder`, `title`, `archivedAt`, `createdAt` | ID estable generado en el servidor para altas nuevas y preservado al importar. Índice por propietario, escalera y estado de archivo. El máximo de cuatro y el mínimo al archivar se verifican en la mutación coordinada. |
 | `taskCompletions` | `ownerId`, `taskId`, `date` | Índice único compuesto `(ownerId, taskId, date)`. Express verifica que la tarea pertenece al mismo propietario y está activa antes de marcar. |
-| `healthChecks` | `ownerId`, `date`, `nutrition`, `sleep`, `movement` | Índice único compuesto `(ownerId, date)`. Cada escritura modifica solo el objetivo solicitado. |
+| `healthChecks` | `ownerId`, `date`, `nutrition`, `sleep`, `movement` | Índice único compuesto `(ownerId, date)`. Cada escritura modifica solo el objetivo solicitado y conserva el documento con las tres metas en `false` si hubo interacción. |
 | Derivados | Today, Total, estado de Health, racha y días desde alta | Se calculan a partir de tareas, completaciones, Health, fecha de consulta y alta real. |
 
 Usar esquemas Mongoose y validación de colección para los tipos y valores básicos del documento, e índices únicos efectivos antes de aceptar escrituras. La propiedad de las referencias entre documentos y las reglas de negocio se verifican en Express. Las fechas de acción se guardan como días calendario `YYYY-MM-DD`. Las fechas de alta, creación y archivo son instantes. Los modelos persisten registros por fecha para conservar el histórico sin acumularlo dentro de un documento.
@@ -287,12 +285,12 @@ La base de 07-EXP vive en el workspace `server/`. `src/app.ts` inicia Express y 
 | `DELETE /api/tasks/:taskId` | Archivar una tarea activa. Recibir fecha capturada y zona del dispositivo como parámetros y devolver la tarea y el resultado sobre su marca de hoy. |
 | `PUT /api/tasks/:taskId/completions/:date` | Aplicar el estado deseado `completed: boolean` con la zona del dispositivo, de forma idempotente. |
 | `GET /api/health` | Leer checks propios para Health y racha. |
-| `PUT /api/health/:date/:goal` | Aplicar el estado deseado y la zona del dispositivo. Devuelve el registro confirmado o `null` según §02.7. |
+| `PUT /api/health/:date/:goal` | Aplicar el estado deseado y la zona del dispositivo. Devuelve el registro confirmado, también si queda con las tres metas en `false` (§02.7). |
 
 ### Atomicidad y concurrencia [PROP]
 
 - **Tareas.** Dentro de cada transacción de siembra, alta, renombrado, archivo o marca, actualizar primero la versión de escritura del usuario autenticado. Esa escritura común hace competir las operaciones de tareas de la misma cuenta y fuerza a reintentar conflictos con una nueva lectura. Sembrar las seis tareas y el indicador de siembra en una transacción. Exigir la inicialización antes de permitir altas y contar activas dentro de la transacción tras coordinar el acceso. Así el orden de llamadas del cliente preserva las seis tareas iniciales y el límite. Renombrado efectivo y archivo eliminan solo la marca de hoy en la misma transacción. Marcar y desmarcar validan propiedad y estado activo ahí mismo. El índice único respalda la idempotencia. Una marca concurrente con archivo respeta el orden confirmado y jamás queda una marca de hoy en una tarea archivada por esa carrera.
-- **Fecha y Health.** Validar el día capturado con el reloj del servidor, la zona declarada y la referencia fija conforme a DEC-07-01/02/04. En las transacciones, evaluar tras obtener el acceso coordinado y volver a validar en cada reintento, con la fecha original. Si la zona aún no se fijó, confirmarla con la primera operación fechada exitosa en la misma transacción y coordinarla con las operaciones de tareas y Health mediante el mismo usuario. Con zona fija, Health usa una actualización atómica de un campo por cuenta y día. Revalidar la fecha antes de escribir y ante reintentos, por ejemplo si dos upserts intentan crear el mismo día. Para `false` usar una actualización sin insertar y devolver `null` si no existe el documento. [Atomicidad e índices únicos en MongoDB](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/).
+- **Fecha y Health.** Validar el día capturado con el reloj del servidor, la zona declarada y la referencia fija conforme a DEC-07-01/02/04. En las transacciones, evaluar tras obtener el acceso coordinado y volver a validar en cada reintento, con la fecha original. Si la zona aún no se fijó, confirmarla con la primera operación fechada exitosa en la misma transacción y coordinarla con las operaciones de tareas y Health mediante el mismo usuario. Con zona fija, Health usa una actualización atómica de un campo por cuenta y día. Revalidar la fecha antes de escribir y ante reintentos, por ejemplo si dos upserts intentan crear el mismo día. Una escritura explícita, incluso con `false`, crea el registro si falta con los otros objetivos desmarcados. Conservar la fila si las tres marcas quedan en `false`. Reservar la ausencia del documento para días sin interacción. [Atomicidad e índices únicos en MongoDB](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/).
 - **Lecturas.** `GET /api/tasks` obtiene las tareas y marcas de una misma vista coherente, con propietario en ambas lecturas. Las respuestas conservan los IDs y campos que necesita React. Usar respuestas confirmadas y conservar las fórmulas puras de progreso, semáforo y racha.
 
 ### Transición desde Supabase [PENDIENTE DE INVENTARIO AUTORIZADO]
@@ -354,8 +352,8 @@ La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos 
 - [ ] Cerrar la app y volver días después no duplica ni pierde pasos; un día con cero no aumenta totales.
 - [ ] Verificar la normalización al confirmar y la desmarcación de hoy al renombrar según §02.6, con el histórico intacto.
 - [ ] Verificar el retiro de tarjetas marcadas y desmarcadas según §02.6, con Today correcto, histórico intacto y protección de la última activa.
-- [ ] Health mantiene tres checks por fecha; reinicio visual no fuerza rojo; tabla de semáforo B completa.
-- [ ] Racha de días cerrados conforme a su regla; no confundir con pasos totales ni días desde alta.
+- [ ] Health empieza con casillas vacías, aplica el descenso antes de la primera interacción y distingue un día sin registro de uno explícitamente desmarcado. Life y Health muestran el mismo nivel.
+- [ ] Racha de días cerrados: Health naranja o rojo reinicia aun con pasos. Probar continuidad en verde o amarillo, la pausa de un día sin pasos y el día abierto.
 - [ ] Pruebas de aislamiento con dos usuarios: lecturas y mutaciones ajenas rechazadas, incluidas completaciones con ID de tarea ajena. Verificar JWT ausente, inválido y expirado, y ausencia de credenciales en respuestas y logs.
 - [ ] API de frases real visible en Life, con carga, error, reintento y vacío; conservar UX de revelación diaria.
 - [ ] Popups: borrador de nombre conservado al cerrar afuera/Escape; Cancel descarta; Submit cambia en React; controles de Health clicables en toda la tarjeta.
@@ -379,7 +377,7 @@ Publicar una aplicación operativa para administrar pequeñas metas en Health, A
 ### Priorización
 
 - **P0:** integridad de completaciones y fechas, Auth y aislamiento, CRUD mínimo, contadores correctos, API third-party, rutas, build/lint, deploy y PR.
-- **P1:** semáforo Health regla B, racha, pulido responsive y accesibilidad, confirmaciones de cambios destructivos.
+- **P1:** progresión diaria de Health, racha, pulido responsive y accesibilidad, confirmaciones de cambios destructivos.
 - **P2:** animaciones, estadísticas avanzadas y mejoras cosméticas que no bloquean el MVP.
 
 La UI de popups implementada provisionalmente en 06A no es prueba de que exista CRUD persistente.
@@ -407,7 +405,7 @@ La defensa recorre una acción real de React a Express y MongoDB Atlas. La vista
 | Incluir pasos de hoy en históricos | Filtro estrictamente `completed_date < todayLocalDate`; pruebas lunes/martes |
 | Duplicar totales al cambiar de día o abrir tras varios días | Derivar desde completaciones únicas fechadas; sin job nocturno ni acumulador redundante |
 | Perder histórico al retirar una tarea | Archivar con `archived_at` y eliminar únicamente su completación de hoy según §02.6 |
-| Confundir reinicio de checks de Health con rojo automático | Evaluar regla B con hoy y ayer |
+| Confundir día sin interacción con un día que acabó desmarcado | Conservar el registro de ceros y comprobar el descenso sin interacción |
 | Inconsistencia entre vistas | Una fuente de completaciones por cuenta y funciones puras compartidas |
 | Consulta sin filtro de propietario | Revisar todos los accesos privados y verificar dos cuentas con referencias cruzadas |
 | Cuentas o datos anteriores sin inventario | Inventario autorizado y decisión de preservación antes del corte |
@@ -435,7 +433,7 @@ El plan registra comprobaciones existentes de frontend y las pendientes sobre el
 ### 22 de noviembre de 2026 — Dossier v2.1
 
 - [DECIDIDO] Life suma Activities y Learning; Health no suma pasos.
-- [DECIDIDO] Health regla B, racha de días cerrados, cuentas con tareas de ejemplo una sola vez, fecha calendario local.
+- [HISTÓRICO] Health usaba la regla B, sustituida por 07-10A. Se aprobaron la racha de días cerrados, la siembra única y la fecha calendario local.
 - [PROP en su momento] `archived_at` como mecanismo de retiro. La regla aprobada en §02.6 sustituyó la alternativa de borrado definitivo.
 - [CONTEXTO HISTÓRICO] El dossier original declaraba que el repositorio todavía no existía. Era cierto para aquella redacción, **no describe el estado del proyecto el 24/11**.
 
@@ -452,7 +450,7 @@ El plan registra comprobaciones existentes de frontend y las pendientes sobre el
 - [DECIDIDO] Hoy suma pasos de Activities y Learning marcados en la fecha local actual; desmarcar resta hoy; Life refleja la suma numérica.
 - [DECIDIDO] `Your total steps` refleja **solo días anteriores**; al cambiar de día, el progreso anterior se incorpora lógicamente sin borrar ni mover registros, ni depender de una app abierta a medianoche.
 - [DECIDIDO] El histórico no depende de tarjetas activas y no se reduce por renombrar o retirarlas.
-- [DECIDIDO] Health no genera pasos y sus checks diarios empiezan vacíos; su color continúa sujeto a regla B.
+- [DECIDIDO] Health aporta cero pasos y sus checks diarios empiezan vacíos. El nivel vigente se define en §02.7.
 - [DECIDIDO en 06B-05] El propietario aprobó `archived_at` y la eliminación exclusiva de la completación de hoy al retirar una tarjeta. Las reglas vigentes están en §02.6.
 
 ### 25 de noviembre de 2026 — Arquitectura académica v2.3 [HISTÓRICO]

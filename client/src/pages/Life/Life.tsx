@@ -16,7 +16,7 @@ export default function Life() {
     today: date,
     status: healthStatus,
     joinedOn,
-    healthChecks,
+    healthByDate,
   } = useHealth()
   const taskData = useTasks()
   const isQuoteLoading = quoteState.status === 'loading'
@@ -24,7 +24,7 @@ export default function Life() {
   const daysInLadder = getDaysInLadder(joinedOn.date, date)
   const streak = getStreakDays(
     taskData,
-    healthChecks,
+    healthByDate,
     date,
     joinedOn.isSimulated ? undefined : joinedOn.date,
   )

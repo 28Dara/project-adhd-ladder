@@ -1,7 +1,7 @@
 import type { HealthCheck } from '../types/health'
 import type { TaskData } from '../types/task'
 import { getPreviousLocalDateKey } from './dates'
-import { getHealthTone } from './health'
+import { getHealthLevel, isHealthStreakEligible } from './health'
 
 function* getValidCompletions({ tasks, completions }: TaskData, today: string) {
   const tasksById = new Map(tasks.map((task) => [task.id, task]))
@@ -38,7 +38,7 @@ export function getLadderProgress(data: TaskData, today: string) {
 
 export function getStreakDays(
   data: TaskData,
-  healthChecks: readonly HealthCheck[],
+  healthByDate: ReadonlyMap<string, HealthCheck>,
   today: string,
   firstDay?: string,
 ): number {
@@ -46,23 +46,18 @@ export function getStreakDays(
   for (const { date } of getValidCompletions(data, today)) {
     daysWithSteps.add(date)
   }
-  const healthByDay = new Map(healthChecks.map((check) => [check.date, check]))
   let streak = 0
   let day = getPreviousLocalDateKey(today)
 
   while (!firstDay || day >= firstDay) {
+    // Going backwards from yesterday, the first reset ends the current streak.
+    if (!isHealthStreakEligible(getHealthLevel(healthByDate, day))) break
+
     const previousDay = getPreviousLocalDateKey(day)
     if (daysWithSteps.has(day)) {
       streak += 1
-    } else {
-      // Going backwards, the first reset ends the current streak.
-      if (!daysWithSteps.has(previousDay)) break
-      const tone = getHealthTone(
-        healthByDay.get(day),
-        healthByDay.get(previousDay),
-        day === firstDay,
-      )
-      if (tone === 'danger') break
+    } else if (!daysWithSteps.has(previousDay)) {
+      break
     }
     day = previousDay
   }

@@ -22,7 +22,7 @@
 
 .health__overview {
   grid-area: status;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
   margin-block-end: var(--health-gap);
 }
 
@@ -93,6 +93,15 @@
   stroke-width: 7;
 }
 
+.health__status-message {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .health__legend,
 .health__goal-list {
   display: grid;
@@ -102,7 +111,9 @@
 }
 
 .health__legend {
+  inline-size: min(94%, 25rem);
   gap: clamp(0.5rem, 1vw, 0.9rem);
+  margin-inline: auto;
 }
 
 .health__legend-item {
@@ -114,16 +125,58 @@
   line-height: 1.15;
 }
 
-.health__legend-item span:last-child {
-  padding: 0.4em 0.7em;
-  border: 1px solid transparent;
+.health__description {
+  display: grid;
+  min-block-size: 2.5em;
+  place-items: center;
+  padding: 0.3em 0.55em;
+  border: 3px solid transparent;
   border-radius: 2rem;
   background: var(--health-label);
+  color: #000;
   font-weight: 700;
+  text-align: center;
 }
 
-.health__legend-item[aria-current] span:last-child {
-  border-color: var(--color-border);
+.health__legend-item[aria-current] .health__description {
+  border-color: var(--color-text);
+  border-color: color-mix(in srgb, var(--health-light) 42%, #000);
+  background: var(--health-light);
+}
+
+.health__streak {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  justify-self: center;
+  gap: 0.65rem;
+  inline-size: min(100%, 18rem);
+  padding: 0.45rem 0.85rem;
+  background: var(--health-label);
+  color: #000;
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.2;
+}
+
+.health__streak svg {
+  inline-size: 1.5em;
+  block-size: 1.5em;
+  color: var(--color-text);
+  color: color-mix(in srgb, var(--health-light) 42%, #000);
+}
+
+.health__streak p {
+  margin: 0;
+}
+
+.health__streak span {
+  display: block;
+}
+
+@media (forced-colors: active) {
+  .health__legend-item[aria-current] .health__description {
+    border-color: Highlight;
+  }
 }
 
 .health__goal-list {

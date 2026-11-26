@@ -33,6 +33,11 @@
   --health-label: var(--color-warning-bg);
 }
 
+.ladder-health-tone--caution {
+  --health-light: var(--color-caution);
+  --health-label: var(--color-caution-bg);
+}
+
 .ladder-health-tone--danger {
   --health-light: var(--color-danger);
   --health-label: var(--color-danger-bg);

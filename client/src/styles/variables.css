@@ -24,8 +24,10 @@
 
   --color-success: #a7cc83;
   --color-warning: #ffcd40;
+  --color-caution: var(--color-accent);
   --color-danger: #ff8985;
   --color-success-bg: #e8edd3;
   --color-warning-bg: #ffe7ad;
+  --color-caution-bg: #ffddc2;
   --color-danger-bg: #fad4cc;
 }

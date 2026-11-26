@@ -1,4 +1,4 @@
-# ADHD Ladder — Paleta de color v1.0
+# ADHD Ladder — Paleta de color v1.1
 
 > Conversión de `ADHD-Ladder-Paleta-v1.pdf`. Referencia de producción: 20 de noviembre de 2026. Las muestras gráficas están representadas por sus valores HEX. El archivo `client/src/styles/variables.css` es la fuente de verdad para implementar los colores.
 
@@ -42,9 +42,11 @@ Identidad orgánica, acogedora y minimalista: verdes naturales, fondos crema y b
 |---|---|---|---|
 | Success | `--color-success` | `#A7CC83` | «You're doing great!» |
 | Warning | `--color-warning` | `#FFCD40` | «You got it, keep it up!» |
+| Caution | `--color-caution` | `#FF891C` | Naranja de Health «Good start, but could be better». Reutiliza `--color-accent`. |
 | Danger | `--color-danger` | `#FF8985` | «Take a look at your health!» |
 | Success Background | `--color-success-bg` | `#E8EDD3` | Fondo de confirmaciones. |
 | Warning Background | `--color-warning-bg` | `#FFE7AD` | Fondo de advertencias. |
+| Caution Background | `--color-caution-bg` | `#FFDDC2` | Fondo pastel del nivel naranja de Health. |
 | Danger Background | `--color-danger-bg` | `#FAD4CC` | Fondo de errores y Delete Card. |
 
 ## 05 · Proporción de uso
@@ -97,13 +99,15 @@ Centralizar los colores en `variables.css` y utilizar `var(--color-primary)` y l
   /* 04 / Colores semánticos */
   --color-success: #A7CC83;
   --color-warning: #FFCD40;
+  --color-caution: var(--color-accent);
   --color-danger: #FF8985;
   --color-success-bg: #E8EDD3;
   --color-warning-bg: #FFE7AD;
+  --color-caution-bg: #FFDDC2;
   --color-danger-bg: #FAD4CC;
 }
 ```
 
 ## 08 · Notas de producción
 
-Los tonos son una normalización de las referencias visuales; algunos HEX son adaptaciones propuestas, no extracciones literales. Los contrastes de accesibilidad de los estados interactivos están pendientes de validación. Los fondos, figuras y degradados se plantean en CSS.
+Los tonos son una normalización de las referencias visuales; algunos HEX son adaptaciones propuestas, no extracciones literales. Las descripciones de Health usan negro sobre el tono fuerte al activarse y sobre el pastel correspondiente en reposo. El borde de la descripción activa oscurece el tono para marcar el estado por grosor y contraste. Los fondos, figuras y degradados se plantean en CSS.
