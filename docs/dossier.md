@@ -268,6 +268,8 @@ project-adhd-ladder/
 
 El frontend vive en el workspace `client/` con su entrada HTML, assets, configuración y ejemplo de entorno. Conserva sus módulos internos bajo `client/src/`. El lockfile de npm y las migraciones permanecen en la raíz.
 
+La base de 07-EXP vive en el workspace `server/`. `src/app.ts` inicia Express y monta el router de `src/routes/index.ts` bajo `/api`. `src/middleware/error-handler.ts` y `src/utils/errors.ts` definen las respuestas de error JSON. En desarrollo, Vite reenvía `/api` al puerto configurado mediante `PORT`, con `3000` como valor predeterminado. Ambos procesos leen el puerto del entorno o de `server/.env`.
+
 ### Implementación y despliegue [PROP]
 
 - **Paquetes y comandos.** Mantener manifiestos y TypeScript independientes. Usar workspaces nativos de npm y lockfile de raíz para que `npm install` incluya ambos paquetes desde el punto de entrada académico. Reusar las dependencias actuales del cliente. En el servidor, `express` y `@supabase/supabase-js` en ejecución. En desarrollo, TypeScript, `tsx`, `@types/node`, `@types/express` y las herramientas ESLint/Prettier existentes. Coordinar dos procesos de desarrollo con `concurrently` en la raíz a partir de la fundación del servidor. Mantener `npm run dev`, `npm run build`, `npm run lint` y `npm run format:check` en la raíz.

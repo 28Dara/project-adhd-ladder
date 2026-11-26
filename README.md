@@ -6,20 +6,24 @@ Los cambios de tareas y Health se mantienen al navegar por el área privada. Se 
 
 ## Stack
 
-Vite, React, TypeScript y React Router en modo declarativo. Supabase Auth gestiona las sesiones. Los estilos usan CSS, Normalize.css y fuentes locales empaquetadas por Fontsource. ESLint revisa el código y Prettier aplica el formato compartido.
+Vite, React y React Router en el cliente, y Express para la API local. Ambos usan TypeScript. Supabase Auth gestiona las sesiones en el cliente. Los estilos usan CSS, Normalize.css y fuentes locales empaquetadas por Fontsource. ESLint revisa el código y Prettier aplica el formato compartido.
 
 ## Instalación y ejecución
 
-Usa Node.js 24.x con npm. Esta es la versión mayor elegida para el proyecto y es compatible con Vite, ESLint y React Router. La versión utilizada para verificar la instalación es Node.js 24.15.0. Ejecuta los comandos desde la raíz del repositorio. npm instala el workspace de `client/` usando el lockfile de la raíz.
+Usa Node.js 24.x con npm. La versión utilizada para verificar la instalación es Node.js 24.15.0. Ejecuta los comandos desde la raíz del repositorio. npm instala los workspaces `client/` y `server/` usando un solo lockfile.
 
 ```sh
 npm install
 npm run dev
 ```
 
-- `npm run build` comprueba los tipos y genera la versión de producción en `client/dist/`.
-- `npm run lint` revisa el código con ESLint.
-- `npm run format` aplica el formato y `npm run format:check` lo verifica.
+`npm run dev` inicia Vite y Express juntos. Abre la URL de Vite que aparece en la terminal. Vite reenvía `/api` a Express, que escucha en `127.0.0.1:3000` por defecto. En el origen de Vite, abre `/api/healthz` y comprueba que devuelve HTTP 200 con `{"status":"ok"}`.
+
+- `npm run dev:client` y `npm run dev:server` inician los procesos por separado.
+- `npm run build` comprueba los tipos y genera `client/dist/` y `server/dist/`. Para ejecutar la API compilada, usa `npm run start --workspace server`.
+- `npm run lint`, `npm run format` y `npm run format:check` cubren ambos workspaces.
+
+Si necesitas otro puerto para Express, copia `server/.env.example` a `server/.env`, cambia `PORT` y reinicia ambos procesos. Si defines `PORT` en el entorno de la terminal, ese valor tiene prioridad para ambos.
 
 ## Frase diaria de Life
 
