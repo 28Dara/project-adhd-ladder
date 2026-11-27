@@ -1,312 +1,111 @@
 # ADHD Ladder
 
-ADHD Ladder es una aplicación web diseñada para ayudar a las personas a organizar sus actividades, desarrollar hábitos saludables y visualizar su progreso personal mediante un sistema de pequeñas metas diarias.
+ADHD Ladder es una aplicación web para organizar actividades, practicar habilidades y registrar hábitos mediante pequeñas metas diarias. Está inspirada en las dificultades de organización y constancia que pueden experimentar las personas con TDAH. Es la entrega frontend de Etapa 1 del programa Web Development de TripleTen.
 
-El proyecto está inspirado en las dificultades de organización, motivación y constancia que pueden experimentar las personas con TDAH. Su propósito es ofrecer una experiencia sencilla, visual e intuitiva, en la que cada pequeño logro represente un paso hacia un objetivo mayor.
+## Inicio rápido
 
-ADHD Ladder no pretende sustituir la atención médica ni realizar diagnósticos.
+1. Clona la rama de Etapa 1 e instala las dependencias.
 
-## Concepto
+   ```bash
+   git clone -b stage-frontend --single-branch https://github.com/28Dara/project-adhd-ladder.git
+   cd project-adhd-ladder
+   npm ci
+   ```
 
-La aplicación utiliza la escalera como metáfora del crecimiento personal. En lugar de enfocarse únicamente en grandes objetivos, propone avanzar mediante pequeñas acciones que puedan realizarse de manera constante.
+2. Copia [client/.env.example](client/.env.example) como `client/.env.local` y completa los valores indicados en [Variables de entorno](#variables-de-entorno).
 
-El sistema se divide en cuatro secciones principales:
+   ```bash
+   cp client/.env.example client/.env.local
+   ```
 
-### Life Ladder
+3. Arranca el cliente desde la raíz. Todo el recorrido frontend funciona con Express apagado.
 
-Representa el progreso general del usuario. Centraliza los logros de Activities y Learning, muestra la racha de días consecutivos y presenta una frase motivacional diaria obtenida mediante una API externa.
+   ```bash
+   npm run dev:client
+   ```
 
-### Activities Ladder
+4. Abre la URL que imprime Vite. Normalmente es `http://localhost:5173`.
 
-Permite organizar actividades personales, establecer pequeñas metas y registrar su cumplimiento diario.
+## Requisitos técnicos
 
-### Learning Ladder
+- Node.js **24.x**, npm y Git.
+- Acceso a internet desde el navegador para Supabase Auth y DummyJSON.
+- El repositorio usa npm Workspaces. La instalación en la raíz prepara `client/` y `server/` con un solo archivo de bloqueo.
 
-Está orientada al aprendizaje continuo y al desarrollo de nuevas habilidades. Comparte la mecánica de Activities, pero mantiene sus objetivos independientes.
+## Variables de entorno
 
-### Health
+Completa `client/.env.local` antes de iniciar Vite. La propietaria debe facilitar por separado los valores reales del proyecto Supabase habilitado para la revisión.
 
-Permite registrar tres aspectos fundamentales del bienestar diario:
+| Variable | Valor esperado |
+| --- | --- |
+| `VITE_SUPABASE_URL` | URL pública del proyecto Supabase. |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Clave publicable del mismo proyecto. |
 
-- Nutrition
-- Sleep
-- Movement
+Ambos valores son configuración pública del cliente. Usa exclusivamente la clave publicable y conserva `client/.env.local` fuera de Git. Reinicia Vite si cambias el archivo.
 
-Su sistema de cuatro colores representa el cumplimiento de los objetivos diarios y considera el estado de salud del día anterior.
+Express usa `HOST=127.0.0.1` y `PORT=3000` por defecto. Para ajustar su configuración local, copia [server/.env.example](server/.env.example) como `server/.env`.
 
-El estado de Health también influye en la continuidad de la racha personal, incentivando un equilibrio entre productividad y bienestar.
+## Guía de evaluación
 
-## Funcionalidades
+1. **Landing.** Abre `/` en la URL de Vite. Sin sesión, verás la pantalla de bienvenida.
+2. **About.** Abre **About** en el encabezado o en el pie para conocer el proyecto y su autora. Vuelve a la portada.
+3. **Registro.** Pulsa **Sign up**. Introduce un correo de prueba al que tengas acceso, escribe y confirma la contraseña y pulsa **Continue**.
+4. **Confirmación.** Si Supabase requiere confirmar el correo, abre el enlace que recibas antes de iniciar sesión. Si el registro inicia sesión automáticamente, llegarás a Life.
+5. **Inicio de sesión.** Si aún no tienes sesión, pulsa **Log in**, introduce los datos de la cuenta que registraste y pulsa **Continue**.
+6. **Life.** Revisa **Your steps today**, que suma las marcas de hoy en Activities y Learning, y **Your total steps**, que cuenta las marcas de días anteriores que están en memoria. La vista también muestra los días desde el registro y la racha de días cerrados.
+7. **Activities y Learning.** Usa los enlaces de Life o el selector del encabezado para abrir **Activities Ladder** y **Learning Ladder**. Cada una tiene sus propias tarjetas.
+8. **Marcar y desmarcar.** En cada escalera, alterna una casilla y observa cómo aumenta o disminuye el contador diario. Deja al menos una tarjeta marcada para comprobar el resumen.
+9. **Crear.** Pulsa **+** (**Add task**), escribe un nombre y confirma con **Submit**. Se admiten hasta cuatro tarjetas activas por escalera. El botón desaparece al alcanzar el límite.
+10. **Renombrar.** Abre el engrane de una tarjeta, elige **Change Name**, cambia el nombre y pulsa **Submit**. Un cambio efectivo de nombre retira la marca de hoy si la tarjeta estaba marcada.
+11. **Archivar.** Abre el engrane y elige **Delete Card**. Confirma con **Delete**. La tarjeta sale de la lista activa y pierde su marca de hoy, si la tenía. Los pasos anteriores se conservan en la sesión. Siempre queda al menos una tarjeta activa.
+12. **Volver al resumen.** Pulsa **Go back to the Life Ladder**. Comprueba que **Your steps today** refleja las marcas de ambas escaleras.
+13. **Health.** Abre **Health Ladder** y alterna **Good Nutrition**, **Good Sleep** y **Daily Movement**. El indicador y la leyenda cambian según las metas marcadas. Health influye en la racha y aporta cero pasos.
+14. **Frase real.** Vuelve a Life y pulsa **Click to reveal**. Durante la petición verás **Loading quote...**. La frase procede de `GET https://dummyjson.com/quotes/random`, una solicitud directa del navegador que puedes ver en la pestaña Red de las herramientas de desarrollo. Si aparece un error, pulsa **Retry**.
+15. **Cerrar sesión.** Pulsa **Log out** y comprueba que vuelves a Landing.
+16. **Rutas protegidas.** Sin sesión, abre directamente `/life`, `/activities`, `/learning` o `/health`. La aplicación redirige a `/login`. `/about` sigue siendo pública.
+17. **Recarga.** Vuelve a iniciar sesión, crea una tarjeta o marca una tarea y recarga la página. Supabase Auth puede restaurar la sesión. Las tarjetas de ejemplo vuelven a su estado inicial y se pierden los cambios de la sesión.
 
-- Registro e inicio de sesión.
-- Rutas públicas y privadas.
-- Gestión de actividades y objetivos de aprendizaje.
-- Registro de logros diarios.
-- Visualización del progreso personal.
-- Sistema de rachas.
-- Indicadores visuales de bienestar.
-- Frases motivacionales mediante una API externa.
-- Diseño adaptable a dispositivos móviles, tabletas y computadoras.
-- Componentes reutilizables y estado compartido.
+## Funciones principales
+
+- **Life** reúne el progreso diario e histórico, los días desde el registro, la racha y la frase motivacional bajo demanda.
+- **Activities y Learning** permiten crear, marcar, renombrar y archivar tarjetas en listas independientes.
+- **Health** presenta cuatro niveles de bienestar según las metas diarias y contribuye al cálculo de la racha.
+- **Cuenta y navegación** incluyen registro, inicio y cierre de sesión, restauración de sesión, rutas protegidas y edición del nombre visible durante la sesión.
 
 ## Tecnologías
 
-### Frontend
-
-- HTML5
-- CSS3
-- JavaScript
-- TypeScript
-- React
-- React Router
-- Vite
-- Fetch API
-
-### Backend
-
-- Node.js
-- Express
-- TypeScript
-
-### Base de datos y autenticación
-
-- Supabase Auth — Autenticación actual de Etapa 1.
-- Estado en memoria — Tareas, completaciones y Health durante la sesión privada.
-
-### Herramientas de desarrollo
-
-- Git
-- GitHub
-- npm Workspaces
-- ESLint
-- Prettier
-- Visual Studio Code
-
-### API externa
-
-- DummyJSON — Obtención de frases motivacionales.
+- **Cliente** · React, TypeScript, React Router, Vite, HTML semántico y CSS adaptable.
+- **Autenticación y API externa** · Supabase Auth y Fetch API para DummyJSON.
+- **Base de servidor y herramientas** · Node.js, Express, npm Workspaces, Git, ESLint y Prettier.
 
 ## Arquitectura
 
-El proyecto utiliza una estructura Full Stack que separa las responsabilidades del cliente y del servidor dentro de un mismo repositorio.
+- [`client/`](client/) contiene la aplicación React. Las rutas públicas y privadas parten de [`App.tsx`](client/src/app/App.tsx). Las escaleras comparten el estado privado de la cuenta y Life deriva sus indicadores de ese estado. La consulta a DummyJSON vive en [`quotesApi.ts`](client/src/utils/quotesApi.ts).
+- [`server/`](server/) contiene la base opcional de Express en TypeScript para Etapa 1. Expone una comprobación de disponibilidad y maneja errores de API. El estado de tareas, completaciones, Health y perfil reside en el cliente.
 
-    project-adhd-ladder/
-    ├── client/
-    │   ├── public/
-    │   ├── src/
-    │   │   ├── app/
-    │   │   ├── components/
-    │   │   ├── config/
-    │   │   ├── context/
-    │   │   ├── hooks/
-    │   │   ├── images/
-    │   │   ├── pages/
-    │   │   ├── styles/
-    │   │   ├── types/
-    │   │   └── utils/
-    │   └── package.json
-    ├── server/
-    │   ├── src/
-    │   │   ├── middleware/
-    │   │   ├── routes/
-    │   │   ├── utils/
-    │   │   └── app.ts
-    │   └── package.json
-    ├── docs/
-    ├── AGENTS.md
-    ├── package.json
-    └── README.md
+## Comandos de verificación técnica
 
-El cliente se encarga de la presentación, la interacción y la experiencia del usuario.
+Ejecuta estos comandos desde la raíz. Verifican ambos workspaces.
 
-Express proporciona la base de la API propia en TypeScript, con un endpoint de estado y manejo centralizado de errores. Supabase Auth gestiona el registro, el inicio de sesión y la restauración de la sesión en el cliente.
+```bash
+npm run build
+npm run lint
+npm run format:check
+```
 
-Esta separación permite desarrollar, verificar y mantener ambas partes de manera independiente, mientras npm Workspaces facilita la administración del proyecto desde la raíz del repositorio.
+Para probar Express por separado, ejecuta `npm run dev:server`. Abre `http://127.0.0.1:3000/api/healthz` o usa el host y puerto que imprime el servidor. El endpoint `GET /api/healthz` devuelve HTTP 200 con `{"status":"ok"}`. `npm run dev` inicia ambos workspaces juntos.
 
-## Evolución y decisiones arquitectónicas
+## Limitaciones actuales y estado del proyecto
 
-ADHD Ladder comenzó como una aplicación Frontend con React y TypeScript e incorporó Supabase Auth y una base de servidor Express. Para Etapa 2, se evalúa continuar con PostgreSQL y Auth de Supabase o usar MongoDB Atlas, Mongoose y autenticación propia con bcrypt y JWT. La decisión final queda pendiente de confirmar los requisitos académicos de TripleTen en la tutoría del 26 de noviembre de 2026.
+- En Etapa 1, el uso de Supabase se limita a Auth para la identidad y la autenticación. Las tareas, completaciones, registros de Health, nombre visible editable, borradores e historial de frases viven en memoria privada de la aplicación. Se reinician al recargar, cerrar sesión o cambiar de cuenta. Es una limitación deliberada de Etapa 1.
+- Las [migraciones SQL históricas](supabase/migrations/) se conservan como antecedentes. El flujo actual de producto usa memoria y Express cumple la función de base de API.
+- En la tutoría del 26 de noviembre de 2026, TripleTen confirmó que el proyecto podía presentarse como frontend y recomendó un backend propio a futuro. La arquitectura y la implementación de Etapa 2 están suspendidas mientras se decide una extensión y se aprueba el alcance técnico.
+- El despliegue está pendiente. Si la entrega final se mantiene en la modalidad frontend, la rúbrica exige una aplicación desplegada que permita recargar sus rutas. [Criterios de Etapa 1](docs/07-AUD-cumplimiento-academico.md).
 
-## Principios de desarrollo
+## Metodología de desarrollo y colaboración con IA
 
-El proyecto busca mantener una arquitectura sencilla, comprensible y fácil de extender, evitando incorporar complejidad que no aporte valor al producto.
+El trabajo se organizó en objetivos pequeños con criterios de aceptación, revisión técnica y validación por la propietaria. Dara definió el concepto, los mockups, la experiencia de usuario, las reglas de negocio y las decisiones de arquitectura. Codex colaboró de forma sustancial en la implementación bajo su supervisión. Dara revisó y aprobó el trabajo.
 
-Entre los principios aplicados se encuentran:
+## Autora
 
-- Separación de responsabilidades.
-- Reutilización de componentes y funciones.
-- Estado compartido mediante React Context.
-- Tipado estático mediante TypeScript.
-- Centralización de constantes y configuraciones.
-- Prevención de duplicaciones innecesarias.
-- Manejo centralizado de errores.
-- Diseño responsive.
-- Validación incremental de funcionalidades.
-- Control de versiones mediante commits específicos y descriptivos.
-
-La implementación prioriza soluciones concretas para necesidades reales, evitando tanto la duplicación innecesaria como las abstracciones prematuras.
-
-## Metodología de trabajo
-
-ADHD Ladder es un proyecto de desarrollo individual.
-
-El desarrollador es responsable de las decisiones de producto, el diseño, la arquitectura, la implementación, la revisión del código y el control de versiones.
-
-Se utiliza una metodología incremental basada en objetivos pequeños, verificables y asociados a commits específicos. Cada objetivo cuenta con un alcance definido, criterios de aceptación y comprobaciones técnicas antes de considerarse terminado.
-
-El proyecto incorpora documentación interna para conservar las decisiones arquitectónicas, los requisitos funcionales y el estado de desarrollo.
-
-## Uso responsable de inteligencia artificial
-
-Durante el desarrollo se utilizaron herramientas de inteligencia artificial como apoyo complementario para la tutoría, la revisión técnica, la planificación y la implementación supervisada.
-
-Para gestionar estas herramientas de manera eficiente, el desarrollador diseñó un sistema propio de instrucciones y skills personalizadas, orientado a:
-
-- Arquitectura y planificación de software.
-- Revisión y validación técnica.
-- Prevención de duplicaciones y sobreingeniería.
-- Seguridad de aplicaciones web.
-- Optimización del contexto y los recursos utilizados.
-- Aprendizaje mediante un sistema de tutoría.
-
-El objetivo de esta metodología es evitar el desarrollo basado en instrucciones improvisadas o la aceptación de código sin comprenderlo, una práctica comúnmente conocida como vibe coding.
-
-La inteligencia artificial funciona como una herramienta de asistencia y colaboración bajo la dirección del desarrollador, quien conserva la responsabilidad sobre las decisiones, la comprensión del código, su validación y su integración en el proyecto.
-
-## Instalación y ejecución
-
-### Requisitos
-
-- Node.js 24.x
-- npm
-- Git
-
-### Clonar el repositorio
-
-    git clone https://github.com/28Dara/project-adhd-ladder.git
-
-    cd project-adhd-ladder
-
-### Instalar las dependencias
-
-Desde la raíz del proyecto:
-
-    npm install
-
-### Variables de entorno
-
-Para Etapa 1, copia `client/.env.example` a `client/.env.local` y configura `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` con la URL y la clave publicable del proyecto Supabase que usará la revisión. Express usa el puerto 3000 por defecto. Si necesitas otro, copia `server/.env.example` a `server/.env` y configura `PORT`.
-
-Las credenciales y los archivos de entorno privados no deben incorporarse al repositorio.
-
-### Ejecutar el proyecto
-
-Iniciar simultáneamente el cliente y el servidor:
-
-    npm run dev
-
-También pueden ejecutarse de manera independiente:
-
-    npm run dev:client
-
-    npm run dev:server
-
-Direcciones locales predeterminadas:
-
-- Frontend: http://localhost:5173
-- Backend: http://127.0.0.1:3000
-
-### Revisar Etapa 1
-
-Abre la URL del frontend. **About** es pública. Para ver la funcionalidad, entra por **Sign Up** o **Log In** con una cuenta de revisión. Si Supabase solicita confirmar el correo, completa ese paso antes de entrar. En **Life**, pulsa **Click to reveal** para consultar una frase real de DummyJSON. El selector permite abrir **Activities**, **Learning** y **Health**.
-
-Las tareas, las marcas, el historial de Health y las frases se mantienen en memoria durante la sesión privada. Se reinician al recargar, al cerrar sesión o al cambiar de cuenta.
-
-### Comprobaciones técnicas
-
-Compilar el proyecto:
-
-    npm run build
-
-Ejecutar ESLint:
-
-    npm run lint
-
-Verificar el formato del código:
-
-    npm run format:check
-
-### Estado de la API
-
-El servidor dispone de un endpoint para comprobar su funcionamiento:
-
-    GET /api/healthz
-
-Respuesta esperada:
-
-    {
-      "status": "ok"
-    }
-
-## Estado del proyecto
-
-ADHD Ladder se desarrolla como proyecto final del programa de Web Development Full Stack de TripleTen.
-
-### Etapa 1 — Frontend
-
-En proceso de cierre y validación académica.
-
-- [x] Diseño y maquetación.
-- [x] Componentes reutilizables.
-- [x] Navegación y rutas protegidas.
-- [x] Formularios de autenticación.
-- [x] Life, Activities, Learning y Health.
-- [x] Integración con una API externa.
-- [x] Diseño responsive.
-- [ ] Validación funcional final.
-- [ ] Entrega académica.
-
-### Etapa 2 — Full Stack
-
-Fundación técnica completada. La implementación de persistencia y autenticación de Etapa 2 queda pendiente de la decisión académica.
-
-- [x] Separación del cliente y el servidor.
-- [x] Configuración de Express y TypeScript.
-- [x] Configuración de npm Workspaces.
-- [x] Manejo centralizado de errores.
-- [x] Comunicación entre cliente y servidor en desarrollo.
-- [ ] Confirmar la arquitectura de persistencia y autenticación.
-- [ ] Persistencia de tareas y objetivos.
-- [ ] Integración completa entre Frontend y Backend.
-- [ ] Pruebas de seguridad y funcionalidad.
-- [ ] Despliegue.
-- [ ] Entrega académica.
-
-## Aprendizajes y habilidades
-
-El desarrollo de ADHD Ladder permite aplicar y consolidar conocimientos relacionados con:
-
-- Desarrollo de aplicaciones web con React y TypeScript.
-- Diseño de interfaces centradas en el usuario.
-- Arquitectura de componentes.
-- Gestión de estado y navegación.
-- Consumo de APIs externas.
-- Desarrollo de servidores Express.
-- Diseño de APIs REST.
-- Manejo de errores y configuración de entornos.
-- Evaluación de alternativas arquitectónicas.
-- Documentación técnica.
-- Control de versiones y desarrollo incremental.
-- Gestión y supervisión de herramientas de inteligencia artificial.
-
-La segunda etapa amplía estos conocimientos hacia el modelado de bases de datos, la persistencia, la autenticación, la autorización y el despliegue de aplicaciones Full Stack.
-
-## Autor
-
-**Dara Rangel (28Dara)**
-
-Desarrollador Web Full Stack.
-
-Proyecto final del programa Web Development de TripleTen — 2026.
-
-- GitHub: https://github.com/28Dara
+**Dara Rangel (28Dara)** · Proyecto final del programa Web Development de TripleTen, 2026. [GitHub](https://github.com/28Dara)
