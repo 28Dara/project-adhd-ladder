@@ -1,0 +1,28 @@
+.private-route {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.private-route__logout:not(:disabled) {
+  cursor: pointer;
+}
+
+.private-route__logout:hover:not(:disabled) {
+  background: var(--color-primary);
+}
+
+.private-route__logout:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.private-route__logout-error {
+  margin: 0.75rem auto 0;
+  padding: 0.5rem 0.875rem;
+  max-width: calc(100% - 2rem);
+  border-radius: 0.5rem;
+  background: var(--color-danger-bg);
+  font-family: var(--font-body);
+  text-align: center;
+}

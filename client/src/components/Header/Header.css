@@ -1,0 +1,141 @@
+.site-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: clamp(0.55rem, 1vw, 0.85rem) clamp(1rem, 4vw, 4rem);
+  border-bottom: 2px solid var(--color-sage-light);
+  background-color: var(--color-surface);
+}
+
+.site-header__nav {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.15rem clamp(0.35rem, 2vw, 1.8rem);
+  font-family: var(--font-body);
+  font-size: clamp(1.2rem, 1.75vw, 1.7rem);
+  line-height: 1.15;
+}
+
+.site-header__nav:has(.site-header__account) {
+  flex-wrap: nowrap;
+}
+
+.site-header__account + .site-header__control {
+  flex: none;
+}
+
+.site-header__account {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.site-header__name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.site-header__edit-anchor {
+  flex: none;
+}
+
+.site-header__edit.site-header__control {
+  min-width: 2.75rem;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.site-header__edit svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.site-header__control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.35em 0.5em;
+  border: 0;
+  border-radius: 0.55em;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-decoration: none;
+}
+
+a.site-header__control:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.site-header__control--login {
+  color: var(--color-text-muted);
+}
+
+.site-header__control--filled {
+  padding-inline: 0.9em;
+  background-color: var(--color-text-muted);
+  color: var(--color-text-inverse);
+}
+
+a.site-header__control--filled:hover {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+@media (min-width: 40rem) {
+  .site-header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 48rem) {
+  .site-header {
+    padding-inline: clamp(2rem, 4.35vw, 4rem) clamp(1.25rem, 2.4vw, 2.5rem);
+    border-bottom-color: color-mix(
+      in srgb,
+      var(--color-text-muted) 55%,
+      var(--color-sand)
+    );
+  }
+
+  .site-header .brand-logo {
+    font-size: clamp(2.25rem, 3.35vw, 3rem);
+  }
+
+  .site-header__nav {
+    column-gap: clamp(0.85rem, 1.7vw, 1.55rem);
+  }
+
+  .site-header__control--filled {
+    border-radius: 0.7em;
+  }
+}
+
+.site-header--back {
+  flex-direction: row;
+  justify-content: space-between;
+  min-height: 0;
+  padding-block: clamp(0.5rem, 1.2vw, 0.9rem);
+}
+
+.site-header--back .brand-logo {
+  font-size: clamp(1.85rem, 3.6vw, 3.45rem);
+}
+
+.site-header__back {
+  gap: 0.4em;
+  padding-inline-end: 0;
+  white-space: nowrap;
+}

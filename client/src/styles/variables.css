@@ -1,0 +1,32 @@
+:root {
+  --font-body: 'Patrick Hand', system-ui, sans-serif;
+
+  --color-primary: #005c3c;
+  --color-primary-dark: #1a604b;
+  --color-ladder: #296a4a;
+  --color-sage: #6d9670;
+  --color-olive: #7c9b46;
+  --color-sage-light: #b5bf91;
+  --color-accent: #ff891c;
+
+  --color-background: #fdf2e5;
+  --color-surface: #fcf5ea;
+  --color-cloud: #f9e6d7;
+  --color-sand: #ede2c9;
+  --color-border: #d9c4aa;
+  --color-highlight: #dddfc2;
+
+  --color-text: #263238;
+  --color-text-secondary: #6b7066;
+  --color-text-muted: #46695e;
+  --color-text-inverse: #fffcf6;
+
+  --color-success: #a7cc83;
+  --color-warning: #ffcd40;
+  --color-caution: var(--color-accent);
+  --color-danger: #ff8985;
+  --color-success-bg: #e8edd3;
+  --color-warning-bg: #ffe7ad;
+  --color-caution-bg: #ffddc2;
+  --color-danger-bg: #fad4cc;
+}

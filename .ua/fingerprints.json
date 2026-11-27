@@ -1,0 +1,2751 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "c0305f7536efee2cc1c65aa61621f419c797a6c7",
+  "generatedAt": "2026-11-26T17:44:13.960Z",
+  "files": {
+    ".gitignore": {
+      "filePath": ".gitignore",
+      "contentHash": "772485ed8d9d5dafdfd174c938d1feb007e58ae4440c533f5989d977865e69ae",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 28,
+      "hasStructuralAnalysis": false
+    },
+    "AGENTS.md": {
+      "filePath": "AGENTS.md",
+      "contentHash": "4158cc67720d66c76eeb842f3a8f865c2860a4c1df822f4c5ac37a590e17e2c6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 64,
+      "hasStructuralAnalysis": false
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "9c7978f585b9599bf06b3e4699916e23920181bd828d70a1125a062e2e9b4c4b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 313,
+      "hasStructuralAnalysis": false
+    },
+    "client/.env.example": {
+      "filePath": "client/.env.example",
+      "contentHash": "966852f57f1eb7a1f0e53275693ab2993e3eb16ed0bb128e946328a6d01cf315",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 3,
+      "hasStructuralAnalysis": false
+    },
+    "client/.prettierignore": {
+      "filePath": "client/.prettierignore",
+      "contentHash": "93c0d96a96160cf0e7960c12a9621d56dfc66d66fd73e552426bbf8e5caae834",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 7,
+      "hasStructuralAnalysis": false
+    },
+    "client/.prettierrc": {
+      "filePath": "client/.prettierrc",
+      "contentHash": "2b92cb24ceb26e242213860ff9284c145a34e551b6c0bd2cc580ab62ea4a1314",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": false
+    },
+    "client/eslint.config.js": {
+      "filePath": "client/eslint.config.js",
+      "contentHash": "cf80a7510234dcd5ae594b30b44682b8b45ba13c0fcb5bf8928bea143802aa1c",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@eslint/js",
+          "specifiers": [
+            "js"
+          ]
+        },
+        {
+          "source": "globals",
+          "specifiers": [
+            "globals"
+          ]
+        },
+        {
+          "source": "eslint-plugin-react-hooks",
+          "specifiers": [
+            "reactHooks"
+          ]
+        },
+        {
+          "source": "eslint-plugin-react-refresh",
+          "specifiers": [
+            "reactRefresh"
+          ]
+        },
+        {
+          "source": "typescript-eslint",
+          "specifiers": [
+            "tseslint"
+          ]
+        },
+        {
+          "source": "eslint/config",
+          "specifiers": [
+            "defineConfig",
+            "globalIgnores"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 23,
+      "hasStructuralAnalysis": true
+    },
+    "client/index.html": {
+      "filePath": "client/index.html",
+      "contentHash": "6c4d54d3d3b1e3427b31a7e1074850ac24411cf5a24c4c54a30a388efd0ab7dc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 14,
+      "hasStructuralAnalysis": false
+    },
+    "client/package.json": {
+      "filePath": "client/package.json",
+      "contentHash": "a7c2ea20168bdc4f8b165519566142f907f6f502f15380f7508d9badd60d0a29",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 41,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/app/App.tsx": {
+      "filePath": "client/src/app/App.tsx",
+      "contentHash": "7c7846a4c25168a6470368fb6e52aeaffcc59896494494fb42cc3abe905ff662",
+      "functions": [
+        {
+          "name": "App",
+          "params": [],
+          "exported": true,
+          "lineCount": 29
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Route",
+            "Routes"
+          ]
+        },
+        {
+          "source": "../components/Footer/Footer",
+          "specifiers": [
+            "Footer"
+          ]
+        },
+        {
+          "source": "../pages/About/About",
+          "specifiers": [
+            "About"
+          ]
+        },
+        {
+          "source": "../pages/Health/Health",
+          "specifiers": [
+            "Health"
+          ]
+        },
+        {
+          "source": "../pages/LadderPage/LadderPage",
+          "specifiers": [
+            "LadderPage"
+          ]
+        },
+        {
+          "source": "../pages/Landing/Landing",
+          "specifiers": [
+            "Landing"
+          ]
+        },
+        {
+          "source": "../pages/Life/Life",
+          "specifiers": [
+            "Life"
+          ]
+        },
+        {
+          "source": "../pages/LogIn/LogIn",
+          "specifiers": [
+            "LogIn"
+          ]
+        },
+        {
+          "source": "../pages/SignUp/SignUp",
+          "specifiers": [
+            "SignUp"
+          ]
+        },
+        {
+          "source": "./AuthRoutes",
+          "specifiers": [
+            "AuthSessionBoundary",
+            "GuestRoute",
+            "ProtectedRoute"
+          ]
+        }
+      ],
+      "exports": [
+        "App"
+      ],
+      "totalLines": 41,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/app/AuthRoutes.css": {
+      "filePath": "client/src/app/AuthRoutes.css",
+      "contentHash": "a754965f9367f53fc03b170d4f24674f56cebb76780b1ebb39efcb2bf1ad0e37",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 29,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/app/AuthRoutes.tsx": {
+      "filePath": "client/src/app/AuthRoutes.tsx",
+      "contentHash": "81da050cc20aa7253bd56b6c59d551b5a81ace9b1eb981c2af5eefa6792c558e",
+      "functions": [
+        {
+          "name": "AuthSessionBoundary",
+          "params": [],
+          "exported": true,
+          "lineCount": 22
+        },
+        {
+          "name": "GuestRoute",
+          "params": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "ProtectedRoute",
+          "params": [
+            "{ publicHome }"
+          ],
+          "exported": true,
+          "lineCount": 38
+        },
+        {
+          "name": "PrivateLayout",
+          "params": [
+            "{\n  user,\n  logout,\n  onLogout,\n}"
+          ],
+          "exported": false,
+          "lineCount": 113
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "ReactNode"
+          ]
+        },
+        {
+          "source": "@supabase/supabase-js",
+          "specifiers": [
+            "Session"
+          ]
+        },
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Navigate",
+            "Outlet",
+            "useMatch"
+          ]
+        },
+        {
+          "source": "../components/Header/Header",
+          "specifiers": [
+            "Header"
+          ]
+        },
+        {
+          "source": "../components/LadderSelector/LadderSelector",
+          "specifiers": [
+            "LadderSelector"
+          ]
+        },
+        {
+          "source": "../components/RoutePanel/RoutePanel",
+          "specifiers": [
+            "RoutePanel"
+          ]
+        },
+        {
+          "source": "../config/exampleTasks",
+          "specifiers": [
+            "createExampleTaskData"
+          ]
+        },
+        {
+          "source": "../hooks/useAuth",
+          "specifiers": [
+            "useAuth"
+          ]
+        },
+        {
+          "source": "../hooks/useDailyQuote",
+          "specifiers": [
+            "useDailyQuote"
+          ]
+        },
+        {
+          "source": "../hooks/useLadderSession",
+          "specifiers": [
+            "LadderSession"
+          ]
+        },
+        {
+          "source": "../hooks/useLocalDateKey",
+          "specifiers": [
+            "useLocalDateKey"
+          ]
+        },
+        {
+          "source": "../types/health",
+          "specifiers": [
+            "HealthCheck"
+          ]
+        },
+        {
+          "source": "../types/task",
+          "specifiers": [
+            "Task"
+          ]
+        },
+        {
+          "source": "../utils/taskCompletions",
+          "specifiers": [
+            "isTaskCompleted",
+            "updateTaskCompletion"
+          ]
+        },
+        {
+          "source": "../utils/tasks",
+          "specifiers": [
+            "addTask",
+            "archiveTask",
+            "renameTaskTitle"
+          ]
+        },
+        {
+          "source": "./AuthRoutes.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "AuthSessionBoundary",
+        "GuestRoute",
+        "ProtectedRoute"
+      ],
+      "totalLines": 202,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/AuthPage/AuthPage.css": {
+      "filePath": "client/src/components/AuthPage/AuthPage.css",
+      "contentHash": "6825c31bb8e3e1757eeb804ac9f5068cac5b22a0377dfac428ac03d4e9727705",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 308,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/components/AuthPage/AuthPage.tsx": {
+      "filePath": "client/src/components/AuthPage/AuthPage.tsx",
+      "contentHash": "e3dc728f6c290830b484bdcf2a7f009357eb7ad6997956cc863ab7c1acc899eb",
+      "functions": [
+        {
+          "name": "PasswordVisibilityButton",
+          "params": [
+            "{\n  inputId,\n  label,\n  visible,\n  onToggle,\n}"
+          ],
+          "exported": false,
+          "lineCount": 27
+        },
+        {
+          "name": "AuthPage",
+          "params": [
+            "{ mode }"
+          ],
+          "exported": true,
+          "lineCount": 219
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useEffect",
+            "useRef",
+            "useState",
+            "SubmitEvent"
+          ]
+        },
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "../../hooks/useAuth",
+          "specifiers": [
+            "useAuth"
+          ]
+        },
+        {
+          "source": "../Header/Header",
+          "specifiers": [
+            "Header"
+          ]
+        },
+        {
+          "source": "./AuthPage.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "AuthPage"
+      ],
+      "totalLines": 271,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/BrandLogo/BrandLogo.css": {
+      "filePath": "client/src/components/BrandLogo/BrandLogo.css",
+      "contentHash": "4cc4c854477726d9db1ff88c0e93f3e7516a2561f5956603de0d8ad679c02a4f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 64,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/components/BrandLogo/BrandLogo.tsx": {
+      "filePath": "client/src/components/BrandLogo/BrandLogo.tsx",
+      "contentHash": "4a670f939a157cbd78f10772fad74642dbd23a83933a1e28346b2c3fc0f31916",
+      "functions": [
+        {
+          "name": "BrandLogo",
+          "params": [],
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "../../hooks/useAuth",
+          "specifiers": [
+            "useAuth"
+          ]
+        },
+        {
+          "source": "./BrandLogo.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "BrandLogo"
+      ],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/Footer/Footer.css": {
+      "filePath": "client/src/components/Footer/Footer.css",
+      "contentHash": "324ff0ac5b86b569e2250bf6c43a522bb02b20d7d43f1244b2dec17200aa006d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 31,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/components/Footer/Footer.tsx": {
+      "filePath": "client/src/components/Footer/Footer.tsx",
+      "contentHash": "2e4925b3194b7e370ceb39726cf9814ba2d94e6ec8ca1acf8d3acd4377b4f428",
+      "functions": [
+        {
+          "name": "Footer",
+          "params": [],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "./Footer.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "Footer"
+      ],
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/Header/Header.css": {
+      "filePath": "client/src/components/Header/Header.css",
+      "contentHash": "d4630d182312493314ba18d9903663b620d8a7673c3089d86f5ce1ad04748f4d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 145,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/components/Header/Header.tsx": {
+      "filePath": "client/src/components/Header/Header.tsx",
+      "contentHash": "1e05d999f1b0ca3b6bda722ec38fdc14074210851fa61e5353e1bfd0459189b1",
+      "functions": [
+        {
+          "name": "Header",
+          "params": [
+            "{\n  showBackLink = false,\n  sectionNavigation,\n  navigation,\n  displayName,\n  onDisplayNameChange,\n}"
+          ],
+          "exported": true,
+          "lineCount": 121
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useId",
+            "useRef",
+            "useState",
+            "ReactNode"
+          ]
+        },
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "../../hooks/useAuth",
+          "specifiers": [
+            "useAuth"
+          ]
+        },
+        {
+          "source": "../BrandLogo/BrandLogo",
+          "specifiers": [
+            "BrandLogo"
+          ]
+        },
+        {
+          "source": "../LadderPopup/EditBubble",
+          "specifiers": [
+            "EditBubble"
+          ]
+        },
+        {
+          "source": "../LadderPopup/LadderTooltip",
+          "specifiers": [
+            "LadderTooltip"
+          ]
+        },
+        {
+          "source": "./Header.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "Header"
+      ],
+      "totalLines": 130,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/LadderArtwork/LadderArtwork.css": {
+      "filePath": "client/src/components/LadderArtwork/LadderArtwork.css",
+      "contentHash": "6c1605a829f90adfa03851b0907c89f06fa7516a7cee2df04b2df8dda1ccf7a5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 32,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/components/LadderArtwork/LadderArtwork.tsx": {
+      "filePath": "client/src/components/LadderArtwork/LadderArtwork.tsx",
+      "contentHash": "9eaca1a17dc15a7def7cfe3767267f1101ff18385574035d086f60754e478744",
+      "functions": [
+        {
+          "name": "LadderArtwork",
+          "params": [],
+          "exported": true,
+          "lineCount": 19
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../../images/ladder-illustration.webp",
+          "specifiers": [
+            "ladderIllustration"
+          ]
+        },
+        {
+          "source": "../../images/tab-cel-illustration.webp",
+          "specifiers": [
+            "mobileIllustration"
+          ]
+        },
+        {
+          "source": "./LadderArtwork.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "LadderArtwork"
+      ],
+      "totalLines": 24,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/LadderPopup/EditBubble.tsx": {
+      "filePath": "client/src/components/LadderPopup/EditBubble.tsx",
+      "contentHash": "a1777f49dfd37cfa29d24d95fe0b8644012cbb709865eda06712139e8d411f1d",
+      "functions": [
+        {
+          "name": "EditBubble",
+          "params": [
+            "{\n  label,\n  placeholder,\n  draft,\n  onDraftChange,\n  onSubmit,\n  onCancel,\n  trigger,\n  ...popupProps\n}"
+          ],
+          "exported": true,
+          "lineCount": 63
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useId",
+            "FormEvent"
+          ]
+        },
+        {
+          "source": "./LadderPopup",
+          "specifiers": [
+            "LadderPopup",
+            "LadderPopupProps"
+          ]
+        }
+      ],
+      "exports": [
+        "EditBubble"
+      ],
+      "totalLines": 76,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/LadderPopup/LadderPopup.css": {
+      "filePath": "client/src/components/LadderPopup/LadderPopup.css",
+      "contentHash": "2277243fe904e3f97ae2703903bb9be591a73cd74a2b22d28337bb8a2e6a11e7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 137,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/components/LadderPopup/LadderPopup.tsx": {
+      "filePath": "client/src/components/LadderPopup/LadderPopup.tsx",
+      "contentHash": "ccd37884c81873e45d22da85d4b4697a44f44af6f0f7305edfd9a478e20928ac",
+      "functions": [
+        {
+          "name": "LadderPopup",
+          "params": [
+            "{\n  id,\n  trigger,\n  onDismiss,\n  centerOnMobile = false,\n  children,\n}"
+          ],
+          "exported": true,
+          "lineCount": 103
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useEffect",
+            "useLayoutEffect",
+            "useRef",
+            "ReactNode"
+          ]
+        },
+        {
+          "source": "./LadderPopup.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "LadderPopup"
+      ],
+      "totalLines": 114,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/LadderPopup/LadderTooltip.tsx": {
+      "filePath": "client/src/components/LadderPopup/LadderTooltip.tsx",
+      "contentHash": "bec24536186d5353ec0f88a63351661b6a1d17d7da165ef3ecaf1a18a2a293f5",
+      "functions": [
+        {
+          "name": "LadderTooltip",
+          "params": [
+            "{\n  children,\n  className = '',\n}"
+          ],
+          "exported": true,
+          "lineCount": 47
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useEffect",
+            "useRef"
+          ]
+        },
+        {
+          "source": "./LadderPopup.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "LadderTooltip"
+      ],
+      "totalLines": 51,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/LadderSelector/LadderSelector.css": {
+      "filePath": "client/src/components/LadderSelector/LadderSelector.css",
+      "contentHash": "401461a0dfeef4023b8f3ac8be25fb388ac65d9748c83147ff0dc86b3436a93c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 77,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/components/LadderSelector/LadderSelector.tsx": {
+      "filePath": "client/src/components/LadderSelector/LadderSelector.tsx",
+      "contentHash": "64d6e4642922c610eea9bddd61b4fb32081d04b9cacd778e74417c00cfb1f1e2",
+      "functions": [
+        {
+          "name": "LadderSelector",
+          "params": [],
+          "exported": true,
+          "lineCount": 59
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useEffect",
+            "useRef"
+          ]
+        },
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link",
+            "useMatch"
+          ]
+        },
+        {
+          "source": "./LadderSelector.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "LadderSelector"
+      ],
+      "totalLines": 71,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/RoutePanel/RoutePanel.css": {
+      "filePath": "client/src/components/RoutePanel/RoutePanel.css",
+      "contentHash": "cc34e81f4c82a8e1f5438f4e46f45a29efd1876aadae7678cd9d92f2958fcebb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 50,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/components/RoutePanel/RoutePanel.tsx": {
+      "filePath": "client/src/components/RoutePanel/RoutePanel.tsx",
+      "contentHash": "39bba00fdbfc932ca6a2885e94866ff348d8a7a7b4824f369e801189406faf17",
+      "functions": [
+        {
+          "name": "RoutePanel",
+          "params": [
+            "{\n  title,\n  busy = false,\n  children,\n}"
+          ],
+          "exported": true,
+          "lineCount": 22
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useId",
+            "ReactNode"
+          ]
+        },
+        {
+          "source": "./RoutePanel.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "RoutePanel"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/components/TaskCard/TaskCard.css": {
+      "filePath": "client/src/components/TaskCard/TaskCard.css",
+      "contentHash": "cf98c36b8a041c760f09f6e8ed1971242ceca3011c984c7ebca0e9e43ab4551c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 69,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/components/TaskCard/TaskCard.tsx": {
+      "filePath": "client/src/components/TaskCard/TaskCard.tsx",
+      "contentHash": "d29aa24270dd08f38d7a09d52f2f797bd2fe40a121fbd37cad64eacc747f336f",
+      "functions": [
+        {
+          "name": "TaskCard",
+          "params": [
+            "{\n  title,\n  completed,\n  onToggleCompleted,\n  renameDraft,\n  canArchive,\n  popup,\n  onOpenPopup,\n  onClosePopup,\n  onRenameDraftChange,\n  onRename,\n  onArchive,\n}"
+          ],
+          "exported": true,
+          "lineCount": 163
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useId",
+            "useRef"
+          ]
+        },
+        {
+          "source": "../../styles/ladder-cards.css",
+          "specifiers": []
+        },
+        {
+          "source": "../LadderPopup/EditBubble",
+          "specifiers": [
+            "EditBubble"
+          ]
+        },
+        {
+          "source": "../LadderPopup/LadderPopup",
+          "specifiers": [
+            "LadderPopup"
+          ]
+        },
+        {
+          "source": "../LadderPopup/LadderTooltip",
+          "specifiers": [
+            "LadderTooltip"
+          ]
+        },
+        {
+          "source": "./TaskCard.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "TaskCard"
+      ],
+      "totalLines": 187,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/config/constants.ts": {
+      "filePath": "client/src/config/constants.ts",
+      "contentHash": "c7b7cfcd0e303428d289b8c006e74fc133ee9e05703f546a70e7d593dcf94035",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [
+        "MAX_ACTIVE_TASKS",
+        "QUOTE_HISTORY_DAYS",
+        "MAX_QUOTE_REQUESTS"
+      ],
+      "totalLines": 4,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/config/exampleTasks.ts": {
+      "filePath": "client/src/config/exampleTasks.ts",
+      "contentHash": "61a417250afe7056c1e5f8398b6cd525a775ffd6b264a2745dd472ec8e26df9c",
+      "functions": [
+        {
+          "name": "createExampleTaskData",
+          "params": [
+            "userId",
+            "now"
+          ],
+          "returnType": "TaskData",
+          "exported": true,
+          "lineCount": 15
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../types/task",
+          "specifiers": [
+            "Task",
+            "TaskData"
+          ]
+        }
+      ],
+      "exports": [
+        "createExampleTaskData"
+      ],
+      "totalLines": 27,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/config/healthPreview.ts": {
+      "filePath": "client/src/config/healthPreview.ts",
+      "contentHash": "ab339e1f158b768d6fbd702b96ba44e5464f5ea15f48183f15603ae78e49cffa",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../types/health",
+          "specifiers": [
+            "HealthGoalId"
+          ]
+        }
+      ],
+      "exports": [
+        "HEALTH_STATUSES",
+        "HEALTH_STATUS_LEGEND",
+        "HEALTH_GOALS"
+      ],
+      "totalLines": 17,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/config/lifePreview.ts": {
+      "filePath": "client/src/config/lifePreview.ts",
+      "contentHash": "4eb4d77b9132d2f9f9a79e73529e861d82fcc4a3a76d696b48a6d1c4ff4ff2dd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [
+        "lifePreview"
+      ],
+      "totalLines": 11,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/context/AuthContext.tsx": {
+      "filePath": "client/src/context/AuthContext.tsx",
+      "contentHash": "b582c1749130b6d618b80bf88a9adcec1a66537e136426984aa03222017b3d43",
+      "functions": [
+        {
+          "name": "getAuthErrorMessage",
+          "params": [
+            "error"
+          ],
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "signOut",
+          "params": [],
+          "exported": false,
+          "lineCount": 8
+        },
+        {
+          "name": "AuthProvider",
+          "params": [
+            "{ children }"
+          ],
+          "exported": true,
+          "lineCount": 95
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useEffect",
+            "useRef",
+            "useState",
+            "ReactNode"
+          ]
+        },
+        {
+          "source": "@supabase/supabase-js",
+          "specifiers": [
+            "AuthError",
+            "Session"
+          ]
+        },
+        {
+          "source": "../utils/supabaseClient",
+          "specifiers": [
+            "getSupabaseClient"
+          ]
+        },
+        {
+          "source": "./authContextValue",
+          "specifiers": [
+            "AuthContext",
+            "AuthCredentials",
+            "AuthResult"
+          ]
+        }
+      ],
+      "exports": [
+        "AuthProvider"
+      ],
+      "totalLines": 149,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/context/authContextValue.ts": {
+      "filePath": "client/src/context/authContextValue.ts",
+      "contentHash": "4b7ee0a1de078f11e64ce18478ef88de4991e301eb185a0fca80c7b28426f3e4",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "createContext"
+          ]
+        },
+        {
+          "source": "@supabase/supabase-js",
+          "specifiers": [
+            "Session",
+            "User"
+          ]
+        }
+      ],
+      "exports": [
+        "AuthContext"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/hooks/useAuth.ts": {
+      "filePath": "client/src/hooks/useAuth.ts",
+      "contentHash": "ccef0992cdbedd5c346038fd261c59a896bea81c30da1d6fcfdab5b177de1994",
+      "functions": [
+        {
+          "name": "useAuth",
+          "params": [],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useContext"
+          ]
+        },
+        {
+          "source": "../context/authContextValue",
+          "specifiers": [
+            "AuthContext"
+          ]
+        }
+      ],
+      "exports": [
+        "useAuth"
+      ],
+      "totalLines": 13,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/hooks/useDailyQuote.ts": {
+      "filePath": "client/src/hooks/useDailyQuote.ts",
+      "contentHash": "2eff2f26150f4667537468a2b97267d69b6c5e91376f8870d9640ca1de90f17c",
+      "functions": [
+        {
+          "name": "getRecentQuotes",
+          "params": [
+            "history",
+            "date"
+          ],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "normalizeQuoteText",
+          "params": [
+            "text"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "useDailyQuote",
+          "params": [
+            "today",
+            "syncDate"
+          ],
+          "exported": true,
+          "lineCount": 115
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useLayoutEffect",
+            "useRef",
+            "useState"
+          ]
+        },
+        {
+          "source": "../config/constants",
+          "specifiers": [
+            "MAX_QUOTE_REQUESTS",
+            "QUOTE_HISTORY_DAYS"
+          ]
+        },
+        {
+          "source": "../types/quote",
+          "specifiers": [
+            "DailyQuoteState",
+            "Quote"
+          ]
+        },
+        {
+          "source": "../utils/dates",
+          "specifiers": [
+            "getPreviousLocalDateKey"
+          ]
+        },
+        {
+          "source": "../utils/quotesApi",
+          "specifiers": [
+            "fetchRandomQuote"
+          ]
+        }
+      ],
+      "exports": [
+        "useDailyQuote"
+      ],
+      "totalLines": 134,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/hooks/useHealth.ts": {
+      "filePath": "client/src/hooks/useHealth.ts",
+      "contentHash": "15ad229844cd4ca48eaea09db28bda6cf35433f13b0f03290f470c11c0d4a26c",
+      "functions": [
+        {
+          "name": "useHealth",
+          "params": [],
+          "exported": true,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../config/healthPreview",
+          "specifiers": [
+            "HEALTH_STATUSES"
+          ]
+        },
+        {
+          "source": "../utils/health",
+          "specifiers": [
+            "getHealthLevel",
+            "isHealthStreakEligible"
+          ]
+        },
+        {
+          "source": "./useLadderSession",
+          "specifiers": [
+            "useLadderSession"
+          ]
+        },
+        {
+          "source": "./useRegistrationDate",
+          "specifiers": [
+            "useRegistrationDate"
+          ]
+        }
+      ],
+      "exports": [
+        "useHealth"
+      ],
+      "totalLines": 23,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/hooks/useLadderSession.ts": {
+      "filePath": "client/src/hooks/useLadderSession.ts",
+      "contentHash": "f114c0761c9a6f4b7b51f273b30cb2e91e524b5b5675d333e2138c5b63b60155",
+      "functions": [
+        {
+          "name": "useLadderSession",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router",
+          "specifiers": [
+            "useOutletContext"
+          ]
+        },
+        {
+          "source": "../types/health",
+          "specifiers": [
+            "HealthCheck",
+            "HealthGoalId"
+          ]
+        },
+        {
+          "source": "../types/quote",
+          "specifiers": [
+            "DailyQuoteState"
+          ]
+        },
+        {
+          "source": "../types/task",
+          "specifiers": [
+            "TaskData",
+            "TaskLadder"
+          ]
+        }
+      ],
+      "exports": [
+        "useLadderSession"
+      ],
+      "totalLines": 27,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/hooks/useLocalDateKey.ts": {
+      "filePath": "client/src/hooks/useLocalDateKey.ts",
+      "contentHash": "958703c31d620405d357b587bbf595cb2c7bb054997a8b033a89b9ccfce3e951",
+      "functions": [
+        {
+          "name": "useLocalDateKey",
+          "params": [],
+          "exported": true,
+          "lineCount": 34
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useCallback",
+            "useEffect",
+            "useRef",
+            "useState"
+          ]
+        },
+        {
+          "source": "../utils/dates",
+          "specifiers": [
+            "getLocalDateKey"
+          ]
+        }
+      ],
+      "exports": [
+        "useLocalDateKey"
+      ],
+      "totalLines": 38,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/hooks/useRegistrationDate.ts": {
+      "filePath": "client/src/hooks/useRegistrationDate.ts",
+      "contentHash": "9883a82769b527cca350ad78db3e4b3e91a0b92411cd55a7678d5b2b208b2474",
+      "functions": [
+        {
+          "name": "useRegistrationDate",
+          "params": [],
+          "exported": true,
+          "lineCount": 21
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../utils/dates",
+          "specifiers": [
+            "getLocalDateKey"
+          ]
+        },
+        {
+          "source": "./useAuth",
+          "specifiers": [
+            "useAuth"
+          ]
+        },
+        {
+          "source": "./useLadderSession",
+          "specifiers": [
+            "useLadderSession"
+          ]
+        }
+      ],
+      "exports": [
+        "useRegistrationDate"
+      ],
+      "totalLines": 32,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/hooks/useTasks.ts": {
+      "filePath": "client/src/hooks/useTasks.ts",
+      "contentHash": "6ee18012142c1f9b8e8d09b12cd9af3c044aee5974d42573e2020f94cf63b485",
+      "functions": [
+        {
+          "name": "useTasks",
+          "params": [],
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "./useLadderSession",
+          "specifiers": [
+            "useLadderSession"
+          ]
+        }
+      ],
+      "exports": [
+        "useTasks"
+      ],
+      "totalLines": 14,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/main.tsx": {
+      "filePath": "client/src/main.tsx",
+      "contentHash": "9748d74675277a20c7e36f37e3c3d7bb7fb8ad3b7db499d31bb95a187f81b7a3",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "StrictMode"
+          ]
+        },
+        {
+          "source": "react-dom/client",
+          "specifiers": [
+            "createRoot"
+          ]
+        },
+        {
+          "source": "react-router",
+          "specifiers": [
+            "BrowserRouter"
+          ]
+        },
+        {
+          "source": "./app/App",
+          "specifiers": [
+            "App"
+          ]
+        },
+        {
+          "source": "./context/AuthContext",
+          "specifiers": [
+            "AuthProvider"
+          ]
+        },
+        {
+          "source": "./vendors/normalize.css",
+          "specifiers": []
+        },
+        {
+          "source": "@fontsource/patrick-hand/latin-400.css",
+          "specifiers": []
+        },
+        {
+          "source": "@fontsource/kalam/latin-400.css",
+          "specifiers": []
+        },
+        {
+          "source": "@fontsource/kalam/latin-700.css",
+          "specifiers": []
+        },
+        {
+          "source": "./styles/global.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/pages/About/About.css": {
+      "filePath": "client/src/pages/About/About.css",
+      "contentHash": "e9ce8c2910028362a8b80433269c74c83808cc423880114e88d086d181244b96",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 62,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/pages/About/About.tsx": {
+      "filePath": "client/src/pages/About/About.tsx",
+      "contentHash": "abc9609c99869b1b5a92db5cb963a888ddbeccedad1c42a74df7d2162c972a6b",
+      "functions": [
+        {
+          "name": "About",
+          "params": [],
+          "exported": true,
+          "lineCount": 52
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "../../components/Header/Header",
+          "specifiers": [
+            "Header"
+          ]
+        },
+        {
+          "source": "../../hooks/useAuth",
+          "specifiers": [
+            "useAuth"
+          ]
+        },
+        {
+          "source": "./About.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "About"
+      ],
+      "totalLines": 58,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/pages/Health/Health.css": {
+      "filePath": "client/src/pages/Health/Health.css",
+      "contentHash": "471b23ba0fd7b0e307012e1c16d89cfe8dfc71bd306e11e5a6119b7a035c4735",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 300,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/pages/Health/Health.tsx": {
+      "filePath": "client/src/pages/Health/Health.tsx",
+      "contentHash": "3b08ea0d8916c352c8a7ee37265c37b11b01296d97c97c43b82f55c87fb2956d",
+      "functions": [
+        {
+          "name": "Health",
+          "params": [],
+          "exported": true,
+          "lineCount": 104
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "../../components/LadderArtwork/LadderArtwork",
+          "specifiers": [
+            "LadderArtwork"
+          ]
+        },
+        {
+          "source": "../../config/healthPreview",
+          "specifiers": [
+            "HEALTH_GOALS",
+            "HEALTH_STATUS_LEGEND"
+          ]
+        },
+        {
+          "source": "../../hooks/useHealth",
+          "specifiers": [
+            "useHealth"
+          ]
+        },
+        {
+          "source": "../../styles/ladder-cards.css",
+          "specifiers": []
+        },
+        {
+          "source": "./Health.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "Health"
+      ],
+      "totalLines": 112,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/pages/LadderPage/LadderPage.css": {
+      "filePath": "client/src/pages/LadderPage/LadderPage.css",
+      "contentHash": "4525da4e1ffdcfba7324e487b09e9c4e5844b2e012f037015a22077b699fa33d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 232,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/pages/LadderPage/LadderPage.tsx": {
+      "filePath": "client/src/pages/LadderPage/LadderPage.tsx",
+      "contentHash": "3cb2db8b592f3662f9b3b9eef819c7e6f2d74d36a634d2e47ce5c5bdd0fe14b2",
+      "functions": [
+        {
+          "name": "LadderPage",
+          "params": [
+            "{ ladder }"
+          ],
+          "exported": true,
+          "lineCount": 195
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useId",
+            "useLayoutEffect",
+            "useRef",
+            "useState"
+          ]
+        },
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "../../components/LadderArtwork/LadderArtwork",
+          "specifiers": [
+            "LadderArtwork"
+          ]
+        },
+        {
+          "source": "../../components/LadderPopup/EditBubble",
+          "specifiers": [
+            "EditBubble"
+          ]
+        },
+        {
+          "source": "../../components/LadderPopup/LadderTooltip",
+          "specifiers": [
+            "LadderTooltip"
+          ]
+        },
+        {
+          "source": "../../components/TaskCard/TaskCard",
+          "specifiers": [
+            "TaskCard",
+            "TaskPopup"
+          ]
+        },
+        {
+          "source": "../../config/constants",
+          "specifiers": [
+            "MAX_ACTIVE_TASKS"
+          ]
+        },
+        {
+          "source": "../../hooks/useLadderSession",
+          "specifiers": [
+            "useLadderSession"
+          ]
+        },
+        {
+          "source": "../../hooks/useRegistrationDate",
+          "specifiers": [
+            "useRegistrationDate"
+          ]
+        },
+        {
+          "source": "../../hooks/useTasks",
+          "specifiers": [
+            "useTasks"
+          ]
+        },
+        {
+          "source": "../../types/task",
+          "specifiers": [
+            "TaskLadder"
+          ]
+        },
+        {
+          "source": "../../utils/dates",
+          "specifiers": [
+            "getDaysInLadder"
+          ]
+        },
+        {
+          "source": "../../utils/progress",
+          "specifiers": [
+            "getLadderProgress"
+          ]
+        },
+        {
+          "source": "../../utils/taskCompletions",
+          "specifiers": [
+            "isTaskCompleted"
+          ]
+        },
+        {
+          "source": "../../utils/tasks",
+          "specifiers": [
+            "getActiveTasks"
+          ]
+        },
+        {
+          "source": "../../styles/ladder-cards.css",
+          "specifiers": []
+        },
+        {
+          "source": "./LadderPage.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "LadderPage"
+      ],
+      "totalLines": 217,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/pages/Landing/Landing.css": {
+      "filePath": "client/src/pages/Landing/Landing.css",
+      "contentHash": "e8de2bb63fbbbbffa5702c06f4a830b74b0155c3ffd3a715302c2516171ca522",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 262,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/pages/Landing/Landing.tsx": {
+      "filePath": "client/src/pages/Landing/Landing.tsx",
+      "contentHash": "988e97e4ca32877babee4e00eb7b1b56d7c6fb2443724508be4c87837dc69c24",
+      "functions": [
+        {
+          "name": "Landing",
+          "params": [],
+          "exported": true,
+          "lineCount": 44
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState"
+          ]
+        },
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "../../components/Header/Header",
+          "specifiers": [
+            "Header"
+          ]
+        },
+        {
+          "source": "../../images/landing-illustration.webp",
+          "specifiers": [
+            "landingIllustration"
+          ]
+        },
+        {
+          "source": "./Landing.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "Landing"
+      ],
+      "totalLines": 51,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/pages/Life/Life.css": {
+      "filePath": "client/src/pages/Life/Life.css",
+      "contentHash": "bd146d857c72bbf915caa39b80c087a6462e592957de3fe01734c8929dfed0a3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 259,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/pages/Life/Life.tsx": {
+      "filePath": "client/src/pages/Life/Life.tsx",
+      "contentHash": "e6ce2795beb3a53f3f8422629f003dfcfc1bb0dfdcc349d39ebe89067bad12c9",
+      "functions": [
+        {
+          "name": "Life",
+          "params": [],
+          "exported": true,
+          "lineCount": 152
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react-router",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "../../components/LadderArtwork/LadderArtwork",
+          "specifiers": [
+            "LadderArtwork"
+          ]
+        },
+        {
+          "source": "../../components/LadderPopup/LadderTooltip",
+          "specifiers": [
+            "LadderTooltip"
+          ]
+        },
+        {
+          "source": "../../config/lifePreview",
+          "specifiers": [
+            "lifePreview"
+          ]
+        },
+        {
+          "source": "../../hooks/useHealth",
+          "specifiers": [
+            "useHealth"
+          ]
+        },
+        {
+          "source": "../../hooks/useLadderSession",
+          "specifiers": [
+            "useLadderSession"
+          ]
+        },
+        {
+          "source": "../../hooks/useTasks",
+          "specifiers": [
+            "useTasks"
+          ]
+        },
+        {
+          "source": "../../utils/dates",
+          "specifiers": [
+            "getDaysInLadder"
+          ]
+        },
+        {
+          "source": "../../utils/progress",
+          "specifiers": [
+            "getLadderProgress",
+            "getStreakDays"
+          ]
+        },
+        {
+          "source": "../../styles/ladder-cards.css",
+          "specifiers": []
+        },
+        {
+          "source": "./Life.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [
+        "Life"
+      ],
+      "totalLines": 165,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/pages/LogIn/LogIn.tsx": {
+      "filePath": "client/src/pages/LogIn/LogIn.tsx",
+      "contentHash": "32ff6898e272f40cb3799658e60846691b2a9927aba8a470d2c704d51d1e3a3d",
+      "functions": [
+        {
+          "name": "LogIn",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../../components/AuthPage/AuthPage",
+          "specifiers": [
+            "AuthPage"
+          ]
+        }
+      ],
+      "exports": [
+        "LogIn"
+      ],
+      "totalLines": 6,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/pages/SignUp/SignUp.tsx": {
+      "filePath": "client/src/pages/SignUp/SignUp.tsx",
+      "contentHash": "3d6d053cb70d1814d6caa29942b588449881209d8ee61d3b97471c62ebddaff6",
+      "functions": [
+        {
+          "name": "SignUp",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../../components/AuthPage/AuthPage",
+          "specifiers": [
+            "AuthPage"
+          ]
+        }
+      ],
+      "exports": [
+        "SignUp"
+      ],
+      "totalLines": 6,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/styles/global.css": {
+      "filePath": "client/src/styles/global.css",
+      "contentHash": "683786a890ddc7883dd881669e8caa6135876c92ab4f69d37d4dc71049aa8612",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 30,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/styles/ladder-cards.css": {
+      "filePath": "client/src/styles/ladder-cards.css",
+      "contentHash": "2cadb32595d27e01d918494155a4bc20ff6c78af184c3238a3929faefbb90b59",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 72,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/styles/variables.css": {
+      "filePath": "client/src/styles/variables.css",
+      "contentHash": "df6a5a18c18ac4185f19d1cf87fc8651013484f2395e432c2cc9c86bf841ab62",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 34,
+      "hasStructuralAnalysis": false
+    },
+    "client/src/types/health.ts": {
+      "filePath": "client/src/types/health.ts",
+      "contentHash": "5ca8a033fca21d7472d6ad1843252510d9434f4c7116796fb5efb12ae7d7eadf",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/types/profile.ts": {
+      "filePath": "client/src/types/profile.ts",
+      "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/types/quote.ts": {
+      "filePath": "client/src/types/quote.ts",
+      "contentHash": "f5b8621a00b6ecc88266c3d84afb7f7a9186bb6af6cdda4a8f16c84bf2c94c90",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 11,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/types/task.ts": {
+      "filePath": "client/src/types/task.ts",
+      "contentHash": "aad008fcd01e8eaacf5608d6f96e91e966ba255e4008032a561f7e22be74ce53",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 23,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/utils/dates.ts": {
+      "filePath": "client/src/utils/dates.ts",
+      "contentHash": "09ea66a17c42f20ce477bbcc381e12b2aed5146739ab98cbc9a2b1fbd366c484",
+      "functions": [
+        {
+          "name": "getLocalDateKey",
+          "params": [
+            "date"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "getPreviousLocalDateKey",
+          "params": [
+            "date",
+            "days"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "getDaysInLadder",
+          "params": [
+            "firstDay",
+            "today"
+          ],
+          "returnType": "number",
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [],
+      "imports": [],
+      "exports": [
+        "getLocalDateKey",
+        "getPreviousLocalDateKey",
+        "getDaysInLadder"
+      ],
+      "totalLines": 18,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/utils/health.ts": {
+      "filePath": "client/src/utils/health.ts",
+      "contentHash": "bc432332624e7c5b5f76cec068f295a991a2b7f474f30861d3ae32baf685d718",
+      "functions": [
+        {
+          "name": "countHealthGoals",
+          "params": [
+            "check"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "getHealthLevel",
+          "params": [
+            "healthByDate",
+            "date"
+          ],
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "isHealthStreakEligible",
+          "params": [
+            "level"
+          ],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../types/health",
+          "specifiers": [
+            "HealthCheck"
+          ]
+        },
+        {
+          "source": "./dates",
+          "specifiers": [
+            "getPreviousLocalDateKey"
+          ]
+        }
+      ],
+      "exports": [
+        "getHealthLevel",
+        "isHealthStreakEligible"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/utils/progress.ts": {
+      "filePath": "client/src/utils/progress.ts",
+      "contentHash": "f4ebf11b4d50cc4f893eb3d1e9c41623128b975d139a992fa22c77b359527c93",
+      "functions": [
+        {
+          "name": "getLadderProgress",
+          "params": [
+            "data",
+            "today"
+          ],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "getStreakDays",
+          "params": [
+            "data",
+            "healthByDate",
+            "today",
+            "firstDay"
+          ],
+          "returnType": "number",
+          "exported": true,
+          "lineCount": 28
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../types/health",
+          "specifiers": [
+            "HealthCheck"
+          ]
+        },
+        {
+          "source": "../types/task",
+          "specifiers": [
+            "TaskData"
+          ]
+        },
+        {
+          "source": "./dates",
+          "specifiers": [
+            "getPreviousLocalDateKey"
+          ]
+        },
+        {
+          "source": "./health",
+          "specifiers": [
+            "getHealthLevel",
+            "isHealthStreakEligible"
+          ]
+        }
+      ],
+      "exports": [
+        "getLadderProgress",
+        "getStreakDays"
+      ],
+      "totalLines": 67,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/utils/quotesApi.ts": {
+      "filePath": "client/src/utils/quotesApi.ts",
+      "contentHash": "69e4a843ebd7601413dba5865fd0656b0b0cc7cddb774468bdf32c9209abb7d2",
+      "functions": [
+        {
+          "name": "fetchRandomQuote",
+          "params": [
+            "signal"
+          ],
+          "returnType": "Promise<Quote | null>",
+          "exported": true,
+          "lineCount": 35
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../types/quote",
+          "specifiers": [
+            "Quote"
+          ]
+        }
+      ],
+      "exports": [
+        "fetchRandomQuote"
+      ],
+      "totalLines": 38,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/utils/supabaseClient.ts": {
+      "filePath": "client/src/utils/supabaseClient.ts",
+      "contentHash": "4cd08eaf13a362c8dd97d9c8aa46cca3cf7e01516e2d3a66d0dcfe0b8bf91f13",
+      "functions": [
+        {
+          "name": "getSupabaseClient",
+          "params": [],
+          "returnType": "SupabaseClient",
+          "exported": true,
+          "lineCount": 16
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@supabase/supabase-js",
+          "specifiers": [
+            "createClient",
+            "SupabaseClient"
+          ]
+        }
+      ],
+      "exports": [
+        "getSupabaseClient"
+      ],
+      "totalLines": 21,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/utils/taskCompletions.ts": {
+      "filePath": "client/src/utils/taskCompletions.ts",
+      "contentHash": "656193c338081910f4ccc27d00358040f074fae4343d74e895dc9bc44bc02d62",
+      "functions": [
+        {
+          "name": "matchesTaskCompletion",
+          "params": [
+            "completion",
+            "taskId",
+            "date"
+          ],
+          "exported": false,
+          "lineCount": 7
+        },
+        {
+          "name": "isTaskCompleted",
+          "params": [
+            "completions",
+            "taskId",
+            "date"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "createTaskCompletion",
+          "params": [
+            "userId",
+            "taskId",
+            "date"
+          ],
+          "returnType": "TaskCompletion",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "updateTaskCompletion",
+          "params": [
+            "data",
+            "taskId",
+            "date",
+            "checked"
+          ],
+          "returnType": "TaskData",
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../types/task",
+          "specifiers": [
+            "TaskCompletion",
+            "TaskData"
+          ]
+        }
+      ],
+      "exports": [
+        "isTaskCompleted",
+        "createTaskCompletion",
+        "updateTaskCompletion"
+      ],
+      "totalLines": 54,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/utils/tasks.ts": {
+      "filePath": "client/src/utils/tasks.ts",
+      "contentHash": "20a5258018cf699166a736c3a9e45077f277c3cccec5190aad003463f0a756b6",
+      "functions": [
+        {
+          "name": "normalizeTaskTitle",
+          "params": [
+            "title"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "getActiveTasks",
+          "params": [
+            "tasks",
+            "ladder"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "findActiveTask",
+          "params": [
+            "tasks",
+            "userId",
+            "taskId"
+          ],
+          "returnType": "Task | undefined",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "addTask",
+          "params": [
+            "data",
+            "task"
+          ],
+          "returnType": "TaskData",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "renameTaskTitle",
+          "params": [
+            "data",
+            "userId",
+            "taskId",
+            "nextTitle",
+            "today"
+          ],
+          "returnType": "TaskData",
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "archiveTask",
+          "params": [
+            "data",
+            "userId",
+            "taskId",
+            "now"
+          ],
+          "returnType": "TaskData",
+          "exported": true,
+          "lineCount": 26
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../config/constants",
+          "specifiers": [
+            "MAX_ACTIVE_TASKS"
+          ]
+        },
+        {
+          "source": "../types/task",
+          "specifiers": [
+            "Task",
+            "TaskData",
+            "TaskLadder"
+          ]
+        },
+        {
+          "source": "./dates",
+          "specifiers": [
+            "getLocalDateKey"
+          ]
+        },
+        {
+          "source": "./taskCompletions",
+          "specifiers": [
+            "updateTaskCompletion"
+          ]
+        }
+      ],
+      "exports": [
+        "getActiveTasks",
+        "addTask",
+        "renameTaskTitle",
+        "archiveTask"
+      ],
+      "totalLines": 90,
+      "hasStructuralAnalysis": true
+    },
+    "client/src/vite-env.d.ts": {
+      "filePath": "client/src/vite-env.d.ts",
+      "contentHash": "6611de5454c8cf03f79b6c0a1b1ec9f353340808de5243c651d6ff8be0cf5f74",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 5,
+      "hasStructuralAnalysis": true
+    },
+    "client/tsconfig.app.json": {
+      "filePath": "client/tsconfig.app.json",
+      "contentHash": "8e5d12ba330e7d86409edec74b95451e0db22ee09b9426c94b5bf817571eddb0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": false
+    },
+    "client/tsconfig.json": {
+      "filePath": "client/tsconfig.json",
+      "contentHash": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 8,
+      "hasStructuralAnalysis": false
+    },
+    "client/tsconfig.node.json": {
+      "filePath": "client/tsconfig.node.json",
+      "contentHash": "d366cc0827139db39c61815f22491bbfda56c654354a42ad7795143d314e45e8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 24,
+      "hasStructuralAnalysis": false
+    },
+    "client/vite.config.ts": {
+      "filePath": "client/vite.config.ts",
+      "contentHash": "f71aa716296686591332bd60017dfd8b02e5f5830590fde83b74fe3af02bb618",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync",
+            "readFileSync"
+          ]
+        },
+        {
+          "source": "node:util",
+          "specifiers": [
+            "parseEnv"
+          ]
+        },
+        {
+          "source": "@vitejs/plugin-react",
+          "specifiers": [
+            "react"
+          ]
+        },
+        {
+          "source": "vite",
+          "specifiers": [
+            "defineConfig"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "docs/07-AUD-cumplimiento-academico.md": {
+      "filePath": "docs/07-AUD-cumplimiento-academico.md",
+      "contentHash": "94e25cdb9ee460ec78ea4604e965f65c9525925330e04273cdfc013892f98ce7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 145,
+      "hasStructuralAnalysis": false
+    },
+    "docs/Architect.md": {
+      "filePath": "docs/Architect.md",
+      "contentHash": "67528c5ebd59129c9ea05d206e2a1cfb7f2fa6fa1da9d89a4ebf77d75593913b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 212,
+      "hasStructuralAnalysis": false
+    },
+    "docs/Etapa-1.2-Conectar-una-API-third-party.txt": {
+      "filePath": "docs/Etapa-1.2-Conectar-una-API-third-party.txt",
+      "contentHash": "a4b801293adde6a515370775acfe18864ab63de536c2a742310a6632ec76de31",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": false
+    },
+    "docs/Etapa_2_checklist.md": {
+      "filePath": "docs/Etapa_2_checklist.md",
+      "contentHash": "7d2ebda6a0cde9658a3ecea041d54b86c138ab35a85202937e84df1d69cfcd66",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 69,
+      "hasStructuralAnalysis": false
+    },
+    "docs/design/paleta-colores.md": {
+      "filePath": "docs/design/paleta-colores.md",
+      "contentHash": "1769957cac51620fefc9526ae7d21e8dd7842f3eae71820c5623fcadaf958cbd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 114,
+      "hasStructuralAnalysis": false
+    },
+    "docs/dossier.md": {
+      "filePath": "docs/dossier.md",
+      "contentHash": "69f8978ff47eb57370d909a1ccad33b385e671e3bf50f89ec521009b6e620d49",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 436,
+      "hasStructuralAnalysis": false
+    },
+    "docs/plan-de-trabajo.md": {
+      "filePath": "docs/plan-de-trabajo.md",
+      "contentHash": "35273d9b07edc2794edf5ff5d8b5881a3fd0668c43e2d5c0c6949c938cbe5774",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 363,
+      "hasStructuralAnalysis": false
+    },
+    "package.json": {
+      "filePath": "package.json",
+      "contentHash": "d49fd4d8ddfb0dbe0e1b6b0cd59bd71a07e99b78c5881200e814fcedc6d9cb5c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": false
+    },
+    "server/.env.example": {
+      "filePath": "server/.env.example",
+      "contentHash": "97fbfbc6ba76b530dbbd25096d61fb361ec99d4d308b32fda3509441db316385",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": false
+    },
+    "server/eslint.config.js": {
+      "filePath": "server/eslint.config.js",
+      "contentHash": "dd501765835a14d7e5ebfc8a7e60b8ee0156603e07df2c120173b69f3e136805",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@eslint/js",
+          "specifiers": [
+            "js"
+          ]
+        },
+        {
+          "source": "eslint/config",
+          "specifiers": [
+            "defineConfig",
+            "globalIgnores"
+          ]
+        },
+        {
+          "source": "typescript-eslint",
+          "specifiers": [
+            "tseslint"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    },
+    "server/package.json": {
+      "filePath": "server/package.json",
+      "contentHash": "3abe068cf155ef52fd0ac0f4c45ea99e973469a484b9b190afa931b5226a370d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 31,
+      "hasStructuralAnalysis": false
+    },
+    "server/src/app.ts": {
+      "filePath": "server/src/app.ts",
+      "contentHash": "d9743b3e1b8bb62af2ca70fc5345095397fa25e17eb08cad48c46f770b1cbca5",
+      "functions": [
+        {
+          "name": "startServer",
+          "params": [],
+          "exported": false,
+          "lineCount": 31
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync"
+          ]
+        },
+        {
+          "source": "node:process",
+          "specifiers": [
+            "loadEnvFile"
+          ]
+        },
+        {
+          "source": "express",
+          "specifiers": [
+            "express"
+          ]
+        },
+        {
+          "source": "./middleware/error-handler.js",
+          "specifiers": [
+            "errorHandler"
+          ]
+        },
+        {
+          "source": "./routes/index.js",
+          "specifiers": [
+            "apiRouter"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 45,
+      "hasStructuralAnalysis": true
+    },
+    "server/src/middleware/error-handler.ts": {
+      "filePath": "server/src/middleware/error-handler.ts",
+      "contentHash": "fc5fd74c46979954adc48b238f9072017eb4cb22369817ac8a6adf9c8dbafb79",
+      "functions": [
+        {
+          "name": "getClientError",
+          "params": [
+            "error"
+          ],
+          "returnType": "HttpError | undefined",
+          "exported": false,
+          "lineCount": 20
+        },
+        {
+          "name": "errorHandler",
+          "params": [
+            "error",
+            "_request",
+            "response",
+            "next"
+          ],
+          "exported": true,
+          "lineCount": 20
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "ErrorRequestHandler"
+          ]
+        },
+        {
+          "source": "../utils/errors.js",
+          "specifiers": [
+            "HttpError"
+          ]
+        }
+      ],
+      "exports": [
+        "errorHandler"
+      ],
+      "totalLines": 45,
+      "hasStructuralAnalysis": true
+    },
+    "server/src/routes/index.ts": {
+      "filePath": "server/src/routes/index.ts",
+      "contentHash": "91c9677068f626e5bbfd7f1ae5a89297dc99117b5649b6a39f9b1aedec369b32",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "Router"
+          ]
+        },
+        {
+          "source": "../utils/errors.js",
+          "specifiers": [
+            "HttpError"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 15,
+      "hasStructuralAnalysis": true
+    },
+    "server/src/utils/errors.ts": {
+      "filePath": "server/src/utils/errors.ts",
+      "contentHash": "841bdca44e1db15b301788dce825981420cc4a0ab8ab2acd0de8b1f81265834f",
+      "functions": [],
+      "classes": [
+        {
+          "name": "HttpError",
+          "methods": [
+            "constructor"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "imports": [],
+      "exports": [
+        "HttpError"
+      ],
+      "totalLines": 9,
+      "hasStructuralAnalysis": true
+    },
+    "server/tsconfig.json": {
+      "filePath": "server/tsconfig.json",
+      "contentHash": "288b21f87ad07124d6f7bf7aa14e65b2d1b38feec49cea3712b7b35d534a26c5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": false
+    },
+    "supabase/migrations/20261123000000_create_user_tables.sql": {
+      "filePath": "supabase/migrations/20261123000000_create_user_tables.sql",
+      "contentHash": "2b2cc9711ddeafedd34ed217a94c70e58e3fbcb355ee4272a3f49e539776da05",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 55,
+      "hasStructuralAnalysis": false
+    },
+    "supabase/migrations/20261123000100_add_user_table_policies.sql": {
+      "filePath": "supabase/migrations/20261123000100_add_user_table_policies.sql",
+      "contentHash": "9405066fb41e3d51c51cab6c3faf02f02aa93f6acdc78b34209c1d11c3966536",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 79,
+      "hasStructuralAnalysis": false
+    },
+    "supabase/migrations/20261124000000_enforce_task_and_completion_integrity.sql": {
+      "filePath": "supabase/migrations/20261124000000_enforce_task_and_completion_integrity.sql",
+      "contentHash": "8a7e7c56664202e0e45e4f680822fd357c242744cc01630267695cd6095eaf87",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 450,
+      "hasStructuralAnalysis": false
+    },
+    "supabase/tests/07-01-task-integrity.md": {
+      "filePath": "supabase/tests/07-01-task-integrity.md",
+      "contentHash": "0b23defb08ca8c5f642328ca6285b76776d1e530338d8b5da78c8c9882058105",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 145,
+      "hasStructuralAnalysis": false
+    }
+  }
+}

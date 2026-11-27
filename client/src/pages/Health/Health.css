@@ -1,0 +1,227 @@
+.health__layout {
+  grid-template-areas: 'status' 'goals' 'streak' 'legend' 'artwork' 'back';
+  gap: var(--ladder-view-gap);
+}
+
+.health__layout > .ladder-artwork {
+  margin-block-start: 0;
+}
+
+.health__status {
+  display: grid;
+  padding: clamp(1rem, 2vw, 2rem);
+  grid-area: status;
+  row-gap: calc(var(--ladder-view-gap) - 0.5rem);
+}
+
+.health__goals {
+  display: grid;
+  grid-area: goals;
+  grid-template-rows: auto 1fr;
+  row-gap: 0.5rem;
+}
+
+.health__title {
+  text-align: center;
+}
+
+.health__title::after {
+  display: block;
+  width: 80%;
+  height: 0.55rem;
+  margin: 0.35rem auto 0;
+  border-top: 0.25rem solid var(--color-sage);
+  border-radius: 50%;
+  content: '';
+}
+
+.health__light {
+  width: clamp(1.5rem, 3.4vw, 3.25rem);
+  aspect-ratio: 1;
+  border: 0.125rem solid var(--color-text);
+  border-radius: 50%;
+  background: var(--health-light);
+}
+
+.health__indicator {
+  display: flex;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.25vw, 1.25rem);
+}
+
+.health__indicator .health__light {
+  width: clamp(5.5rem, 15vw, 10.5rem);
+  border-width: 0.22rem;
+  background: radial-gradient(
+    circle at 38% 34%,
+    var(--health-label),
+    var(--health-light) 70%
+  );
+}
+
+.health__indicator svg {
+  width: clamp(1.15rem, 3.15vw, 3rem);
+  fill: none;
+  stroke: var(--health-light);
+  stroke-linecap: round;
+  stroke-width: 7;
+}
+
+.health__status-message {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.health__legend,
+.health__goal-list {
+  display: grid;
+  margin: 0;
+  list-style: none;
+}
+
+.health__legend {
+  grid-area: legend;
+  grid-template-columns: min(94%, 25rem);
+  align-content: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1vw, 0.9rem);
+  padding: clamp(1rem, 2vw, 2rem);
+}
+
+.health__legend-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.5rem, 1vw, 0.9rem);
+  font-size: clamp(1.1rem, 1.65vw, 1.6rem);
+  line-height: 1.15;
+}
+
+.health__description {
+  display: grid;
+  min-block-size: 2.5em;
+  place-items: center;
+  padding: 0.3em 0.55em;
+  border: 3px solid transparent;
+  border-radius: 2rem;
+  background: var(--health-label);
+  color: #000;
+  font-weight: 700;
+  text-align: center;
+}
+
+.health__legend-item[aria-current] .health__description {
+  border-color: var(--color-text);
+  border-color: color-mix(in srgb, var(--health-light) 42%, #000);
+  background: var(--health-light);
+}
+
+.health__streak {
+  display: grid;
+  grid-area: streak;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  justify-self: center;
+  gap: 0.65rem;
+  inline-size: 100%;
+  margin: 0;
+  padding: 0.45rem 0.85rem;
+  background: var(--health-label);
+  color: #000;
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.2;
+}
+
+.health__streak svg {
+  inline-size: 1.5em;
+  block-size: 1.5em;
+  color: var(--color-text);
+  color: color-mix(in srgb, var(--health-light) 42%, #000);
+}
+
+.health__streak-detail {
+  display: block;
+}
+
+@media (forced-colors: active) {
+  .health__legend-item[aria-current] .health__description {
+    border-color: Highlight;
+  }
+}
+
+.health__goal-list {
+  gap: var(--ladder-view-gap);
+  padding: 0;
+}
+
+.health__goal {
+  display: grid;
+}
+
+.health__goal-label {
+  display: grid;
+  min-height: clamp(4.5rem, 7.4vw, 7rem);
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.7rem, 1.35vw, 1.35rem);
+  padding: clamp(0.65rem, 1.15vw, 1.15rem) clamp(0.8rem, 1.5vw, 1.5rem);
+  font-size: clamp(1.5rem, 2.6vw, 2.65rem);
+  font-weight: 700;
+  line-height: 1.15;
+  cursor: pointer;
+}
+
+.health__goal-label span {
+  padding-inline: 0.6em;
+  border-inline-start: 1px solid var(--color-sage);
+  text-align: center;
+}
+
+.health__goal input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+.health__back {
+  grid-area: back;
+  min-height: clamp(2.75rem, 4.8vw, 4.5rem);
+}
+
+@media (min-width: 40rem) {
+  .health__layout {
+    grid-template-areas:
+      'status goals'
+      'legend goals'
+      'streak back'
+      'artwork artwork';
+    grid-template-rows: auto 1fr auto auto;
+  }
+
+  .health__streak {
+    inline-size: min(100%, 18rem);
+  }
+
+  .health__back {
+    align-self: end;
+  }
+}
+
+@media (min-width: 64rem) {
+  .health__layout {
+    grid-template-areas:
+      'artwork status goals'
+      'artwork legend goals'
+      'artwork streak back';
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .health .ladder-artwork img {
+    object-position: left center;
+  }
+}

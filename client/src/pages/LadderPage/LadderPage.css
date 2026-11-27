@@ -1,0 +1,110 @@
+.ladder-page__layout {
+  grid-template-areas: 'summary' 'tasks' 'artwork';
+  align-items: start;
+  column-gap: var(--ladder-view-gap);
+}
+
+.ladder-page__summary,
+.ladder-page__tasks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ladder-view-gap);
+}
+
+.ladder-page__summary {
+  grid-area: summary;
+  margin-block-end: var(--ladder-view-gap);
+}
+
+.ladder-page__today {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--ladder-view-gap);
+  text-align: center;
+}
+
+.ladder-page__today-count {
+  font-size: clamp(5rem, 11vw, 10.5rem);
+}
+
+.ladder-page__today-count svg:last-child {
+  transform: scaleX(-1);
+}
+
+.ladder-page__tasks {
+  --ladder-task-height: clamp(4.5rem, 7.15vw, 6.6rem);
+
+  grid-area: tasks;
+  grid-template-rows: 1fr auto;
+  row-gap: 0.5rem;
+}
+
+.ladder-page__task-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ladder-view-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ladder-page__task-list > li {
+  flex: 1 0 var(--ladder-task-height);
+}
+
+.ladder-page__add-slot {
+  display: grid;
+  place-items: center;
+}
+
+.ladder-page__add {
+  display: grid;
+  width: 30%;
+  block-size: var(--ladder-task-height);
+  min-height: 2.75rem;
+  place-items: center;
+  padding: 0;
+  border: 0.15rem solid var(--color-primary);
+  border-radius: clamp(1rem, 2.3vw, 2.5rem);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.ladder-page__add svg {
+  width: min(55%, 3.5rem);
+}
+
+.ladder-page__add-hint {
+  --bubble-tip: 50%;
+
+  inset-inline-end: 50%;
+  transform: translateX(50%);
+}
+
+.ladder-page__back {
+  min-height: max(2.75rem, calc(var(--ladder-task-height) * 0.67));
+}
+
+@media (min-width: 40rem) {
+  .ladder-page__layout {
+    grid-template-areas: 'summary tasks' 'artwork artwork';
+    align-items: stretch;
+  }
+
+  .ladder-page__summary {
+    grid-template-rows: 1fr auto;
+    margin-block-end: 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  .ladder-page__layout {
+    grid-template-areas: 'artwork summary tasks';
+  }
+
+  .ladder-page__tasks {
+    row-gap: var(--ladder-view-gap);
+  }
+}

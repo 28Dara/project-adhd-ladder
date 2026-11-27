@@ -1,0 +1,30 @@
+{
+  "name": "project-adhd-ladder-server",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "node --watch --import tsx src/app.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/app.js",
+    "lint": "eslint .",
+    "format": "prettier --config ../client/.prettierrc --write \"src/**/*.ts\" eslint.config.js package.json tsconfig.json",
+    "format:check": "prettier --config ../client/.prettierrc --check \"src/**/*.ts\" eslint.config.js package.json tsconfig.json"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.14.0",
+    "prettier": "3.10.1",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1"
+  }
+}

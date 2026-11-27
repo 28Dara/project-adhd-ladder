@@ -1,475 +1,435 @@
-# ADHD Ladder — Dossier integral v2.1
+# ADHD Ladder — Dossier integral v2.6
 
-> Transcripción estructurada del PDF original; las decisiones y fechas se preservan tal como aparecen en la versión 2.1.
+> **Documento normativo del producto · 25 de noviembre de 2026.** Consolida la arquitectura actual de Etapa 1, los requisitos académicos de las dos etapas y los ajustes de alcance. La lógica de contadores de v2.2 sigue vigente.
+>
+> **Precedencia de decisiones:** instrucción explícita más reciente del propietario > decisiones `[DECIDIDO]` de este dossier > plan de trabajo > propuestas `[PROP]`. Los puntos `[ABIERTO]` no autorizan implementaciones especulativas. El historial conserva su valor histórico, pero no sustituye las reglas vigentes.
 
-Arquitectura: React + TypeScript + Vite + Supabase (Auth y PostgreSQL con RLS) + API externa de frases Producto · Lógica · Tecnologías · Checklist TripleTen · Brief y plan · Validación · Historial
+**Producto:** ADHD Ladder · **Entrega:** proyecto final TripleTen, con Etapa 1 y Etapa 2 diferenciadas. **Stack:** React, TypeScript, Vite, React Router, Node.js, Express, Supabase Auth, npm Workspaces y Fetch nativo para DummyJSON.
 
-Fecha de corte: 22 de noviembre de 2026 · Entrega objetivo: PR enviado el 28 o 29 de noviembre; plazo 30 de noviembre de 2026 Actualiza el dossier v2.0 (21/11/2026). Sigue siendo Etapa 1 (front-end) con Supabase, sin backend propio.
+**Fecha de corte:** 25/11/2026 · **Plazo oficial:** 30/11/2026 · **Objetivo de entrega:** PR `stage-frontend` → `main` el 28 o 29/11. Etapa 2 usa su propio PR `stage-fullstack` → `main`. Confirmar su plazo aplicable. El calendario vigente está en el plan de trabajo.
 
-## Cambios respecto de v2.0
+## Vigencia de arquitectura [DECIDIDO en 07-PRES]
 
-- Tiempo real: unas 30 horas útiles (≈3 h en días laborales; Mié 25 y Sáb 28 ≈7 h). Calendario rehecho con punto de control el martes 24.
+La implementación vigente corresponde a Etapa 1. La persistencia y la autenticación definitivas de Etapa 2 quedan abiertas hasta la aclaración académica de la tutoría de TripleTen del 26 de noviembre de 2026 y una nueva decisión de la propietaria. Se preservan Supabase Auth, la fundación Express y los contratos de producto de §02. El historial de frases de 07-08 sigue aplazado.
 
-- Health (regla B): 3 casillas verde; 1–2 amarillo; 0 casillas amarillo si ayer tuvo al menos una, rojo si ayer también tuvo 0; el primer día de la cuenta es amarillo.
-
-- Racha: el estado de Health puede mantenerla en un día sin pasos; dos días sin pasos, o un día sin pasos con Health rojo, la reinician.
-
-- Life = Activities + Learning. Health no suma pasos (corrige la regla 4 de v2.0). Life muestra total de hoy y total de la cuenta; Activities y Learning tienen su propio conteo diario y total.
-
-- Cuentas nuevas empiezan con tareas de ejemplo. Eliminar = archivar. Las fechas son la fecha local del navegador.
-
-- API de frases ≠ Supabase. Es un servicio público aparte consumido con fetch; proveedor aún por decidir (candidato sin verificar: DummyJSON). La frase va en Life.
-
-- Flujo de trabajo: Dara decide y aprueba; Claude actúa como tech lead y revisor; ChatGPT/Codex escribe código en tareas pequeñas; se revisa cada rama antes de integrar.
-
-- Riesgos nuevos: pausa del plan gratuito de Supabase, confirmación de email, About sin mockup, popups y mobile sin diseño, fuentes y archivos de assets por ajustar.
-
-- Pendiente: confirmar con el tutor, por escrito, que Supabase es aceptable (recomendado, no bloqueante).
-
-Convenciones: [DECIDIDO] aprobado por Dara; [PROP] propuesta técnica aún sin validar; [ABIERTO] requiere resolución. Los mockups no prueban funcionalidad construida. Ninguna parte de este documento demuestra que la app ya exista.
-
-<!-- Página 2 del PDF original -->
+---
 
 ## 01 · Producto y propósito
 
-ADHD Ladder es una aplicación web de hábitos y progreso personal que convierte acciones pequeñas en «escalones» visibles. La persona organiza sus actividades en tres escaleras (Health, Activities y Learning) y ve su avance del día y acumulado en el panel Life, con la metáfora de una escalera y un personaje. Promesa de diseño: que el avance sea legible, acogedor y manejable.
+ADHD Ladder es una aplicación web de hábitos y progreso personal que convierte pequeñas acciones en escalones visibles. El usuario organiza sus metas en **Health, Activities y Learning** y observa progreso diario y acumulado en **Life**, con la metáfora de una escalera y un personaje. El diseño debe ser claro, amable y manejable.
 
 ### Problema y público
 
-Las herramientas de productividad pueden volver el seguimiento una lista larga y abstracta. ADHD Ladder propone identificar el siguiente paso, marcarlo y reconocer el progreso acumulado. Hipótesis, no resultado validado: este formato podría reducir la fricción de empezar en personas que prefieren metas cortas y retroalimentación inmediata.
-
-Público: personas que quieren organizar hábitos y pequeñas actividades diarias, incluidas quienes se identifican con dificultades de atención u organización. El nombre del producto no implica diagnóstico, tratamiento ni eficacia clínica. Los estados de Health reflejan metas autodeclaradas, nunca la salud de la persona.
+Las herramientas de productividad pueden convertir las metas en listas largas y abstractas. La propuesta es mostrar acciones concretas y reconocer avances pequeños, sin prometer eficacia terapéutica. El nombre ADHD Ladder **no implica diagnóstico, tratamiento ni eficacia clínica**. Health refleja metas autodeclaradas, no el estado médico de la persona.
 
 ### Propuesta de valor
 
-- Un siguiente paso claro, en lugar de un panel saturado.
+- Acciones breves y tarjetas fáciles de marcar, añadir y gestionar.
+- Áreas reconocibles y progreso diario diferenciado del histórico.
+- Retroalimentación visual con paleta crema, verde y naranja; tipografías Patrick Hand y Kalam según el sistema de estilos existente.
+- Experiencia accesible, responsive y consistente entre las pantallas privadas.
 
-- Tres áreas de vida reconocibles con tareas independientes.
+### Pantallas
 
-- Progreso diario y acumulado presentado visualmente.
-
-- Interacciones cortas: completar, añadir y administrar tarjetas.
-
-- Lenguaje amable; diseño con cremas, verdes y acentos naranja.
-
-### Mapa de pantallas
-
-| Pantalla | Qué muestra | Estado de diseño |
+| Pantalla | Contenido y función | Alcance vigente |
 |---|---|---|
-| Landing | Logo, About / Log in / Sign up, escalera, CTA «Take your first step ↑» hacia `/signup` | Mockup aprobado |
-| Sign up / Log in | Email y contraseña; Go Back; enlace cruzado | Mockups aprobados |
-| Life | Pasos de hoy (Activities + Learning), racha, total de hoy y de la cuenta, días en la escalera, accesos a las escaleras y tarjeta con la frase motivacional | Mockup; la frase no está dibujada, se decide al maquetar |
-| Health | Semáforo de metas y tres metas diarias fijas (Good Nutrition, Good Sleep, Daily Movement) | Mockup aprobado |
-| Activities / Learning | Tarjetas completables, contador diario, total propio, botón + | Mockups aprobados |
-| About | Texto de la misión de la página y un párrafo corto sobre la autora (la rúbrica pide «Sobre el autor») | Sin mockup; solo texto |
-| Popups | Selector de escalera; menú de tarjeta (Change Name / Delete Card); modal de añadir; confirmar borrado | Sin diseño; se especifican en texto |
-| Mobile | Layouts bajo ~768 px y desde 320 px | Sin diseño; se define en texto y se construye mobile-first |
+| Landing (`/`, sin sesión) | Logo, navegación pública, escalera, CTA hacia registro | Diseño aprobado |
+| Sign Up / Log In | Email/contraseña, navegación de retorno, autenticación mediante Supabase Auth | Rutas públicas |
+| Life (`/` con sesión o `/life`) | Hoy, total histórico, racha, días desde alta, secciones Health/Activities/Learning, frase del día | Privada. Life = Activities + Learning |
+| Health (`/health`) | Semáforo textual y tres objetivos fijos | Privada; no suma pasos |
+| Activities (`/activities`) | Tareas activas, pasos de hoy, total histórico, añadir y gestionar | Privada; máximo cuatro activas |
+| Learning (`/learning`) | Mismas reglas de tareas y contadores que Activities | Privada; máximo cuatro activas |
+| About (`/about`) | Misión del producto y presentación del autor | Pública |
+| Popups | Edición de nombre, menú de tareas, diálogo de añadir, confirmaciones, tooltips | UI implementada. Alta persistente pendiente |
 
-### Qué está confirmado y qué no
+Las cuatro escaleras comparten criterios visuales, pero **no** necesariamente la misma maquetación interna. Las páginas públicas mantienen sus propios márgenes. Diseño responsive a partir de 320 px; consultar mockups y CSS existente para detalles.
 
-Confirmado: React/TypeScript/Vite, Supabase (Auth y base de datos), API de frases separada, Etapa 1 como entrega, tres escaleras, paleta en variables.css, inglés para portafolio internacional, siete pantallas de mockup. Por confirmar: que el tutor acepte Supabase (la v2.0 lo daba por cerrado; Dara lo dio como «creo»). Por definir al implementar: proveedor de frases, SQL y políticas exactas, mecanismo de siembra de tareas de ejemplo, tipografías finales, detalles de móvil.
+### Alcance y prioridades
 
-<!-- Página 3 del PDF original -->
+**[DECIDIDO] Propósito al 25 de noviembre de 2026.** MVP académico y pieza de portafolio para un grupo pequeño de usuarios de demostración. La aplicación debe cumplir la rúbrica, mostrar una implementación funcional y permitir que la desarrolladora mantenga y defienda sus decisiones en una entrevista. Express aporta la base de la API y la identidad la gestiona Supabase Auth. Tareas, completaciones y Health permanecen en memoria en Etapa 1. La operación remota requiere su autorización correspondiente.
 
-### Alcance
+| Capa de alcance | Qué comprende |
+|---|---|
+| Requisitos académicos | Etapa 1 exige frontend funcional y API externa mediante `fetch()`. Etapa 2 evalúa autenticación, API y persistencia propias. Ambas requieren su PR. Ver §04 y [07-AUD](07-AUD-cumplimiento-academico.md). |
+| Producto esencial | Auth, aislamiento del estado por cuenta, tareas y completaciones por día, archivo con historial, progreso derivado, Health y los flujos aprobados que los sostienen. |
+| Comportamiento adicional aprobado | Racha, antigüedad, tareas iniciales y frase de sesión según §§02.6–02.10. |
+| Mejoras opcionales | Pulido cosmético y controles adicionales justificados por evidencia. El plan conserva los pendientes P2. |
+| Fuera del MVP | Operación comercial, pruebas de carga, Docker, WSL, analítica clínica e historial de frases entre sesiones y dispositivos. |
 
-- MVP comprometido: landing, /about, Auth con Supabase, espacio privado con Life/Health/Activities/Learning, CRUD de tareas por usuario, marcado por día, progreso derivado, frase vía fetch con carga/error, responsive desde 320 px, deploy y PR de stage-frontend a main.
+Priorizar la conformidad académica y una versión demostrable con seguridad e integridad verificadas. Mantener las decisiones de producto del capítulo 02 hasta que el propietario autorice un cambio concreto.
 
-- Fuera de alcance: API propia Express/Node, MongoDB, JWT propio, notificaciones, analítica clínica, gamificación compleja.
-
-- Recorte, en este orden: edición de nombre con lápiz, racha avanzada, pulido de popups y animaciones. Nunca se sacrifican la seguridad de datos ni el requisito de la API de frases.
-
-### Indicadores propuestos (no son resultados)
-
-Completar una tarea en menos de tres interacciones; tiempo para registrar una actividad; errores al editar o eliminar; comprensión de los indicadores en una prueba con 3–5 personas.
+---
 
 ## 02 · Especificación funcional y lógica
 
-### Rutas
+### 02.1 Rutas, sesión y seguridad
 
-- / landing pública; /about página pública; /signup y /login con Supabase Auth y Go Back [DECIDIDO].
+`/` muestra Landing sin sesión y Life con sesión, tras completar la restauración. `/about` es pública. `/signup` y `/login` son para visitantes y mantienen la redirección a `/life` para sesiones activas. `/life`, `/health`, `/activities` y `/learning` requieren sesión y, sin ella, redirigen a `/login`. El cierre exitoso vuelve a `/`. Life en `/` y `/life` usa el mismo layout privado y estado de cuenta que las demás escaleras.
 
-- /life, /health, /activities, /learning: área privada. Sin sesión se redirige a login. Se restaura con supabase.auth.getSession() y onAuthStateChange [PROP].
+React Router gobierna la navegación. El `AuthProvider` registra, autentica y restaura sesiones con Supabase Auth. El área privada se monta por ID de cuenta y mantiene su estado durante la sesión.
 
-- La seguridad de los datos depende de RLS, no de las rutas de React.
+### 02.2 Definiciones normativas de los contadores [DECIDIDO]
 
-### Modelo de datos [PROP]
+**Paso:** una completación válida de una tarea de **Activities o Learning** para una fecha calendario local concreta. Una tarea puede aportar como máximo **un paso por día**, aunque se marque repetidamente.
 
-| Tabla | Campos clave | Notas |
+**Fecha local actual (`todayLocalDate`):** `YYYY-MM-DD` calculado con la fecha local del navegador. La misma referencia se usa en las vistas de progreso. La propuesta de §03 llevaría las vistas y escrituras al calendario fijo de la cuenta tras su aprobación.
+
+**Pasos de hoy (`Your steps today`):** número de completaciones de **hoy**; puede subir y bajar al marcar/desmarcar. No es la cantidad de tarjetas creadas ni la cantidad total de hábitos configurados.
+
+**Total histórico (`Your total steps`):** número de completaciones de **fechas estrictamente anteriores a hoy**. No incluye ninguna completación de la fecha actual. Los totales no cambian al marcar o desmarcar hoy.
+
+**Tarjetas activas:** tareas actualmente disponibles para marcar. El máximo es cuatro en Activities y cuatro en Learning. El número de tarjetas activas no define el histórico. Si se muestra una fracción de progreso, su denominador corresponde a las tareas activas de la escalera; **no** confundirlo con `Your total steps`.
+
+### 02.3 Fórmulas únicas de progreso [DECIDIDO]
+
+Para cada completación válida `c`, `c.completed_date` es una fecha local `YYYY-MM-DD` y la tarea asociada pertenece a Activities o Learning.
+
+```text
+activitiesToday = nº de completaciones de Activities con completed_date === todayLocalDate
+learningToday   = nº de completaciones de Learning   con completed_date === todayLocalDate
+lifeToday       = activitiesToday + learningToday
+
+activitiesTotal = nº de completaciones de Activities con completed_date < todayLocalDate
+learningTotal   = nº de completaciones de Learning   con completed_date < todayLocalDate
+lifeTotal       = activitiesTotal + learningTotal
+```
+
+**Interpretación de las SectionCards de Life:** la sección My Activities muestra `activitiesToday`; la sección Learning muestra `learningToday`; Life muestra la suma **de esos números**. Si Learning registra tres pasos, aporta tres, no un solo paso por existir una SectionCard.
+
+**Health nunca aporta pasos** a estas fórmulas. Los contadores históricos incluyen completaciones de días cerrados, independientemente de si las tarjetas originales siguen visibles.
+
+**Evitar dobles fuentes de verdad:** calcular estos valores desde completaciones fechadas. No crear una columna acumulada ni un estado de total persistido independiente salvo decisión arquitectónica posterior explícita. No debe ejecutarse una función de suma exactamente a medianoche.
+
+### 02.4 Operación de las casillas [DECIDIDO]
+
+1. **Marcar hoy:** registrar una sola completación de esa tarea en la fecha actual; el contador diario de su escalera aumenta en uno. La sección de Life y `lifeToday` se actualizan con el nuevo número; los históricos no cambian.
+2. **Desmarcar hoy:** revertir la completación de esa tarea **solo para hoy**; su contador diario disminuye en uno y Life refleja la resta. Los registros de fechas anteriores permanecen intactos.
+3. **No duplicar:** una misma tarea marcada varias veces en la misma fecha cuenta como máximo una vez. El contador nunca puede ser negativo.
+4. **Cambio de día:** cada casilla se determina por la presencia de una completación de **la nueva fecha**. Si no existe, se muestra desmarcada, aunque la misma tarea se completara ayer. Todos los contadores diarios comienzan en cero si nadie registró pasos para ese nuevo día.
+5. **Histórico por fechas:** al convertirse ayer en una fecha anterior a hoy, sus completaciones pasan **lógicamente** al total histórico. No borrar, copiar ni trasladar necesariamente esos registros.
+6. **Aplicación cerrada:** si la persona no abre la app durante varios días, la próxima consulta debe producir los mismos números, sin incrementar varias veces un total almacenado.
+7. **Cuentas distintas:** únicamente se cuentan completaciones del usuario autenticado; nunca las de otra cuenta.
+
+**Precisión temporal:** el histórico es relativo a la fecha local de consulta, no una cifra que se actualice por un proceso nocturno. Cambios posteriores en zona horaria deben manejarse coherentemente, sin reinterpretar silenciosamente fechas ya guardadas; los escenarios de cambio manual de reloj o zona horaria requieren pruebas adicionales, no una nueva regla inventada.
+
+**DEC-07-01 [DECIDIDO] · Fecha local.** Las operaciones fechadas conservan el día calendario local del dispositivo y preservan la sincronización de lectura y escritura corregida en AUD-02-01. Para la futura persistencia, validar según DEC-07-04. La interfaz sigue sin configuración de zona horaria y la fecha UTC no sustituye el día local.
+
+**DEC-07-02 [DECIDIDO] · Integridad temporal.** Rechazar registros fechados antes del alta. Usar la fecha real de registro de la cuenta según el contrato de fecha local y proteger los días cerrados. Al persistir un renombrado efectivo o un retiro, confirmar o revertir juntos el cambio de la tarjeta y la eliminación exclusiva de su completación de hoy, conforme a §02.6.
+
+**DEC-07-04 [DECIDIDO] · Referencia fija de escritura.** La primera operación fechada exitosa fija para la cuenta la zona horaria detectada y declarada por el dispositivo. Durante el MVP se conserva esa referencia sin selector ni modificación posterior. La fecha capturada al realizar cada acción debe coincidir con el día calculado con el reloj del servidor tanto en la zona declarada como en la referencia fija. La referencia también determina la fecha local de alta real y protege los días cerrados. Si los días no coinciden, la escritura se rechaza sin trasladarla automáticamente a otro día. Esto puede impedir temporalmente escribir desde dispositivos con días locales distintos. La futura capa de escritura comprueba la coherencia de la fecha declarada a partir de los datos del navegador.
+
+**Compatibilidad de zonas [DECIDIDO].** Admitir los identificadores de zona horaria que devuelven los navegadores, previa revisión técnica de su compatibilidad con el entorno de validación que se apruebe. La implementación debe respetar las comprobaciones de DEC-07-04.
+
+### 02.5 Ejemplo vinculante: lunes → martes [DECIDIDO]
+
+Histórico anterior al lunes: Activities 8, Learning 12, Life 20.
+
+| Momento | Activities hoy | Learning hoy | Life hoy | Activities total | Learning total | Life total |
+|---|---:|---:|---:|---:|---:|---:|
+| Lunes, antes de marcar | 0 | 0 | 0 | 8 | 12 | 20 |
+| Lunes, marca 1 de Activities | 1 | 0 | 1 | 8 | 12 | 20 |
+| Lunes, desmarca esa tarea | 0 | 0 | 0 | 8 | 12 | 20 |
+| Lunes, marca 3 de Learning | 0 | 3 | 3 | 8 | 12 | 20 |
+| Martes, sin nuevos checks | 0 | 0 | 0 | 8 | 15 | 23 |
+
+**Lectura:** el lunes, las tres marcas de Learning son progreso diario y **no** elevan Life total de 20. El martes, esas mismas tres completaciones ya son históricas, de modo que Life total es 23 y Life hoy es cero. No hubo transferencia física de datos. Si se desmarcara una de las tres tareas **antes de que termine el lunes**, el martes el histórico aumentaría solo dos.
+
+### 02.6 Integridad del historial y gestión de tareas [DECIDIDO]
+
+- Una tarea pertenece a una escalera (Activities o Learning) y puede completarse una vez por día.
+- **[DECIDIDO] Nombre al confirmar:** al crear o renombrar con Submit, se aplica `trim()` y se convierte el primer carácter a mayúscula conservando el resto del texto tal como se escribió. Se rechaza un nombre que quede vacío. El borrador conserva el texto escrito.
+- **[DECIDIDO] Renombrado efectivo:** si el nombre normalizado cambia respecto del confirmado, se conservan el ID, la escalera y el propietario. En la misma operación se elimina solo la completación de esa tarea para la fecha local actual, si existe. En ese caso, Today disminuye un paso en la escalera correspondiente y en Life. El histórico permanece intacto. Si se confirma el mismo nombre normalizado o la tarea ya está desmarcada, los contadores se mantienen. Cancel, Escape, clic exterior y envíos inválidos dejan intactas las completaciones.
+- Cuentas nuevas reciben **una sola vez** las tareas de ejemplo: Activities — Gym, Read my Book, Guitar Practice; Learning — Learned something new, Studied a language, Studied music theory. No recrearlas automáticamente si el usuario las retira.
+- Se permiten hasta **cuatro tareas activas por escalera**. Cuando queda una, Settings oculta **Delete Card** y la operación rechaza su retiro. La vista admite un estado vacío si ocurre por carga, error, importación o datos preexistentes.
+- **[DECIDIDO] Retiro mediante `archived_at`.** Confirmar **Delete Card** registra la fecha de archivado, conserva la tarea con su ID, propietario y escalera y la quita de la lista activa. El retiro preserva el registro físico y las completaciones históricas. La confirmación de 06B-05 aplica al estado en memoria.
+- **[DECIDIDO] Completación de hoy al retirar.** En la misma actualización que establece `archived_at`, se elimina solo la completación de esa tarea de la fecha local actual, si existe. Today baja un paso en su escalera y en Life cuando la tarjeta estaba marcada. Total permanece intacto. Cancel, Escape y el clic exterior conservan la tarjeta y sus completaciones.
+- Las archivadas quedan fuera del límite de tareas activas y se mantienen disponibles para contar el historial. Las operaciones ordinarias de marcar, renombrar y retirar requieren una tarea activa. Una tarjeta nueva recibe un ID propio, aunque su nombre coincida con el de una archivada. La restauración queda fuera del alcance.
+
+### 02.7 Health — progresión diaria [DECIDIDO en 07-10A]
+
+Los tres objetivos diarios son **Good Nutrition, Good Sleep y Daily Movement**. Cada fecha empieza con las tres casillas desmarcadas. El nivel efectivo se comparte entre Health y el círculo de Life. Los objetivos aportan cero pasos.
+
+| Nivel | Color | Descripción |
 |---|---|---|
-| `profiles` | `id` (PK, FK `auth.users`), `display_name`, `created_at` | Editar nombre con lápiz es P2; mientras tanto el header muestra el correo. |
-| `tasks` | `id`, `user_id`, `ladder` (`activities` \| `learning`), `title`, `archived_at`, `created_at` | Health no usa esta tabla. Archivar en vez de borrar. `UNIQUE(id, user_id)`. |
-| `task_completions` | `id`, `user_id`, `task_id`, `completed_date` | `UNIQUE(task_id, completed_date)`. FK compuesta (`task_id`, `user_id`) hacia `tasks(id, user_id)` impide referencias cruzadas. |
-| `health_checks` | `user_id`, `date`, `nutrition`, `sleep`, `movement` | PK (`user_id`, `date`): una fila por día. |
-| Derivados (sin tabla) | pasos de hoy, totales, días en la escalera, racha, estado de Health | Se calculan de los registros; nunca son fuente de verdad. |
+| 3 | Verde | You're doing great! |
+| 2 | Amarillo | You got it, keep it up! |
+| 1 | Naranja | Good start, but could be better |
+| 0 | Rojo | Take a look at your health! |
 
-Las fechas son YYYY-MM-DD de la fecha local del navegador; evitar toISOString() sin tratar la zona horaria. La app no se limita a una zona horaria.
+Una cuenta nueva empieza en rojo. En un día sin interacciones, el nivel efectivo es el nivel final del día anterior menos uno, con mínimo de cero. Cada día adicional sin interacción resta un nivel hasta llegar a rojo. Con la primera interacción del día, el número de casillas actualmente marcadas pasa a determinar todo el nivel. Desmarcar las tres deja el día en rojo.
 
-### Reglas de negocio
+La ausencia de un registro diario representa un día sin interacción. Un registro con tres valores `false` representa un día con interacción y cero marcas. Conservar esa diferencia por fecha y cuenta. En Etapa 1, los registros residen en la sesión privada en memoria y se pierden al recargar, cerrar sesión o cambiar de cuenta.
 
-1. Cada tarea pertenece a una sola escalera (Activities o Learning) y conserva su id al renombrarse.
+La vista de Health resalta la descripción del nivel efectivo. Para verde o amarillo muestra «Your health is on track!». Para naranja o rojo muestra «Your streak is at risk!». En ambos casos incluye «Be honest with yourself.».
 
-2. Completar registra la fecha local una sola vez por tarea y día. Desmarcar hoy revierte el conteo de hoy. Un día nuevo aparece sin marcar; los días pasados conservan su historial.
+### 02.8 Racha [DECIDIDO en 07-10A]
 
-3. Contador diario de una escalera = tareas activas marcadas hoy; denominador = tareas activas de esa escalera.
+Life calcula la racha con **días cerrados**, hasta ayer. La racha acumulada permanece durante el día abierto y se evalúa al cambiar de fecha.
 
-4. Life: pasos de hoy = pasos de hoy de Activities + de Learning. Health no suma pasos.
+- Health naranja o rojo al cierre reinicia la racha, aun si hubo pasos.
+- Con Health verde o amarillo, un día con al menos un paso en Activities o Learning suma un día a la racha.
+- Con Health verde o amarillo y cero pasos, la racha se mantiene sin sumar si el día anterior tuvo pasos. Dos días consecutivos sin pasos reinician la racha.
 
-5. Totales: Activities y Learning muestran su total propio; Life muestra el total de hoy y el total de la cuenta (Activities + Learning). Siempre calculados de task_completions.
+**Días en la escalera** cuenta los días calendario desde el registro, incluido el primero. Today y Total siguen las fórmulas de §02.3.
 
-6. Días en la escalera: días de calendario desde el alta, contando el primer día. No equivale a racha.
+### 02.9 Contratos de datos para la futura persistencia
 
-<!-- Página 4 del PDF original -->
+| Datos | Contrato |
+|---|---|
+| Cuenta | Identidad estable y fecha real de alta. Aislamiento por propietario. Siembra única y referencia fija de escritura según DEC-07-04. |
+| Tareas | ID estable, escalera, título y estado de archivo. Mantener el histórico de tareas retiradas y el límite de activas de §02.6. |
+| Completaciones | Una por tarea y fecha. Aplicar las reglas de propiedad y la atomicidad de renombre y archivo de §02.6. |
+| Health | Un registro por cuenta y fecha tras la primera interacción. Mantener independencia entre objetivos y conservar el registro con tres valores `false`. |
+| Derivados | Today, Total, Health, racha y días desde alta se calculan a partir de los registros fuente. |
 
-7. Cuenta nueva: empieza con tareas de ejemplo (Activities: Gym, Read my Book, Guitar Practice; Learning: Learned something new, Studied a language, Studied music theory). Se siembran una sola vez; si la persona las archiva, no reaparecen.
+Las fechas de acción son días calendario `YYYY-MM-DD`. Las fechas de alta, creación y archivo son instantes. El modelo físico queda pendiente de la decisión de Etapa 2.
 
-8. Eliminar = archivar (archived_at): sale de las activas y conserva historial y totales. Si resulta demasiado complejo para el plazo, se borra definitivamente.
+### 02.10 Quotes API — requisito externo de Etapa 1
 
-9. La interfaz soporta 0 tareas, carga, error de red, cuenta sin actividad y fallo de la API de frases.
+La API de frases de terceros se consume mediante `fetch()` en `client/src/utils/quotesApi.ts`, con respuesta verificada y tipada, transformación al tipo interno `Quote`, carga, error con reintento y estado vacío.
 
-### Health: regla B [DECIDIDO]
+**Proveedor [DECIDIDO]** — DummyJSON, mediante `https://dummyjson.com/quotes/random`. Se consulta directamente desde el navegador, sin credenciales ni datos de cuenta. La respuesta debe contener `id` numérico, `quote` y `author` de texto. La aplicación conserva el texto original y lo muestra como texto plano. Se verifica CORS (intercambio de recursos entre orígenes) desde el navegador.
 
-El estado se calcula en una función pura a partir del conteo de casillas de hoy y de ayer. No se guarda.
+**Interacción aprobada** — Si la fecha local carece de frase asignada, Life muestra «Today's quote for you is...» y «Click to reveal». Solo se solicita una frase a DummyJSON al pulsar el botón. Al revelarla, desaparecen título y botón y se muestra solo la frase. Se conservan los estados de carga, error, vacío y reintento. Las respuestas de otro día o cuenta se descartan.
 
-| Ayer | Hoy | Estado de hoy |
-|---|---|---|
-| Cualquiera | 3 casillas | Verde |
-| Cualquiera | 1 o 2 casillas | Amarillo |
-| Al menos 1 casilla (3/3 o 1–2) | 0 casillas | Amarillo |
-| 0 casillas | 0 casillas | Rojo (dos días seguidos sin marcar) |
-| Sin día anterior (primer día de la cuenta) | 0 casillas | Amarillo |
+**Prevención de repeticiones [DECIDIDO]** — Comparar cada frase recibida con las revelaciones exitosas de la cuenta durante hoy y los seis días calendario locales anteriores. Se considera repetición si coincide el identificador o el texto al ignorar mayúsculas, minúsculas y espacios redundantes. Conservar el texto original al mostrarlo. Solicitar alternativas de forma secuencial y mantener la carga hasta obtener una frase válida y diferente o alcanzar cinco solicitudes totales por intento. Si las cinco se repiten, informar y permitir un reintento manual. Una frase revelada hace siete días o más vuelve a ser elegible.
 
-El semáforo siempre lleva etiqueta de texto y no depende solo del color. Los textos del mockup («You’re doing great!», «You got it, keep it up!», «Take a look at your health!») se usan como etiquetas de metas, no como evaluación médica.
+**[DECIDIDO] Alcance del MVP.** La frase y la ventana de comparación se mantienen en memoria de la sesión privada. Recargar, cerrar sesión o cambiar de cuenta reinicia esa memoria. DEC-07-03 y 07-08 quedan aplazados para después de la entrega. DummyJSON y su gestión de errores siguen en el navegador.
 
-### Racha [DECIDIDO]
+### 02.11 Estado, persistencia y accesibilidad
 
-Se evalúa por día cerrado; mientras hoy no termina se muestra la racha hasta ayer.
+- Mantener el estado compartido de las rutas privadas y los borradores en React. Tareas, completaciones y Health viven en memoria durante la sesión privada en Etapa 1. Los hooks usan utilidades tipadas y los componentes se encargan de la presentación.
+- Funciones puras para fechas, progreso, Health y racha. UI consistente en Life/Activities/Learning desde la misma fuente de completaciones por usuario y fecha.
+- Aislamiento en todas las consultas privadas, verificado con dos cuentas. Controlar carreras de solicitudes, respuestas antiguas tras cambio de cuenta y reversión de actualizaciones optimistas fallidas.
+- Accesibilidad: `button`, `a`, `label`, teclado, foco visible, estados de carga/error, indicadores de color acompañados de texto, popups cerrables y formularios con validación.
+- Responsive a partir de 320 px sin desbordamiento horizontal; no ocultar overflow como remedio para fallos de maquetación.
 
-- 1 o más pasos en Activities o Learning: suma 1.
+---
 
-- Sin pasos, Health verde o amarillo y el día anterior sí tuvo pasos: se mantiene (no suma ni reinicia).
+## 03 · Tecnologías, arquitectura y diseño
 
-- Sin pasos y el día anterior tampoco tuvo pasos: se reinicia, aunque Health sea verde.
+### Stack y responsabilidades vigentes [DECIDIDO]
 
-- Sin pasos con Health rojo: se reinicia.
+| Capa | Responsabilidad actual |
+|---|---|
+| Cliente React, TypeScript, Vite y React Router | Presentación, formularios, guardas y estado en memoria por cuenta. Funciones puras de fechas, progreso, Health y racha. |
+| Supabase Auth | Registro, inicio y cierre de sesión y restauración en el cliente mediante `@supabase/supabase-js`. |
+| Express y TypeScript | Fundación de API con `GET /api/healthz`, respuestas JSON, manejo centralizado de errores y proxy Vite en desarrollo. |
+| DummyJSON | Frase externa solicitada directamente por el navegador con Fetch, según §02.10. |
 
-### API externa de frases (obligatoria en Etapa 1)
+[La referencia Around `5d7db78`](https://github.com/28Dara/web_project_around_full/tree/5d7db784f0443a4c9f72a6b24515f2b217c5fe67) aporta contexto histórico para la organización de cliente y servidor.
 
-Supabase guarda cuentas y tareas; la frase viene de otro servicio público, aparte, consumido con fetch. Es la integración third-party que exige la rúbrica.
+### Organización vigente [DECIDIDO]
 
-- utils/quotesApi.ts usa fetch(), con la respuesta real tipada y transformada al tipo interno Quote. Nunca tipar una respuesta supuesta antes de verla.
+```text
+project-adhd-ladder/
+  client/
+    src/                         # conserva las carpetas actuales
+    public/
+    index.html
+    package.json
+    tsconfig*.json
+    vite.config.ts
+    .env.example
+  server/
+    src/
+      app.ts
+      middleware/
+      routes/
+        index.ts
+      utils/
+    package.json
+    tsconfig.json
+    .env.example
+  docs/
+  .agents/
+  AGENTS.md
+  package.json
+  README.md
+  .gitignore
+```
 
-- Proveedor: [ABIERTO]. Candidato sin verificar: DummyJSON (/quotes/random). Probar antes del viernes 27 desde la consola del navegador (CORS, sin claves).
+El frontend vive en el workspace `client/` con su entrada HTML, assets, configuración y ejemplo de entorno. Conserva sus módulos internos bajo `client/src/`. El lockfile de npm permanece en la raíz.
 
-- Componente visible MotivationalQuote en Life con carga, error con reintento y estado vacío. Un fallback nunca se presenta como si viniera de la API.
+La base de 07-EXP vive en el workspace `server/`. `src/app.ts` inicia Express y monta el router de `src/routes/index.ts` bajo `/api`. `src/middleware/error-handler.ts` y `src/utils/errors.ts` definen las respuestas de error JSON. En desarrollo, Vite reenvía `/api` al puerto configurado mediante `PORT`, con `3000` como valor predeterminado. Ambos procesos leen el puerto del entorno o de `server/.env`.
 
-- Si el proveedor devuelve una lista, se puede añadir «cargar más» (buena práctica de la rúbrica). Documentar el proveedor y sus límites en el README.
+### Etapa 2 · decisión abierta y conservación de datos
 
-- Cualquier variable VITE_ es legible desde el navegador.
+Las alternativas de evaluación son continuar con Supabase PostgreSQL y Supabase Auth o usar MongoDB Atlas, Mongoose y autenticación propia con bcrypt y JWT. La [rúbrica de Etapa 2](Etapa_2_checklist.md) mantiene sus requisitos literales. Confirmar en la tutoría del 26 de noviembre de 2026 si la primera alternativa sería admisible. La decisión técnica y el inicio de la implementación requieren autorización posterior de la propietaria.
 
-### Estado, persistencia y seguridad
+La propuesta previa de MongoDB queda como antecedente en `92643be` y en el plan anterior a 07-PRES (`a04c426`). Se conservan las migraciones SQL y la [guía histórica de pruebas](../supabase/tests/07-01-task-integrity.md). Cualquier corte futuro requiere inventario autorizado, preservación de cuentas e históricos y verificación de su correspondencia. La observación de 07-00 sobre las tablas visibles en `public` describe una consulta anterior. La correspondencia de email por sí sola no demuestra control de una cuenta.
 
-- Supabase PostgreSQL con consultas por usuario y RLS activada en todas las tablas personales (SELECT/INSERT/UPDATE/DELETE por propietario).
+### Assets y calidad visual
 
-- Estado de UI con useState/Context para sesión, tareas y errores; funciones puras (utils/progress.ts) para contadores, Health y racha. localStorage no es la fuente de verdad.
+Ilustraciones de producción en WebP, iconos/logo en SVG según conveniencia, decoración y fondos en CSS, textos y botones accesibles en HTML. Las fuentes preferidas son Patrick Hand y Kalam, con fallback de sistema. Mantener los mockups aprobados y el estilo orgánico sin introducir imágenes de texto innecesarias.
 
-- Los componentes no dependen del proveedor: los hooks (useTasks, etc.) aíslan Supabase. Activities y Learning reutilizan componentes.
+**Guía de vistas privadas:** márgenes laterales de Life, Activities y Learning alineados con Health. Preservar en tablet/móvil la ubicación de ilustraciones, evitando espacios verticales excesivos; el globo de edición del nombre debe centrarse en móvil sin perder la punta que apunta al lápiz. Estas observaciones son requisitos visuales; su cumplimiento final exige verificación real.
 
-<!-- Página 5 del PDF original -->
+---
 
-- Operaciones optimistas se revierten si el servidor falla. Prueba adversarial con dos usuarios antes del deploy.
+## 04 · Checklist de desarrollo y evaluación
 
-### UX y accesibilidad
+### A · Condiciones críticas de entrega de TripleTen (Etapa 1)
 
-- Elementos button/a, label en formularios, foco visible, teclado, aria-live discreto, confirmación al archivar, no transmitir estado solo con color, alt en imágenes.
+Fuente oficial y lección 1.2 cotejadas en [07-AUD](07-AUD-cumplimiento-academico.md). La rúbrica evalúa el frontend. Confirmar la modalidad de entrega, la lección 1.1 si está disponible y el acceso del evaluador a la funcionalidad desde `/`.
 
-- Responsive desde 320 px sin scroll horizontal ni overflow: hidden. Decoración en CSS; ilustración principal como WebP optimizado.
+- [ ] Entregar URL del PR `stage-frontend` → `main` antes del plazo.
+- [ ] `npm install`, `npm run dev`, `npm run build` y `npm run lint` sin fallos.
+- [ ] API third-party consumida realmente con `fetch()`, datos visibles y estados de carga/error.
+- [ ] Si Etapa 1 es la entrega final frontend, aplicación desplegada y rutas internas recargables sin 404. Si continúa a Etapa 2, confirmar cuándo corresponde publicar.
+- [ ] Errores críticos de una revisión académica anterior corregidos, si aplica.
+- [ ] README con nombre, propósito, stack, proveedor de API y URL pública.
 
-### Casos de prueba críticos
+### B · Calidad frontend
 
-- Completar y desmarcar el mismo día sin duplicados; cruce de medianoche; contadores de Life sincronizados con Activities y Learning.
+La rúbrica original incluye criterios de desempeño valorados en **4,21 puntos cada uno**, buenas prácticas de **1,5 puntos cada una** y recomendaciones de **1 punto cada una**; las categorías siguientes agrupan los requisitos para seguimiento, no sustituyen el documento oficial del curso.
 
-- Todos los casos de la tabla de Health y de la regla de racha (incluidos primer día de cuenta y dos días sin pasos).
+- [ ] TypeScript consistente (incluidos iconos y componentes); componentes reutilizables y props tipadas; hooks fuera de condicionales/bucles; keys estables que no dependan del índice.
+- [ ] Estructura de componentes, estilos, assets, utilidades, configuración y recursos externos clara; constantes organizadas en configuración; listeners limpiados al desmontar.
+- [ ] Responsive desde 320 px, teclado/focus, semántica HTML, imágenes optimizadas con `alt`, fuentes conectadas con fallback de sistema, normalize/reset y contraste suficiente.
+- [ ] Formularios con placeholder, required cuando corresponda, validación y foco; cuenta con estados carga/error y restauración de sesión; enlaces y botones semánticos.
+- [ ] Ruta de funcionalidad y ruta sobre la autora con navegación completa, según el PDF. En este proyecto son Life accesible desde `/` con sesión y `/about` pública. El PDF nombra `react-router-dom`. La versión 8 instalada lo reemplaza por `react-router` y sus entradas DOM. Documentar la equivalencia y confirmar el criterio con el evaluador en 07-10. [Migración oficial de React Router](https://reactrouter.com/upgrading/v7#react-router-dom).
+- [ ] Fetch con respuesta tipada, manejo de fallos y estado vacío; paginación/cargar más solo si el servicio lo requiere y tiene sentido.
+- [ ] `.env` excluido del repo; `.env.example` sin credenciales; sin build ni `node_modules` versionados; sin archivos sobrantes de Vite.
 
-- Alta, renombrar, archivar; cuenta nueva con tareas de ejemplo; cuenta sin actividad; formulario inválido.
+### C · Buenas prácticas y recomendaciones de evaluación
 
-- Registro, login, logout, recarga con sesión, ruta privada sin sesión.
+- [ ] Estado inicial tipado, tipos compartidos y nombres legibles; estructura mantenible y sin código muerto.
+- [ ] Respuestas vacías explícitas y, si una API devuelve listas largas, paginación o «cargar más» cuando corresponda.
+- [ ] Estados hover y focus en controles; iconos SVG e imágenes optimizadas; fuentes alternativas y `alt` descriptivos.
+- [ ] Historial Git con mensajes descriptivos cuando el propietario autorice commits.
 
-- Usuario A no puede leer, modificar ni borrar datos de B, incluidas referencias cruzadas en task_completions.
+**Etapa 2.** La rúbrica exige el PR `stage-fullstack → main` y enumera los requisitos de API, autenticación, persistencia y despliegue para el stack literal. Su aplicabilidad a las alternativas de §03 se aclarará en la tutoría. [07-AUD](07-AUD-cumplimiento-academico.md#etapa-2--motivos-de-rechazo) registra los requisitos y su evidencia por ID.
 
-- Fallo de red de Supabase; carga/error/timeout de frases; deploy sin 404 al recargar rutas; móvil desde 320 px; build y lint limpios.
+### D · QA funcional obligatorio del producto
 
-## 03 · Tecnologías y arquitectura
+- [ ] Cuentas nuevas reciben las seis tareas de ejemplo una sola vez.
+- [ ] Máximo cuatro tareas activas por Activities/Learning; menu Settings oculta Delete Card si solo queda una.
+- [ ] Marcar una tarea hoy suma exactamente uno en su escalera; repetir no duplica; desmarcar resta solo hoy.
+- [ ] SectionCard de Life refleja exactamente el conteo de cada escalera; Life hoy = Activities hoy + Learning hoy.
+- [ ] Los tres contadores históricos excluyen `todayLocalDate`; marcar/desmarcar hoy no los cambia.
+- [ ] Tras cambiar de lunes a martes, pasos de lunes figuran en histórico **una sola vez** y hoy empieza en cero.
+- [ ] Cerrar la app y volver días después no duplica ni pierde pasos; un día con cero no aumenta totales.
+- [ ] Verificar la normalización al confirmar y la desmarcación de hoy al renombrar según §02.6, con el histórico intacto.
+- [ ] Verificar el retiro de tarjetas marcadas y desmarcadas según §02.6, con Today correcto, histórico intacto y protección de la última activa.
+- [ ] Health empieza con casillas vacías, aplica el descenso antes de la primera interacción y distingue un día sin registro de uno explícitamente desmarcado. Life y Health muestran el mismo nivel.
+- [ ] Racha de días cerrados: Health naranja o rojo reinicia aun con pasos. Probar continuidad en verde o amarillo, la pausa de un día sin pasos y el día abierto.
+- [ ] Pruebas de aislamiento con dos usuarios: lecturas y mutaciones ajenas rechazadas, incluidas completaciones con ID de tarea ajena. Para la arquitectura que se apruebe, verificar el rechazo de sesiones ausentes, inválidas o expiradas y la ausencia de credenciales en respuestas y logs.
+- [ ] API de frases real visible en Life, con carga, error, reintento y vacío; conservar UX de revelación diaria.
+- [ ] Popups: borrador de nombre conservado al cerrar afuera/Escape; Cancel descarta; Submit cambia en React; controles de Health clicables en toda la tarjeta.
+- [ ] Recuperación de sesión y cambio de cuenta comprobados. Para la arquitectura de Etapa 2 que se apruebe, comprobar fallos de servicios, carga vacía y mutación optimista fallida.
+- [ ] Revisar móvil/tablet, especialmente ilustración de Life y alineación del popup del Header; sin regresiones.
 
-Se entrega solo la Etapa 1 (front-end) con Supabase como backend gestionado: Auth para usuarios y PostgreSQL para persistencia. Una segunda API externa devuelve frases con fetch(). Node.js se usa solo como herramienta de desarrollo de Vite, no como backend.
+### E · Validación de código y release
 
-### Stack
+- [ ] `git diff --check`, `npm run format:check` si existe, build y lint; reportar pruebas realmente ejecutadas.
+- [ ] Despliegue con rewrite SPA, restauración de sesión en HTTPS, dos cuentas probadas y README final.
+- [ ] URL del PR de cada etapa entregada cuando corresponda. Revisar cambios y solicitar autorización antes de publicar o fusionar.
 
-- Vite + React + TypeScript: SPA con npm run dev, build y lint. React Router DOM: rutas públicas y privadas.
+---
 
-- HTML semántico + CSS por componente/Modules + Grid/Flex + normalize.css: maquetación mobile-first.
-
-- variables.css: sistema de color existente; verificar contraste de estados.
-
-- @supabase/supabase-js: Auth, sesión y consultas a PostgreSQL con RLS.
-
-- Fetch API en utils/quotesApi.ts, tipada, con carga/error/reintento. Lucide para iconos.
-
-- Git + GitHub + GitHub Projects: repo público, ramas main / stage-frontend / feature/*, commits descriptivos y PR a main.
-
-- Vercel o Netlify: hosting con rewrite para SPA; configurar las URLs permitidas de Auth en Supabase y las variables públicas.
-
-### Arquitectura
-
-React (UI, routing, estado) -> hooks -> cliente Supabase -> Supabase Auth + PostgreSQL/RLS React (MotivationalQuote) -> utils/quotesApi.ts [fetch] -> API pública de frases
-
-### Estructura sugerida del repositorio
-
-project-adhd-ladder/ README.md .env.example AGENTS.md (reglas para Codex) public/ (favicons) src/ app/App.tsx components/{Header,Footer,Dropdown,LadderCard,TaskCard,TaskModal,MotivationalQuote}/ pages/{Landing,About,SignUp,LogIn,Life,Health,Activities,Learning}/
-
-<!-- Página 6 del PDF original -->
-
-context/AuthContext.tsx hooks/{useAuth,useTasks,useHealth}.ts utils/{supabaseClient,quotesApi,progress,dates}.ts types/{task,quote,profile,health}.ts config/constants.ts styles/{variables,global}.css images/ vendors/ (normalize.css, fuentes) supabase/migrations/ # SQL versionado
-
-### Variables de entorno y secretos
-
-- VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY (clave pública), VITE_QUOTES_API_URL si aplica.
-
-- Nunca service_role ni claves secretas en el cliente. .env fuera de Git; .env.example con nombres y valores ficticios. Ninguna IA recibe claves.
-
-- La protección de datos personales depende de RLS, no del secreto de la anon key.
-
-### Assets, fuentes y rendimiento
-
-- Las ilustraciones van en WebP; SVG para logo, plantas, chispas y flecha. Los PNG originales se quedan fuera del repo.
-
-- Fondos, nubes y degradados en CSS. Textos, números y botones son HTML, no imágenes.
-
-- Tipografías sugeridas: Patrick Hand (cuerpo) y Kalam (títulos), gratuitas de Google Fonts; validarlas contra el mockup. Autohospedarlas en vendors/ (por ejemplo con @fontsource) y añadir fallback de sistema (system-ui, sans-serif), no solo «cursive».
-
-- LifeIcons.jsx pasa a .tsx con props tipadas. Faltan iconos de los mockups: Mail, Lock, Eye/EyeOff, ArrowLeft, X, ArrowUp.
-
-- Los mockups usan «Usuario1»; la UI es en inglés y muestra el correo.
-
-## 04 · Lista de comprobación de desarrollo y evaluación
-
-Ninguna casilla viene marcada. La rúbrica oficial de Etapa 1 no exige Supabase ni login: son elecciones del proyecto. Sí exige una API third-party consumida con fetch desde utils/, con datos visibles y estados de carga y error.
-
-### A · Causas de rechazo sin revisión (Etapa 1)
-
-- [ ] PR de stage-frontend a main; se entrega la URL del PR, no la del repositorio.
-
-- [ ] npm install y npm run dev funcionan.
-
-- [ ] La API third-party carga datos reales visibles.
-
-- [ ] Sitio desplegado; recargar una ruta no da 404.
-
-- [ ] Sin errores críticos pendientes de revisiones anteriores (hoy no hay ninguna).
-
-### B · Criterios de desempeño (4.21 puntos cada uno)
-
-- [ ] Vite y todo el código en TypeScript (incluidos los iconos y componentes).
-
-- [ ] npm run build sin errores TS; npm run lint sin errores.
-
-- [ ] Carpetas separadas para componentes, estilos, imágenes, utilidades y recursos externos (fuentes, normalize.css).
-
-- [ ] README con nombre, descripción, tecnologías y enlace al deploy.
-
-- [ ] Responsive desde 320 px sin scroll horizontal ni overflow: hidden para ocultarlo.
-
-- [ ] HTML semántico; layout con flex/grid; normalize o reset; fuentes bien conectadas.
-
-- [ ] Componentes reutilizables con props tipadas.
-
-- [ ] Al menos dos rutas con react-router-dom (/ y /about), navegación sin enlaces rotos.
-
-- [ ] Hooks fuera de condicionales y bucles; key único que no sea el índice.
-
-- [ ] Fetch third-party en utils/, con tipos de la respuesta, indicador de carga y mensaje de error visible.
-
-- [ ] Claves en VITE_..., con .env.example y sin .env en el repo; sin node_modules ni build versionados.
-
-### C · Mejores procedimientos (1.5 puntos cada uno)
-
-<!-- Página 7 del PDF original -->
-
-- [ ] Estado inicial tipado; tipos compartidos en módulos reutilizables.
-
-- [ ] Paginación o «cargar más» si la API devuelve una lista larga.
-
-- [ ] Estado vacío explícito cuando no hay resultados.
-
-- [ ] Constantes en MAYÚSCULAS en un archivo de configuración.
-
-- [ ] Limpiar addEventListener al desmontar.
-
-- [ ] Formularios con placeholder, required y foco visible; elementos interactivos son button y a reales.
-
-- [ ] Iconos SVG e imágenes optimizadas; sin archivos sobrantes de la plantilla de Vite.
-
-### D · Recomendaciones (1 punto cada una)
-
-- [ ] Fuente de sistema como alternativa a cada fuente propia.
-
-- [ ] alt adecuado en imágenes.
-
-- [ ] Estados hover y focus en botones y enlaces.
-
-- [ ] Formato uniforme, nombres descriptivos y sin código muerto.
-
-- [ ] Commits que describan cada cambio.
-
-### H · QA específico del proyecto (no es exigencia literal de TripleTen)
-
-- [ ] Supabase Auth: registro, login, logout y recuperación de sesión en URL pública; confirmación de email resuelta.
-
-- [ ] CRUD: crear, renombrar, archivar y completar; cuenta nueva con tareas de ejemplo sembradas una sola vez.
-
-- [ ] RLS en todas las tablas personales, probada con dos cuentas; task_completions no acepta un task_id ajeno; UNIQUE(task_id, completed_date) impide duplicados.
-
-- [ ] Conteos de Life, Activities y Learning coherentes con la fecha local y el cambio de día.
-
-- [ ] Health (regla B) y racha pasan todos los casos de la tabla; el semáforo tiene etiquetas de texto y no hay lenguaje de diagnóstico.
-
-- [ ] Frase obtenida por fetch en utils/quotesApi.ts, visible en Life, con carga, error, reintento y respuesta vacía.
-
-- [ ] Estados de Supabase: carga, cuenta sin datos, red desconectada y fallo de mutación.
-
-- [ ] Revisión visual desde 320 px, teclado y contraste. Claves apropiadas para el frontend; sin service_role.
-
-- [ ] npm run dev, build y lint verificados; deploy y PR reales de stage-frontend a main.
-
-## 05 · Brief y plan de acción
+## 05 · Brief, prioridades y plan
 
 ### Objetivo y Definition of Done
 
-Publicar una aplicación usable para registrar y completar pequeñas metas en Health, Activities y Learning y ver el progreso en Life. Está hecho cuando: corre con npm run dev, compila y pasa lint, todas las rutas navegan, hay cuentas y tareas reales persistidas, RLS aísla usuarios, la frase real se ve con carga/error, es responsive desde 320 px, está desplegada con recarga sin 404, el README está completo y el PR llegó antes del plazo.
+Publicar una aplicación operativa para administrar pequeñas metas en Health, Activities y Learning, registrar completaciones por fecha y consultar pasos de hoy e históricos coherentes en Life. Está completa cuando la autenticación y el aislamiento de cuentas funcionan según la arquitectura que se apruebe, los datos reales persisten, los contadores respetan la regla de días cerrados, la API externa de frases aporta contenido real, la app es responsive y accesible y se verifican el despliegue y la entrega de Etapa 2. El cierre de Etapa 1 tiene su propio PR y las condiciones de §04.A.
 
 ### Priorización
 
-- P0: arquitectura, Auth, RLS, CRUD, contadores, API de frases visible, /about, estados de carga/error, rutas, responsive, build/lint/deploy/PR.
+- **P0:** integridad de completaciones y fechas, Auth y aislamiento, CRUD mínimo, contadores correctos, API third-party, rutas, build/lint, deploy y PR.
+- **P1:** progresión diaria de Health, racha, pulido responsive y accesibilidad, confirmaciones de cambios destructivos.
+- **P2:** animaciones, estadísticas avanzadas y mejoras cosméticas que no bloquean el MVP.
 
-- P1: fidelidad estética, semáforo de Health, racha básica, días en la escalera, confirmación al archivar.
+La UI de popups implementada provisionalmente en 06A no es prueba de que exista CRUD persistente.
 
-- P2: edición de nombre con lápiz, racha avanzada, animaciones, estadísticas complejas.
+### Calendario
 
-### Calendario revisado (≈30 horas)
+El [plan vigente](plan-de-trabajo.md) mantiene el camino crítico y el estado verificable. Meta del PR de Etapa 1 el 28–29 de noviembre, con el 30/11/2026 como fecha indicada de cierre del programa. Confirmar el plazo aplicable a Etapa 2 y los tiempos de revisión.
 
-| Fecha | Horas | Trabajo | Prueba de cierre |
-|---|---:|---|---|
-| Dom 22 | 3 | Repo público y rama `stage-frontend`, Vite TS, carpetas, `variables.css`, normalize, fuentes con fallback, rutas, Landing y About | dev, build y lint limpios; `/` y `/about` navegan |
-| Lun 23 | 3 | Proyecto Supabase, cliente y variables, `AuthContext`, signup/login/logout, sesión y rutas privadas | Registro, login, logout y recarga con sesión; ruta privada redirige |
-| Mar 24 | 3 | Tablas, RLS, FK compuesta, siembra de tareas de ejemplo; pruebas con dos cuentas | A no lee ni escribe datos de B. Punto de control |
-| Mié 25 | ≈7 | Header y selector de escalera; Life, Health, Activities y Learning; popups; estados vacíos; base responsive | Cuatro vistas navegables desde 320 px |
-| Jue 26 | 3 | Alta, renombrar, archivar, marcar por fecha; contadores; `utils/progress.ts` con Health y racha | Persistencia real; casos de prueba de las tablas pasan |
-| Vie 27 | 3 | `quotesApi.ts`, tipos, MotivationalQuote en Life; carga, error y reintento | Frase real visible; fallo simulado probado |
-| Sáb 28 | ≈7 | Pulido responsive y accesibilidad, README, lint/build, deploy con rewrite SPA, URLs de Auth, prueba en producción con dos cuentas | URL pública sin 404 al recargar; PR enviado si todo pasa |
-| Dom 29 | 3 | Correcciones, README final, PR si falta | PR enviado (URL del PR) |
-| Lun 30 | — | Colchón para el feedback de TripleTen (revisan en menos de 24 h) | Sin funciones nuevas |
+### Flujo de trabajo
 
-<!-- Página 8 del PDF original -->
+El propietario aprueba las decisiones de producto y el alcance. El flujo operativo entre el propietario, ChatGPT y Codex, incluidas las autorizaciones y el commit personal del propietario, se rige por `AGENTS.md`.
 
-Punto de control (martes por la noche): si Auth y RLS no funcionan, el miércoles se construye la UI con datos de ejemplo tipados dentro de useTasks y Supabase continúa el jueves. La UI nunca espera al backend.
+---
 
-### Riesgos por fecha
+## 06 · Validación, defensa y riesgos
 
-- 23/11: si Auth no funciona, resolverlo antes de construir estadísticas.
+### Defensa técnica
 
-- 24/11: no omitir RLS aunque se retrasen los estilos.
+La presentación de Etapa 1 demuestra la sesión con Supabase Auth, las rutas privadas, el estado compartido de las escaleras y una frase real vía Fetch. El endpoint `/api/healthz` permite mostrar la fundación Express por separado. La tutoría aclarará el alcance de persistencia y autenticación para Etapa 2.
 
-- 26/11: si la racha se complica, mostrar bien el progreso diario y diferir la racha.
-
-- 27/11: si el proveedor de frases falla o bloquea CORS, cambiar a otra API documentada; nunca texto estático.
-
-- 28/11: congelar funciones. 29/11: solo correcciones.
-
-### Flujo de trabajo y roles
-
-- Dara decide, aprueba y conserva el código; Claude actúa como tech lead y revisor; ChatGPT/Codex escribe código en tareas pequeñas. Dara revisa todo antes de integrar.
-
-- Cada tarea tiene un objetivo verificable. Ramas: feature/* → revisión del diff (build, lint, lectura) → merge a stage-frontend → PR final a main. Nada se sube a main sin autorización.
-
-- Un solo documento de reglas (este dossier y la mini-skill v2, copiada como AGENTS.md) para que las IA no se contradigan.
-
-- Claude puede leer repos públicos por enlace (rama, PR con sufijo .diff o archivos); no entra a repos privados ni lee tableros de GitHub Projects de forma fiable. Las tareas pendientes viven mejor en Issues o en un archivo TASKS.md del repo.
-
-<!-- Página 9 del PDF original -->
-
-## 06 · Validación y defensa técnica
-
-### Dictamen
-
-Viable como proyecto de Etapa 1 con backend gestionado por Supabase, siempre que se respete el orden de prioridades y se pruebe RLS. La Etapa 2 es opcional y no se elige; la rúbrica de Etapa 1 dice que quedarse en front-end es una entrega final válida. Supabase no sustituye el requisito de consumir una API third-party con fetch.
-
-### Defensa del producto y de la arquitectura
-
-Una lista convencional privilegia pendientes; ADHD Ladder resalta pasos completados, áreas de vida y avance visual, sin afirmar eficacia terapéutica. Como portafolio demuestra diseño, CRUD, estado, autenticación gestionada, seguridad por usuario, consumo de API, accesibilidad y despliegue. Supabase aporta Auth, PostgreSQL y API gestionada, pero el uso de un BaaS no garantiza protección automática: se prueba RLS.
-
-### Riesgos
+### Riesgos y mitigaciones
 
 | Riesgo | Mitigación |
 |---|---|
-| Alcance: 8 pantallas, auth, CRUD, progreso y API en unas 30 horas | Priorizar P0; punto de control del martes; recortar P2 primero. |
-| Supabase gratuito se pausa tras ≈7 días sin actividad (según su documentación; verificar) | Mantener actividad hasta la revisión o documentar en el README cómo reactivarlo. |
-| Confirmación de email por defecto puede estorbar al revisor | Desactivarla para la entrega o dar credenciales de prueba en el README. |
-| Errores de RLS podrían filtrar datos | Pruebas con dos cuentas, incluidas referencias cruzadas; FK compuesta. |
-| CORS o disponibilidad de la API de frases | Probar el proveedor desde el navegador pronto; tener un segundo candidato. |
-| Health puede sonar médico | Metas autodeclaradas, etiquetas de texto, sin diagnóstico. |
-| Fechas, rachas y archivado alteran los números | Fecha local, funciones puras con casos de prueba, archivar en vez de borrar. |
-| Diseño incompleto (About, popups, móvil) | Especificar en texto y construir mobile-first; no hacer mockups completos. |
-| Dos IA con consejos distintos | Una sola fuente de reglas y revisión humana de cada rama. |
-| Validez externa: no hay evidencia de impacto en personas usuarias | Presentar como hipótesis. |
+| Incluir pasos de hoy en históricos | Filtro estrictamente `completed_date < todayLocalDate`; pruebas lunes/martes |
+| Duplicar totales al cambiar de día o abrir tras varios días | Derivar desde completaciones únicas fechadas; sin job nocturno ni acumulador redundante |
+| Perder histórico al retirar una tarea | Archivar con `archived_at` y eliminar únicamente su completación de hoy según §02.6 |
+| Confundir día sin interacción con un día que acabó desmarcado | Conservar el registro de ceros y comprobar el descenso sin interacción |
+| Inconsistencia entre vistas | Una fuente de completaciones por cuenta y funciones puras compartidas |
+| Consulta sin filtro de propietario | Revisar todos los accesos privados y verificar dos cuentas con referencias cruzadas |
+| Cuentas o datos anteriores sin inventario | Inventario autorizado y decisión de preservación antes del corte |
+| Desfase de despliegue entre cliente, API y Auth | Probar en el origen HTTPS final la recarga SPA, la API JSON y la restauración de sesión |
+| API pública de frases fuera de servicio o CORS | Verificación temprana y proveedor alternativo aprobado |
+| Elección de persistencia o autenticación incompatible con la rúbrica | Confirmar los requisitos en la tutoría y aprobar el diseño antes de implementarlo |
+| Desbordamiento móvil y popups | Verificar desde 320 px y teclado; no ocultar overflow como arreglo |
+| Documentos del repo con reglas antiguas | Aplicar la precedencia de `AGENTS.md` y sincronizar referencias operativas en una tarea aprobada. Ver ARC-02 en el plan. |
+| Tiempo insuficiente para requisitos obligatorios | Priorizar P0, congelar pulidos opcionales y desplegar con margen |
 
-### Decisiones
+### Validación no certificada
 
-Cerradas: Etapa 1, Supabase, React/TS/Vite, tres escaleras, Life = Activities + Learning, Health regla B, reglas de racha, fecha local, tareas de ejemplo, archivar, frase en Life, inglés, flujo de trabajo con Codex y Claude. Pendientes: proveedor de frases, SQL y políticas detalladas, mecanismo de siembra, tipografías finales, texto de popups, breakpoints móviles, confirmación del tutor. No se reabren Open Library ni Express como prioridades.
+El plan registra comprobaciones existentes de frontend y las pendientes sobre el resultado integrado. Para Etapa 1 quedan las comprobaciones manuales y académicas de 07-10. Las verificaciones de persistencia, aislamiento y concurrencia corresponden al diseño que se apruebe para Etapa 2.
 
-### Validación pendiente (no certificada)
+---
 
-- [ ] Probar registro, login, logout y sesión en la URL pública.
+## 07 · Histórico de decisiones y vigencia
 
-- [ ] Comprobar RLS con dos usuarios, incluidas referencias cruzadas.
+### 19–21 de noviembre de 2026 — Origen
 
-- [ ] Mostrar una frase realmente recibida por fetch y probar sus estados.
+- [DECIDIDO] Proyecto final TripleTen Etapa 1; React/TypeScript/Vite; diseño de escaleras en inglés; paleta verde `#005C3C`, crema `#FDF2E5` y naranja `#FF891C`.
+- [CORRECCIÓN] Se descarta persistencia exclusivamente local y Open Library como eje del proyecto; Supabase gestiona cuentas y datos y una API pública separada debe entregar frases. Sin Express ni MongoDB.
+- [DECIDIDO] Mockups y enfoque visual; fondos en CSS y arte de escalera optimizado.
 
-<!-- Página 10 del PDF original -->
+### 22 de noviembre de 2026 — Dossier v2.1
 
-- [ ] Compilar, lint y verificar cada ruta tras recargar.
+- [DECIDIDO] Life suma Activities y Learning; Health no suma pasos.
+- [HISTÓRICO] Health usaba la regla B, sustituida por 07-10A. Se aprobaron la racha de días cerrados, la siembra única y la fecha calendario local.
+- [PROP en su momento] `archived_at` como mecanismo de retiro. La regla aprobada en §02.6 sustituyó la alternativa de borrado definitivo.
+- [CONTEXTO HISTÓRICO] El dossier original declaraba que el repositorio todavía no existía. Era cierto para aquella redacción, **no describe el estado del proyecto el 24/11**.
 
-- [ ] Revisar desde 320 px, teclado y contraste del semáforo.
+### 23–24 de noviembre de 2026 — Interfaz y 06A
 
-- [ ] Enviar el PR de stage-frontend a main y recibir la evaluación.
+- [DECIDIDO] Cuatro tareas activas como máximo por Activities/Learning; Delete Card no aparece si solo queda una.
+- [DECIDIDO] Popups de edición con Cancel, Submit y cierre exterior preservando borrador; nombre temporal React. Health check desde toda la tarjeta; Life revela una frase aleatoria por fecha y la conserva en sesión.
+- [REPORTADO, NO CERTIFICADO] Codex informó que implementó 06A y pasó sus verificaciones. Las frases eran locales y la sesión simulada: **no se conectó la API externa**.
+- [PENDIENTE DE VERIFICACIÓN] Regresión de margen vertical de ilustración Life en tablet/móvil y globo de nombre descentrado en móvil, si todavía no se corrigieron localmente.
 
-Fuentes: rúbrica Etapa_1_aplicacion_front_end.pdf, rúbrica de Etapa 2 (referencia, no elegida), mockups 01–07, paleta y variables.css, mini-skill v2, conversaciones del 20 al 22 de noviembre. No se inspeccionó código de GitHub ni infraestructura desplegada, porque aún no existen.
+### 24 de noviembre de 2026 — Nueva regla de contadores v2.2 [DECIDIDO]
 
-## 07 · Histórico de decisiones
+- **Sustituye expresamente** cualquier definición anterior de «total de cuenta», «lifetime total» o «total steps» que incluyera completaciones del día actual.
+- [DECIDIDO] Hoy suma pasos de Activities y Learning marcados en la fecha local actual; desmarcar resta hoy; Life refleja la suma numérica.
+- [DECIDIDO] `Your total steps` refleja **solo días anteriores**; al cambiar de día, el progreso anterior se incorpora lógicamente sin borrar ni mover registros, ni depender de una app abierta a medianoche.
+- [DECIDIDO] El histórico no depende de tarjetas activas y no se reduce por renombrar o retirarlas.
+- [DECIDIDO] Health aporta cero pasos y sus checks diarios empiezan vacíos. El nivel vigente se define en §02.7.
+- [DECIDIDO en 06B-05] El propietario aprobó `archived_at` y la eliminación exclusiva de la completación de hoy al retirar una tarjeta. Las reglas vigentes están en §02.6.
 
-Reconstruido a partir de los chats y archivos del proyecto; no es una transcripción completa. Fechas por día.
+### 25 de noviembre de 2026 — Arquitectura académica v2.3 [HISTÓRICO]
 
-19–21 de noviembre
+- La API propia Express y el contrato TypeScript-first de §03 sustituyen el acceso directo desde React a datos privados de Supabase como diseño final. Supabase Auth conserva el acceso desde React y PostgreSQL conserva RLS y las operaciones indivisibles.
+- Se aprueba el inicio por sesión en `/`, con `/life` y el estado privado compartido vigentes. La persistencia de frases prevista en DEC-07-03 queda aplazada con 07-08.
+- [HISTÓRICO] DEC-07-03 preveía conservar una sola asignación por cuenta y fecha, incluso ante concurrencia. La asignación se recuperaría tras recarga o cambio de dispositivo. El historial se conservaría y la prevención de duplicados consultaría hoy y los seis días anteriores. Su ejecución queda fuera de esta entrega.
+- La cadena SQL histórica aporta una línea base de revisión. La aplicación de esa cadena quedó pendiente. DEC-07-01, DEC-07-02 y DEC-07-04 conservan sus reglas de producto en v2.4.
 
-- [CONTEXTO] Proyecto final de TripleTen con plazo el 30/11. Etapa 1 (front-end con API externa) obligatoria; Etapa 2 (backend propio) opcional.
+### 25 de noviembre de 2026 — MongoDB y autenticación propia v2.4 [HISTÓRICO]
 
-- [DECIDIDO] Concepto: seguimiento cotidiano con la metáfora de una escalera. Proyecto en inglés para portafolio. Estilo minimalista, orgánico y acogedor; paleta oficial (verde #005C3C, crema #FDF2E5, naranja #FF891C) en PDF y variables.css.
+- En `92643be` se registra la adopción inicial de Atlas, Mongoose, bcrypt y jsonwebtoken. 07-PRES suspende esa decisión hasta la aclaración académica. 07-ARQ, 07-ROOT, 07-REL y 07-EXP permanecen registrados como hitos locales. Los artefactos SQL se conservan como antecedentes. Supabase Auth sigue en uso en Etapa 1.
 
-- [DECIDIDO] Se trabajó pantalla por pantalla: mockups de Landing, Sign Up, Log In, Life, Health, Activities y Learning. Fondos y figuras en CSS; la escalera con personaje como imagen optimizada; textos y cifras en HTML.
+### 25 de noviembre de 2026 — 07-PRES [DECIDIDO]
 
-- [CORRECCIÓN] El primer dossier proponía persistencia local y Open Library; se retiró. Supabase gestiona cuentas y datos, y una API aparte entrega frases motivacionales. Etapa 1 sin Express ni MongoDB. Se añadió RLS como obligación de seguridad.
+Se prioriza la presentación de Etapa 1. Supabase Auth sigue operativo y Express conserva su fundación. La selección de persistencia y autenticación de Etapa 2 queda abierta hasta la tutoría del 26/11/2026 y la posterior decisión de la propietaria.
 
-22 de noviembre
+### Referencias
 
-- [DECIDIDO] Revisión del dossier v2.0: conflictos entre documentos resueltos (Life no suma Health; Health como tabla propia por fecha; racha).
+Rúbrica local de TripleTen Etapa 1, [Around en `main`](https://github.com/28Dara/web_project_around_full/tree/main), mockups 01–07, paleta, tokens y [AGENTS.md](../AGENTS.md). La vigencia de las decisiones de producto se indica en este dossier y el plan registra su implementación.
 
-- [DECIDIDO] Horas disponibles: ≈3 h en días laborales y ≈7 h el miércoles 25 y el sábado 28. Se vuelve al orden Auth y RLS primero, con punto de control el martes y alternativa de UI con datos de ejemplo.
-
-- [DECIDIDO] Cuentas nuevas con tareas de ejemplo; fecha local del navegador; archivar si no es demasiado complejo; encabezado con el correo (lápiz para editar nombre, P2); About solo con texto; totales de Life y de cada página como se describe arriba.
-
-- [DECIDIDO] Health regla B y reglas de racha (sección 02).
-
-- [DECIDIDO] Flujo de trabajo: Dara decide; Claude revisa; Codex/ChatGPT escribe código; revisión antes de integrar.
-
-- [ABIERTO] Confirmar Supabase con el tutor por escrito; proveedor de frases; confirmación de email y pausa del plan gratuito.
-
-- Aún no existen repositorio, proyecto Supabase ni código: este historial registra decisiones, no funciones construidas.
+**Regla final para futuras implementaciones.** Aplicar las secciones normativas de producto y arquitectura y la precedencia indicada al inicio del dossier.

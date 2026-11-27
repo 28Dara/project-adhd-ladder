@@ -1,0 +1,31 @@
+.ladder-artwork {
+  grid-area: artwork;
+  margin-block-start: 1rem;
+}
+
+.ladder-artwork img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Crop the transparent bands in tab-cel-illustration.webp. */
+  aspect-ratio: 2088 / 1440;
+  object-fit: cover;
+  object-position: center 45%;
+}
+
+@media (min-width: 64rem) {
+  .ladder-artwork {
+    position: relative;
+    align-self: stretch;
+    margin-block-start: 0;
+  }
+
+  .ladder-artwork img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: contain;
+    object-position: center;
+  }
+}

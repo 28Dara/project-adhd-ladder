@@ -1,0 +1,203 @@
+.life {
+  background: var(--color-background);
+}
+
+.life__layout {
+  grid-template-areas: 'summary' 'side' 'artwork';
+  align-items: start;
+  gap: clamp(1rem, 1.8vw, 1.65rem);
+}
+
+.life__layout > .ladder-artwork {
+  margin-block-start: 0;
+}
+
+.life__summary,
+.life__side,
+.life__ladders {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ladder-view-gap);
+}
+
+.life__summary {
+  grid-area: summary;
+}
+
+.life__side {
+  grid-area: side;
+}
+
+.life__today {
+  display: grid;
+  justify-items: center;
+  gap: clamp(0.8rem, 1.6vw, 1.45rem);
+  text-align: center;
+}
+
+.life__today-count {
+  font-size: clamp(5.75rem, 12vw, 10.5rem);
+}
+
+.life__ladders {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.life__ladder {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.6rem, 1.25vw, 1.3rem);
+  min-height: 4.5rem;
+  padding: clamp(0.7rem, 1.4vw, 1.35rem);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.life__ladder:hover {
+  border-color: var(--color-sage);
+  background: var(--color-text-inverse);
+}
+
+.life__ladder-badge {
+  display: grid;
+  width: clamp(2.5rem, 5vw, 4.55rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-success-bg);
+  color: var(--color-primary);
+  font-size: clamp(1.5rem, 3vw, 3rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.life__health-badge {
+  border: 0.125rem solid var(--color-text);
+  background: var(--health-light);
+}
+
+.life__ladder-info {
+  display: grid;
+  gap: 0.15rem;
+  padding-inline-start: clamp(0.55rem, 1.4vw, 1.5rem);
+  border-inline-start: 1px solid var(--color-border);
+}
+
+.life__ladder-name {
+  font-size: clamp(1.4rem, 2.6vw, 2.65rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.life__ladder-caption,
+.life__quote p {
+  color: var(--color-text-secondary);
+  font-size: clamp(1rem, 1.45vw, 1.35rem);
+}
+
+.life__ladder-arrow {
+  color: var(--color-primary);
+  font-size: clamp(1.45rem, 2.6vw, 2.6rem);
+  line-height: 1;
+}
+
+.life__ladder-hint {
+  --bubble-tip: calc(100% - 0.8rem);
+
+  inset-inline-end: clamp(0.7rem, 1.4vw, 1.35rem);
+  max-width: calc(100% - 2rem);
+}
+
+.life__quote {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.55rem;
+  text-align: center;
+  padding: clamp(1rem, 2.3vw, 2.25rem);
+}
+
+.life__quote .ladder-card__title {
+  font-size: clamp(1.4rem, 2.15vw, 2.15rem);
+}
+
+.life__quote blockquote {
+  margin: 0;
+}
+
+.life__quote p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.life__quote-reveal {
+  min-height: 2.75rem;
+  padding: 0.35em 0.9em;
+  border: 1px solid var(--color-primary);
+  border-radius: 0.65em;
+  background: var(--color-success-bg);
+  color: var(--color-primary);
+  font: inherit;
+  font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+  cursor: pointer;
+}
+
+.life__quote-reveal:hover {
+  background: var(--color-highlight);
+}
+
+.life__quote-reveal:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+@media (min-width: 40rem) {
+  .life__layout {
+    grid-template-areas: 'summary side' 'artwork artwork';
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .life__summary {
+    align-content: space-between;
+  }
+
+  .life__side {
+    grid-template-rows: auto 1fr;
+  }
+}
+
+@media (min-width: 64rem) {
+  .life {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background:
+      radial-gradient(
+        ellipse 30% 20% at 0 100%,
+        var(--color-cloud) 99%,
+        transparent
+      ),
+      radial-gradient(
+        ellipse 34% 18% at 100% 100%,
+        var(--color-cloud) 99%,
+        transparent
+      ),
+      radial-gradient(
+        ellipse at 55% 18%,
+        var(--color-text-inverse),
+        transparent 70%
+      ),
+      var(--color-background);
+  }
+
+  .life__layout {
+    grid-template-areas: 'artwork summary side';
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.16fr) minmax(0, 1fr);
+    width: 100%;
+    margin-block: auto;
+  }
+}
