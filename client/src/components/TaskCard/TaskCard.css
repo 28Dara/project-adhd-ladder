@@ -39,12 +39,6 @@
   height: auto;
 }
 
-.task-card__options {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 .task-card__options button {
   display: flex;
   width: 100%;

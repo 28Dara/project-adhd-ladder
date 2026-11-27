@@ -48,6 +48,12 @@
   gap: 0.45rem;
 }
 
+.ladder-popup__options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .ladder-popup__form input {
   width: 100%;
   min-height: 2.75rem;
@@ -65,7 +71,7 @@
   gap: 0.45rem;
 }
 
-.ladder-popup button {
+.ladder-popup :where(button) {
   min-height: 2.75rem;
   padding: 0.35rem 0.65rem;
   border: 1px solid transparent;

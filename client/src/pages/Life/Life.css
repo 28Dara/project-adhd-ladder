@@ -1,17 +1,11 @@
 .life {
-  padding: clamp(1rem, 4vw, 4.5rem) clamp(1rem, 2.2vw, 2.5rem) 0;
   background: var(--color-background);
-  font-family: var(--font-body);
 }
 
 .life__layout {
-  display: grid;
   grid-template-areas: 'summary' 'side' 'artwork';
-  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: clamp(1rem, 1.8vw, 1.65rem);
-  max-width: 100rem;
-  margin-inline: auto;
 }
 
 .life__layout > .ladder-artwork {
@@ -23,7 +17,7 @@
 .life__ladders {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: clamp(0.85rem, 1.65vw, 1.5rem);
+  gap: var(--ladder-view-gap);
 }
 
 .life__summary {
@@ -34,10 +28,6 @@
   grid-area: side;
 }
 
-.life__card {
-  padding: clamp(1rem, 2.3vw, 2.25rem);
-}
-
 .life__today {
   display: grid;
   justify-items: center;
@@ -45,57 +35,8 @@
   text-align: center;
 }
 
-.life__today .ladder-card__title::after {
-  display: block;
-  width: 84%;
-  height: 0.55rem;
-  margin: 0.5rem auto 0;
-  border-top: 0.3rem solid var(--color-sage);
-  border-radius: 50%;
-  content: '';
-}
-
 .life__today-count {
-  display: flex;
-  margin: 0;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.45rem, 1.4vw, 1.3rem);
-  color: var(--color-primary);
   font-size: clamp(5.75rem, 12vw, 10.5rem);
-  font-weight: 700;
-  line-height: 0.82;
-}
-
-.life__today-count svg {
-  width: clamp(1.25rem, 3vw, 2.85rem);
-  fill: none;
-  stroke: var(--color-sage);
-  stroke-linecap: round;
-  stroke-width: 7;
-}
-
-.life__total {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  column-gap: clamp(0.6rem, 1.6vw, 1.5rem);
-}
-
-.life__since {
-  margin: 0.25rem 0 0.8rem;
-  color: var(--color-text-secondary);
-  font-size: clamp(1.05rem, 1.55vw, 1.5rem);
-}
-
-.life__total-count {
-  margin: 0;
-  padding-inline-start: clamp(0.6rem, 1.75vw, 1.5rem);
-  border-inline-start: 1px solid var(--color-border);
-  color: var(--color-primary);
-  font-size: clamp(2.8rem, 6vw, 6.5rem);
-  font-weight: 700;
-  line-height: 1;
 }
 
 .life__ladders {
@@ -176,6 +117,7 @@
   justify-items: center;
   gap: 0.55rem;
   text-align: center;
+  padding: clamp(1rem, 2.3vw, 2.25rem);
 }
 
 .life__quote .ladder-card__title {
@@ -233,8 +175,6 @@
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding-block: clamp(1rem, 2svh, 2rem);
-    padding-inline-start: clamp(0.75rem, 1vw, 1.25rem);
     background:
       radial-gradient(
         ellipse 30% 20% at 0 100%,

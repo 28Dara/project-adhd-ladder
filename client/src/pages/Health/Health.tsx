@@ -10,8 +10,8 @@ export default function Health() {
   const toneClass = `ladder-health-tone--${status.tone}`
 
   return (
-    <main className="health">
-      <div className="health__layout">
+    <main className="health ladder-view ladder-view--detail">
+      <div className="health__layout ladder-view__layout">
         <section
           className="ladder-card health__status"
           aria-labelledby="health-title"
@@ -97,7 +97,7 @@ export default function Health() {
         </ul>
 
         <LadderArtwork />
-        <Link className="ladder-card health__back" to="/life">
+        <Link className="ladder-card ladder-card--back health__back" to="/life">
           <svg
             aria-hidden="true"
             viewBox="0 0 24 24"

@@ -48,17 +48,17 @@ export default function Life() {
   })
 
   return (
-    <main className="life">
-      <div className="life__layout">
+    <main className="life ladder-view">
+      <div className="life__layout ladder-view__layout">
         <div className="life__summary">
           <section
-            className="ladder-card life__card life__today"
+            className="ladder-card ladder-card--today life__today"
             aria-labelledby="life-today"
           >
             <h1 id="life-today" className="ladder-card__title">
               Your steps today
             </h1>
-            <p className="life__today-count">
+            <p className="ladder-card__today-count life__today-count">
               <svg aria-hidden="true" viewBox="0 0 42 65">
                 <path d="M33 16 15 5M25 32H5M29 48 14 59" />
               </svg>
@@ -71,21 +71,21 @@ export default function Life() {
           </section>
 
           <section
-            className="ladder-card life__card life__total"
+            className="ladder-card ladder-card--total"
             aria-labelledby="life-total"
           >
             <div>
               <h2 id="life-total" className="ladder-card__title">
                 Your total steps
               </h2>
-              <p className="life__since">
+              <p className="ladder-card__since">
                 Since <time dateTime={joinedOn.date}>{joinedOn.label}</time>
               </p>
               <p className="ladder-card__pill">
                 Days in the ladder: {daysInLadder}
               </p>
             </div>
-            <p className="life__total-count">{totalSteps}</p>
+            <p className="ladder-card__total-count">{totalSteps}</p>
           </section>
         </div>
 
@@ -128,7 +128,7 @@ export default function Life() {
           </nav>
 
           <aside
-            className="ladder-card life__card life__quote"
+            className="ladder-card life__quote"
             aria-label="Motivational quote"
             aria-live="polite"
           >

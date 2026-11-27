@@ -1,100 +1,35 @@
-.ladder-page {
-  --ladder-gap: clamp(0.85rem, 1.65vw, 1.5rem);
-
-  padding: clamp(1rem, 4vw, 4.5rem) clamp(1rem, 2.2vw, 2.5rem) 0;
-  font-family: var(--font-body);
-}
-
 .ladder-page__layout {
-  display: grid;
   grid-template-areas: 'summary' 'tasks' 'artwork';
-  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  column-gap: var(--ladder-gap);
-  max-width: 100rem;
-  margin-inline: auto;
+  column-gap: var(--ladder-view-gap);
 }
 
 .ladder-page__summary,
 .ladder-page__tasks {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: var(--ladder-gap);
+  gap: var(--ladder-view-gap);
 }
 
 .ladder-page__summary {
   grid-area: summary;
-  margin-block-end: var(--ladder-gap);
-}
-
-.ladder-page__today,
-.ladder-page__total {
-  padding: clamp(1rem, 2.3vw, 2.25rem);
+  margin-block-end: var(--ladder-view-gap);
 }
 
 .ladder-page__today {
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: var(--ladder-gap);
+  gap: var(--ladder-view-gap);
   text-align: center;
 }
 
-.ladder-page__today .ladder-card__title::after {
-  display: block;
-  width: 84%;
-  height: 0.55rem;
-  margin: 0.5rem auto 0;
-  border-top: 0.3rem solid var(--color-sage);
-  border-radius: 50%;
-  content: '';
-}
-
 .ladder-page__today-count {
-  display: flex;
-  margin: 0;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.45rem, 1.4vw, 1.3rem);
-  color: var(--color-primary);
   font-size: clamp(5rem, 11vw, 10.5rem);
-  font-weight: 700;
-  line-height: 0.82;
-}
-
-.ladder-page__today-count svg {
-  width: clamp(1.25rem, 3vw, 2.85rem);
-  fill: none;
-  stroke: var(--color-sage);
-  stroke-linecap: round;
-  stroke-width: 7;
 }
 
 .ladder-page__today-count svg:last-child {
   transform: scaleX(-1);
-}
-
-.ladder-page__total {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  column-gap: clamp(0.6rem, 1.6vw, 1.5rem);
-}
-
-.ladder-page__since {
-  margin: 0.25rem 0 0.8rem;
-  color: var(--color-text-secondary);
-  font-size: clamp(1.05rem, 1.55vw, 1.5rem);
-}
-
-.ladder-page__total-count {
-  margin: 0;
-  padding-inline-start: clamp(0.6rem, 1.75vw, 1.5rem);
-  border-inline-start: 1px solid var(--color-border);
-  color: var(--color-primary);
-  font-size: clamp(2.8rem, 6vw, 6.5rem);
-  font-weight: 700;
-  line-height: 1;
 }
 
 .ladder-page__tasks {
@@ -108,7 +43,7 @@
 .ladder-page__task-list {
   display: flex;
   flex-direction: column;
-  gap: var(--ladder-gap);
+  gap: var(--ladder-view-gap);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -149,43 +84,13 @@
 }
 
 .ladder-page__back {
-  display: flex;
   min-height: max(2.75rem, calc(var(--ladder-task-height) * 0.67));
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.45em 0.75em;
-  border-color: var(--color-sage);
-  background: var(--color-success-bg);
-  color: var(--color-primary);
-  font-size: clamp(1.1rem, 1.6vw, 1.5rem);
-  line-height: 1.15;
-  text-align: center;
-  text-decoration: none;
-}
-
-.ladder-page__back:hover {
-  background: var(--color-highlight);
-}
-
-.ladder-page__back svg {
-  width: 1.2em;
-  flex: none;
 }
 
 @media (min-width: 40rem) {
-  .ladder-page {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
   .ladder-page__layout {
     grid-template-areas: 'summary tasks' 'artwork artwork';
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     align-items: stretch;
-    width: 100%;
-    margin-block: auto;
   }
 
   .ladder-page__summary {
@@ -195,34 +100,11 @@
 }
 
 @media (min-width: 64rem) {
-  .ladder-page {
-    padding-block: clamp(1rem, 2svh, 2rem);
-    padding-inline-start: clamp(0.75rem, 1vw, 1.25rem);
-    background:
-      radial-gradient(
-        ellipse 35% 20% at 0 100%,
-        var(--color-cloud) 99%,
-        transparent
-      ),
-      radial-gradient(
-        ellipse 38% 24% at 100% 100%,
-        var(--color-cloud) 99%,
-        transparent
-      ),
-      radial-gradient(
-        ellipse at 55% 18%,
-        var(--color-text-inverse),
-        transparent 70%
-      ),
-      var(--color-background);
-  }
-
   .ladder-page__layout {
     grid-template-areas: 'artwork summary tasks';
-    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.1fr) minmax(0, 1.05fr);
   }
 
   .ladder-page__tasks {
-    row-gap: var(--ladder-gap);
+    row-gap: var(--ladder-view-gap);
   }
 }

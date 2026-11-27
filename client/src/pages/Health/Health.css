@@ -1,17 +1,6 @@
-.health {
-  --health-gap: clamp(0.85rem, 1.65vw, 1.5rem);
-
-  padding: clamp(1rem, 4vw, 4.5rem) clamp(1rem, 2.2vw, 2.5rem) 0;
-  font-family: var(--font-body);
-}
-
 .health__layout {
-  display: grid;
   grid-template-areas: 'status' 'goals' 'streak' 'legend' 'artwork' 'back';
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--health-gap);
-  max-width: 100rem;
-  margin-inline: auto;
+  gap: var(--ladder-view-gap);
 }
 
 .health__layout > .ladder-artwork {
@@ -21,11 +10,8 @@
 .health__status {
   display: grid;
   padding: clamp(1rem, 2vw, 2rem);
-}
-
-.health__status {
   grid-area: status;
-  row-gap: calc(var(--health-gap) - 0.5rem);
+  row-gap: calc(var(--ladder-view-gap) - 0.5rem);
 }
 
 .health__goals {
@@ -96,7 +82,6 @@
 .health__goal-list {
   display: grid;
   margin: 0;
-  padding: 0;
   list-style: none;
 }
 
@@ -171,7 +156,8 @@
 }
 
 .health__goal-list {
-  gap: var(--health-gap);
+  gap: var(--ladder-view-gap);
+  padding: 0;
 }
 
 .health__goal {
@@ -203,48 +189,18 @@
 }
 
 .health__back {
-  display: flex;
   grid-area: back;
   min-height: clamp(2.75rem, 4.8vw, 4.5rem);
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.45em 0.75em;
-  border-color: var(--color-sage);
-  background: var(--color-success-bg);
-  color: var(--color-primary);
-  font-size: clamp(1.1rem, 1.6vw, 1.5rem);
-  line-height: 1.15;
-  text-align: center;
-  text-decoration: none;
-}
-
-.health__back:hover {
-  background: var(--color-highlight);
-}
-
-.health__back svg {
-  width: 1.2em;
-  flex: none;
 }
 
 @media (min-width: 40rem) {
-  .health {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-  }
-
   .health__layout {
     grid-template-areas:
       'status goals'
       'legend goals'
       'streak back'
       'artwork artwork';
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     grid-template-rows: auto 1fr auto auto;
-    width: 100%;
-    margin-block: auto;
   }
 
   .health__streak {
@@ -257,34 +213,11 @@
 }
 
 @media (min-width: 64rem) {
-  .health {
-    padding-block: clamp(1rem, 2svh, 2rem);
-    padding-inline-start: clamp(0.75rem, 1vw, 1.25rem);
-    background:
-      radial-gradient(
-        ellipse 35% 20% at 0 100%,
-        var(--color-cloud) 99%,
-        transparent
-      ),
-      radial-gradient(
-        ellipse 38% 24% at 100% 100%,
-        var(--color-cloud) 99%,
-        transparent
-      ),
-      radial-gradient(
-        ellipse at 55% 18%,
-        var(--color-text-inverse),
-        transparent 70%
-      ),
-      var(--color-background);
-  }
-
   .health__layout {
     grid-template-areas:
       'artwork status goals'
       'artwork legend goals'
       'artwork streak back';
-    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.1fr) minmax(0, 1.05fr);
     grid-template-rows: auto 1fr auto;
   }
 

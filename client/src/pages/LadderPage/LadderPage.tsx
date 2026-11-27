@@ -60,17 +60,17 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
   }
 
   return (
-    <main className="ladder-page">
-      <div className="ladder-page__layout">
+    <main className="ladder-page ladder-view ladder-view--detail">
+      <div className="ladder-page__layout ladder-view__layout">
         <div className="ladder-page__summary">
           <section
-            className="ladder-card ladder-page__today"
+            className="ladder-card ladder-card--today ladder-page__today"
             aria-labelledby="ladder-today"
           >
             <h1 id="ladder-today" className="ladder-card__title">
               Today’s steps!
             </h1>
-            <p className="ladder-page__today-count">
+            <p className="ladder-card__today-count ladder-page__today-count">
               <svg aria-hidden="true" viewBox="0 0 42 65">
                 <path d="M33 16 15 5M25 32H5M29 48 14 59" />
               </svg>
@@ -85,21 +85,21 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
           </section>
 
           <section
-            className="ladder-card ladder-page__total"
+            className="ladder-card ladder-card--total"
             aria-labelledby="ladder-total"
           >
             <div>
               <h2 id="ladder-total" className="ladder-card__title">
                 Your total steps
               </h2>
-              <p className="ladder-page__since">
+              <p className="ladder-card__since">
                 Since <time dateTime={joinedOn.date}>{joinedOn.label}</time>
               </p>
               <p className="ladder-card__pill">
                 Days in the ladder: {daysInLadder}
               </p>
             </div>
-            <p className="ladder-page__total-count">{totalSteps}</p>
+            <p className="ladder-card__total-count">{totalSteps}</p>
           </section>
         </div>
 
@@ -196,7 +196,10 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
               </li>
             )}
           </ul>
-          <Link className="ladder-card ladder-page__back" to="/life">
+          <Link
+            className="ladder-card ladder-card--back ladder-page__back"
+            to="/life"
+          >
             <svg
               aria-hidden="true"
               viewBox="0 0 24 24"
