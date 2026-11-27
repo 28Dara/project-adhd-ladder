@@ -36,10 +36,10 @@ ADHD Ladder es una aplicación web para organizar actividades, practicar habilid
 
 Completa `client/.env.local` antes de iniciar Vite. La propietaria debe facilitar por separado los valores reales del proyecto Supabase habilitado para la revisión.
 
-| Variable | Valor esperado |
-| --- | --- |
-| `VITE_SUPABASE_URL` | URL pública del proyecto Supabase. |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | Clave publicable del mismo proyecto. |
+| Variable                        | Valor esperado                                 |
+| ------------------------------- | ---------------------------------------------- |
+| `VITE_SUPABASE_URL`             | https://kaejeafgphlqtxcomggb.supabase.co       |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | sb_publishable_Su3SiKPipn5bvsKLq4_94Q_Xse2UF9f |
 
 Ambos valores son configuración pública del cliente. Usa exclusivamente la clave publicable y conserva `client/.env.local` fuera de Git. Reinicia Vite si cambias el archivo.
 
