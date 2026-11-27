@@ -64,7 +64,7 @@
 .auth-page__stairs {
   position: absolute;
   z-index: -1;
-  inset: 0;
+  inset: 5px 0 0;
 }
 
 .auth-page__stairs span {
@@ -297,6 +297,10 @@
 }
 
 @media (min-width: 48rem) {
+  .auth-page__stairs {
+    inset-block-start: 25px;
+  }
+
   .auth-page__input input {
     min-height: 3rem;
   }

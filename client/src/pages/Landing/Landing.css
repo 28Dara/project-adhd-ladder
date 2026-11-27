@@ -44,6 +44,8 @@
 }
 
 .landing__artwork {
+  position: relative;
+  inset-block-start: 5px;
   grid-area: artwork;
   z-index: -1;
   display: flex;
@@ -160,12 +162,19 @@
   outline-offset: 4px;
 }
 
+@media (width < 48rem) {
+  #root:has(> .landing) {
+    min-height: max(844px, 100svh);
+  }
+}
+
 @media (min-width: 48rem) {
   .landing__hero {
     grid-template-areas:
       'artwork'
       'content';
     grid-template-rows: max-content max-content;
+    row-gap: 0.625rem;
     padding: 0 0 clamp(2.75rem, 4vw, 3.625rem);
     background: radial-gradient(
         ellipse at 50% 36%,
@@ -185,7 +194,7 @@
 
     position: absolute;
     z-index: -1;
-    bottom: clamp(2rem, 4.75vw, 4.25rem);
+    inset-block-end: 0;
     width: min(31%, 28rem);
     height: clamp(5rem, 10.5vw, 9.5rem);
     background:
@@ -218,6 +227,7 @@
   }
 
   .landing__artwork {
+    inset-block-start: 25px;
     z-index: auto;
     display: block;
     width: min(87.5%, 82rem);
@@ -257,5 +267,16 @@
     border-radius: 0.78em;
     font-size: clamp(1.875rem, 3.45vw, 3.125rem);
     line-height: 1;
+  }
+}
+
+@media (min-width: 64rem) {
+  .landing__hero {
+    grid-template-rows: max-content minmax(max-content, 1fr);
+    padding-block-end: clamp(1.5rem, 2.75vw, 2.5rem);
+  }
+
+  .landing__content {
+    align-self: center;
   }
 }
