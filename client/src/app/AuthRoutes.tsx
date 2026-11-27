@@ -177,7 +177,7 @@ function PrivateLayout({
     <div className="private-route">
       <Header
         sectionNavigation={<LadderSelector />}
-        displayName={displayName ?? user.email}
+        displayName={displayName}
         onDisplayNameChange={setDisplayName}
         navigation={
           <button

@@ -1,10 +1,43 @@
-import { useId, useRef, useState, type ReactNode } from 'react'
+import {
+  Fragment,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react'
 import { Link } from 'react-router'
+import { DISPLAY_NAME_MAX_LENGTH } from '../../config/displayName'
 import { useAuth } from '../../hooks/useAuth'
 import BrandLogo from '../BrandLogo/BrandLogo'
 import EditBubble from '../LadderPopup/EditBubble'
 import LadderTooltip from '../LadderPopup/LadderTooltip'
 import './Header.css'
+
+// Match the existing Header layout breakpoint in Header.css.
+const mobileHeaderQuery = '(width < 40rem)'
+
+function subscribeToMobileHeader(onChange: () => void) {
+  const query = window.matchMedia(mobileHeaderQuery)
+  query.addEventListener('change', onChange)
+  return () => query.removeEventListener('change', onChange)
+}
+
+function isMobileHeader() {
+  return window.matchMedia(mobileHeaderQuery).matches
+}
+
+function resolveDisplayName(customName: unknown, email: string | undefined) {
+  const name =
+    typeof customName === 'string' && customName.trim()
+      ? customName
+      : email?.split('@', 1)[0]
+  const boundedName = name
+    ?.slice(0, DISPLAY_NAME_MAX_LENGTH)
+    .replace(/[\uD800-\uDBFF]$/u, '')
+
+  return boundedName?.trim() ? boundedName : 'Signed in'
+}
 
 export default function Header({
   showBackLink = false,
@@ -24,6 +57,7 @@ export default function Header({
   const editTrigger = useRef<HTMLButtonElement>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState('')
+  const isMobile = useSyncExternalStore(subscribeToMobileHeader, isMobileHeader)
   const HeaderControls = onDisplayNameChange ? 'div' : 'nav'
 
   function closeEditor() {
@@ -35,12 +69,8 @@ export default function Header({
     closeEditor()
   }
 
-  return (
-    <header
-      className={`site-header${showBackLink ? ' site-header--back' : ''}`}
-    >
-      <BrandLogo />
-      {sectionNavigation}
+  const controls = (
+    <Fragment key="controls">
       {!isLoading && !sessionError && (
         <HeaderControls
           className="site-header__nav"
@@ -49,7 +79,10 @@ export default function Header({
           {session && (
             <div className="site-header__account">
               <span className="site-header__name">
-                {displayName ?? user?.email ?? 'Signed in'}
+                {resolveDisplayName(
+                  displayName ?? user?.user_metadata?.display_name,
+                  user?.email,
+                )}
               </span>
               {onDisplayNameChange && (
                 <div className="ladder-tooltip__anchor site-header__edit-anchor">
@@ -82,6 +115,7 @@ export default function Header({
                       centerOnMobile
                       label="Enter your new username"
                       placeholder="Username example"
+                      maxLength={DISPLAY_NAME_MAX_LENGTH}
                       draft={draft}
                       onDraftChange={setDraft}
                       onDismiss={closeEditor}
@@ -126,6 +160,17 @@ export default function Header({
             ))}
         </HeaderControls>
       )}
+    </Fragment>
+  )
+  const selector = <Fragment key="selector">{sectionNavigation}</Fragment>
+  const accountFirst = isMobile && session && onDisplayNameChange
+
+  return (
+    <header
+      className={`site-header${showBackLink ? ' site-header--back' : ''}`}
+    >
+      <BrandLogo />
+      {accountFirst ? [controls, selector] : [selector, controls]}
     </header>
   )
 }

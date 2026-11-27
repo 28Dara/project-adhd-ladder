@@ -4,6 +4,7 @@ import LadderPopup, { type LadderPopupProps } from './LadderPopup'
 interface EditBubbleProps extends LadderPopupProps {
   label: string
   placeholder: string
+  maxLength?: number
   draft: string
   onDraftChange: (draft: string) => void
   onSubmit: (value: string) => void
@@ -13,6 +14,7 @@ interface EditBubbleProps extends LadderPopupProps {
 export default function EditBubble({
   label,
   placeholder,
+  maxLength,
   draft,
   onDraftChange,
   onSubmit,
@@ -23,10 +25,12 @@ export default function EditBubble({
   const inputId = useId()
   const labelId = useId()
   const value = draft.trim()
+  const canSubmit =
+    Boolean(value) && (maxLength === undefined || draft.length <= maxLength)
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (value) {
+    if (canSubmit) {
       onSubmit(value)
       trigger.current?.focus()
     }
@@ -46,6 +50,7 @@ export default function EditBubble({
           id={inputId}
           type="text"
           placeholder={placeholder}
+          maxLength={maxLength}
           value={draft}
           onChange={(event) => onDraftChange(event.target.value)}
           required
@@ -55,7 +60,7 @@ export default function EditBubble({
           <button
             type="submit"
             className="ladder-popup__primary"
-            disabled={!value}
+            disabled={!canSubmit}
           >
             Submit
           </button>

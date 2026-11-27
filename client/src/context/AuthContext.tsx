@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import type { AuthError, Session } from '@supabase/supabase-js'
+import type {
+  AuthError,
+  Session,
+  SignUpWithPasswordCredentials,
+} from '@supabase/supabase-js'
 import { getSupabaseClient } from '../utils/supabaseClient'
 import {
   AuthContext,
@@ -64,7 +68,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function authenticate(
     method: 'signUp' | 'signInWithPassword',
-    credentials: AuthCredentials,
+    credentials: AuthCredentials &
+      Pick<SignUpWithPasswordCredentials, 'options'>,
   ): Promise<AuthResult> {
     if (authInProgress.current) {
       return {
@@ -136,7 +141,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ...state,
         user: state.session?.user ?? null,
         retrySession,
-        signUp: (credentials) => authenticate('signUp', credentials),
+        signUp: ({ displayName, ...credentials }) =>
+          authenticate('signUp', {
+            ...credentials,
+            options: { data: { display_name: displayName } },
+          }),
         signInWithPassword: (credentials) =>
           authenticate('signInWithPassword', credentials),
         signOut,

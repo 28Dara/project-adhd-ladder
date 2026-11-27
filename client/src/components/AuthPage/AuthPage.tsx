@@ -6,6 +6,7 @@ import {
   type SubmitEvent,
 } from 'react'
 import { Link } from 'react-router'
+import { DISPLAY_NAME_MAX_LENGTH } from '../../config/displayName'
 import { useAuth } from '../../hooks/useAuth'
 import Header from '../Header/Header'
 import './AuthPage.css'
@@ -64,8 +65,9 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
   const [feedback, setFeedback] = useState<{
     error: boolean
     text: string
-    field?: 'passwordConfirmation'
+    field?: 'displayName' | 'passwordConfirmation'
   } | null>(null)
+  const displayNameInput = useRef<HTMLInputElement>(null)
   const confirmationInput = useRef<HTMLInputElement>(null)
   const mounted = useRef(false)
   const isSignUp = mode === 'signup'
@@ -78,7 +80,9 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
   }, [])
 
   useLayoutEffect(() => {
-    if (feedback?.field === 'passwordConfirmation') {
+    if (feedback?.field === 'displayName') {
+      displayNameInput.current?.focus()
+    } else if (feedback?.field === 'passwordConfirmation') {
       confirmationInput.current?.focus()
     }
   }, [feedback])
@@ -92,6 +96,20 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
       const credentials = {
         email: String(fields.get('email')).trim(),
         password: String(fields.get('password')),
+      }
+      const rawName = String(fields.get('displayName') ?? '')
+      const displayName = rawName.trim()
+
+      if (
+        isSignUp &&
+        (!displayName || rawName.length > DISPLAY_NAME_MAX_LENGTH)
+      ) {
+        setFeedback({
+          error: true,
+          text: `Enter a username of up to ${DISPLAY_NAME_MAX_LENGTH} characters.`,
+          field: 'displayName',
+        })
+        return
       }
 
       if (
@@ -109,9 +127,9 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
       setIsSubmitting(true)
       setFeedback(null)
 
-      const { session, error } = await (isSignUp ? signUp : signInWithPassword)(
-        credentials,
-      )
+      const { session, error } = isSignUp
+        ? await signUp({ ...credentials, displayName })
+        : await signInWithPassword(credentials)
       if (!mounted.current) return
 
       if (error) {
@@ -182,6 +200,37 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
                   />
                 </div>
               </div>
+
+              {isSignUp && (
+                <div className="auth-page__field">
+                  <label htmlFor="auth-display-name">
+                    Username (up to {DISPLAY_NAME_MAX_LENGTH} characters)
+                  </label>
+                  <div className="auth-page__input">
+                    <svg aria-hidden="true" viewBox="0 0 24 24">
+                      <circle cx="12" cy="7" r="4" />
+                      <path d="M4 21v-2a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v2" />
+                    </svg>
+                    <input
+                      ref={displayNameInput}
+                      id="auth-display-name"
+                      name="displayName"
+                      autoComplete="nickname"
+                      maxLength={DISPLAY_NAME_MAX_LENGTH}
+                      required
+                      placeholder="Username example"
+                      aria-invalid={
+                        feedback?.field === 'displayName' || undefined
+                      }
+                      aria-describedby={
+                        feedback?.field === 'displayName'
+                          ? 'auth-feedback'
+                          : undefined
+                      }
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className="auth-page__field">
                 <label htmlFor="auth-password">

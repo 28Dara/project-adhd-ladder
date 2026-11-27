@@ -6,6 +6,10 @@ export interface AuthCredentials {
   password: string
 }
 
+export interface SignUpCredentials extends AuthCredentials {
+  displayName: string
+}
+
 export interface AuthResult {
   session: Session | null
   error: string | null
@@ -17,7 +21,7 @@ interface AuthContextValue {
   isLoading: boolean
   sessionError: string | null
   retrySession: () => void
-  signUp: (credentials: AuthCredentials) => Promise<AuthResult>
+  signUp: (credentials: SignUpCredentials) => Promise<AuthResult>
   signInWithPassword: (credentials: AuthCredentials) => Promise<AuthResult>
   signOut: () => Promise<string | null>
 }
