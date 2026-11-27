@@ -15,12 +15,12 @@ export default function Landing() {
           className={`landing__artwork${imageFailed ? ' landing__artwork--fallback' : ''}`}
         >
           {imageFailed ? (
-            <div
+            <p
               className="landing__illustration landing__illustration--fallback"
               aria-hidden="true"
             >
               <span>ADHD Ladder illustration unavailable</span>
-            </div>
+            </p>
           ) : (
             <img
               className="landing__illustration"
@@ -32,7 +32,7 @@ export default function Landing() {
             />
           )}
         </div>
-        <div className="landing__content">
+        <section className="landing__content">
           <h1 className="landing__title">Welcome to the Ladder</h1>
           <div className="landing__actions">
             <Link className="landing__cta" to="/signup">
@@ -43,7 +43,7 @@ export default function Landing() {
               Log in to your ladder
             </Link>
           </div>
-        </div>
+        </section>
       </main>
     </div>
   )

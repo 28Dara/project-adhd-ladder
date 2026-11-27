@@ -70,7 +70,7 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
             <h1 id="ladder-today" className="ladder-card__title">
               Today’s steps!
             </h1>
-            <div className="ladder-page__today-count">
+            <p className="ladder-page__today-count">
               <svg aria-hidden="true" viewBox="0 0 42 65">
                 <path d="M33 16 15 5M25 32H5M29 48 14 59" />
               </svg>
@@ -78,7 +78,7 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
               <svg aria-hidden="true" viewBox="0 0 42 65">
                 <path d="M33 16 15 5M25 32H5M29 48 14 59" />
               </svg>
-            </div>
+            </p>
             <p className="ladder-card__pill">
               {todaySteps} of {activeTasks.length} completed
             </p>
@@ -104,7 +104,12 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
         </div>
 
         <section className="ladder-page__tasks" aria-label="Tasks">
-          <ul className="ladder-page__task-list" ref={taskList} tabIndex={-1}>
+          <ul
+            className="ladder-page__task-list"
+            role="list"
+            ref={taskList}
+            tabIndex={-1}
+          >
             {activeTasks.map((task) => (
               <TaskCard
                 key={task.id}
@@ -137,59 +142,57 @@ export default function LadderPage({ ladder }: { ladder: TaskLadder }) {
               />
             ))}
             {canAddTask && (
-              <li className="ladder-page__add-slot" role="presentation">
-                <div className="ladder-page__add-control ladder-tooltip__anchor">
-                  <button
-                    ref={addTrigger}
-                    className="ladder-page__add"
-                    type="button"
-                    aria-label="Add task"
-                    aria-expanded={isCreateOpen}
-                    aria-controls={isCreateOpen ? addPopupId : undefined}
-                    onClick={() =>
-                      isCreateOpen
-                        ? closeCreatePopup()
-                        : setPopup({ mode: 'create', ladder })
-                    }
+              <li className="ladder-page__add-slot ladder-tooltip__anchor">
+                <button
+                  ref={addTrigger}
+                  className="ladder-page__add"
+                  type="button"
+                  aria-label="Add task"
+                  aria-expanded={isCreateOpen}
+                  aria-controls={isCreateOpen ? addPopupId : undefined}
+                  onClick={() =>
+                    isCreateOpen
+                      ? closeCreatePopup()
+                      : setPopup({ mode: 'create', ladder })
+                  }
+                >
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
                   >
-                    <svg
-                      aria-hidden="true"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    >
-                      <path d="M12 4v16M4 12h16" />
-                    </svg>
-                  </button>
-                  <LadderTooltip className="ladder-page__add-hint">
-                    Add task
-                  </LadderTooltip>
-                  {isCreateOpen && (
-                    <EditBubble
-                      id={addPopupId}
-                      trigger={addTrigger}
-                      label="Enter a new task name"
-                      placeholder="Task name"
-                      draft={taskDrafts[createDraftKey] ?? ''}
-                      onDraftChange={(draft) =>
-                        setTaskDraft(createDraftKey, draft)
-                      }
-                      onDismiss={closeCreatePopup}
-                      onCancel={() => {
-                        setTaskDraft(createDraftKey, undefined)
-                        closeCreatePopup()
-                      }}
-                      onSubmit={(title) => {
-                        restoreTaskListFocus.current = true
-                        createTask(ladder, title)
-                        setTaskDraft(createDraftKey, undefined)
-                        closeCreatePopup()
-                      }}
-                    />
-                  )}
-                </div>
+                    <path d="M12 4v16M4 12h16" />
+                  </svg>
+                </button>
+                <LadderTooltip className="ladder-page__add-hint">
+                  Add task
+                </LadderTooltip>
+                {isCreateOpen && (
+                  <EditBubble
+                    id={addPopupId}
+                    trigger={addTrigger}
+                    label="Enter a new task name"
+                    placeholder="Task name"
+                    draft={taskDrafts[createDraftKey] ?? ''}
+                    onDraftChange={(draft) =>
+                      setTaskDraft(createDraftKey, draft)
+                    }
+                    onDismiss={closeCreatePopup}
+                    onCancel={() => {
+                      setTaskDraft(createDraftKey, undefined)
+                      closeCreatePopup()
+                    }}
+                    onSubmit={(title) => {
+                      restoreTaskListFocus.current = true
+                      createTask(ladder, title)
+                      setTaskDraft(createDraftKey, undefined)
+                      closeCreatePopup()
+                    }}
+                  />
+                )}
               </li>
             )}
           </ul>

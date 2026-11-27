@@ -39,8 +39,15 @@
   height: auto;
 }
 
+.task-card__options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .task-card__options button {
   display: flex;
+  width: 100%;
   align-items: center;
   gap: 0.6rem;
   padding-inline: 0.8rem;
@@ -48,7 +55,7 @@
   text-align: start;
 }
 
-.task-card__options button + button {
+.task-card__options li + li button {
   background: var(--color-danger-bg);
 }
 

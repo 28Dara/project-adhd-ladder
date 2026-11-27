@@ -36,7 +36,7 @@
   content: '';
 }
 
-.ladder-selector[open] .ladder-selector__summary::after {
+.ladder-selector details[open] .ladder-selector__summary::after {
   transform: translateY(25%) rotate(225deg);
 }
 

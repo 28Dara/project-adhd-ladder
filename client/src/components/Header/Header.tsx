@@ -24,6 +24,7 @@ export default function Header({
   const editTrigger = useRef<HTMLButtonElement>(null)
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState('')
+  const HeaderControls = onDisplayNameChange ? 'div' : 'nav'
 
   function closeEditor() {
     setIsEditing(false)
@@ -41,57 +42,58 @@ export default function Header({
       <BrandLogo />
       {sectionNavigation}
       {!isLoading && !sessionError && (
-        <nav className="site-header__nav" aria-label="Main navigation">
+        <HeaderControls
+          className="site-header__nav"
+          aria-label={onDisplayNameChange ? undefined : 'Main navigation'}
+        >
           {session && (
             <div className="site-header__account">
-              <div className="site-header__identity">
-                <span className="site-header__name">
-                  {displayName ?? user?.email ?? 'Signed in'}
-                </span>
-                {onDisplayNameChange && (
-                  <div className="ladder-tooltip__anchor site-header__edit-anchor">
-                    <button
-                      ref={editTrigger}
-                      className="site-header__control site-header__edit"
-                      type="button"
-                      aria-label="Edit username"
-                      aria-expanded={isEditing}
-                      aria-controls={isEditing ? editId : undefined}
-                      onClick={() => setIsEditing((editing) => !editing)}
+              <span className="site-header__name">
+                {displayName ?? user?.email ?? 'Signed in'}
+              </span>
+              {onDisplayNameChange && (
+                <div className="ladder-tooltip__anchor site-header__edit-anchor">
+                  <button
+                    ref={editTrigger}
+                    className="site-header__control site-header__edit"
+                    type="button"
+                    aria-label="Edit username"
+                    aria-expanded={isEditing}
+                    aria-controls={isEditing ? editId : undefined}
+                    onClick={() => setIsEditing((editing) => !editing)}
+                  >
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     >
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="m14 6 4 4M3 21l4.5-1 12-12a2.8 2.8 0 0 0-4-4l-12 12L3 21Z" />
-                      </svg>
-                    </button>
-                    <LadderTooltip>Edit username</LadderTooltip>
-                    {isEditing && (
-                      <EditBubble
-                        id={editId}
-                        trigger={editTrigger}
-                        centerOnMobile
-                        label="Enter your new username"
-                        placeholder="Username example"
-                        draft={draft}
-                        onDraftChange={setDraft}
-                        onDismiss={closeEditor}
-                        onCancel={finishEditing}
-                        onSubmit={(name) => {
-                          onDisplayNameChange(name)
-                          finishEditing()
-                        }}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
+                      <path d="m14 6 4 4M3 21l4.5-1 12-12a2.8 2.8 0 0 0-4-4l-12 12L3 21Z" />
+                    </svg>
+                  </button>
+                  <LadderTooltip>Edit username</LadderTooltip>
+                  {isEditing && (
+                    <EditBubble
+                      id={editId}
+                      trigger={editTrigger}
+                      centerOnMobile
+                      label="Enter your new username"
+                      placeholder="Username example"
+                      draft={draft}
+                      onDraftChange={setDraft}
+                      onDismiss={closeEditor}
+                      onCancel={finishEditing}
+                      onSubmit={(name) => {
+                        onDisplayNameChange(name)
+                        finishEditing()
+                      }}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           )}
           {navigation ??
@@ -122,7 +124,7 @@ export default function Header({
                 </Link>
               </>
             ))}
-        </nav>
+        </HeaderControls>
       )}
     </header>
   )

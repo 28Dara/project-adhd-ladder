@@ -19,8 +19,10 @@ export default function Health() {
           <h1 className="ladder-card__title health__title" id="health-title">
             Health Status
           </h1>
-          <div className={`health__indicator ${toneClass}`} role="status">
-            <span className="health__status-message">{status.message}</span>
+          <p className={`health__indicator ${toneClass}`}>
+            <span className="health__status-message" role="status">
+              {status.message}
+            </span>
             <svg aria-hidden="true" viewBox="0 0 42 65">
               <path d="M33 16 15 5M25 32H5M29 48 14 59" />
             </svg>
@@ -28,14 +30,14 @@ export default function Health() {
             <svg aria-hidden="true" viewBox="0 0 42 65">
               <path d="M9 16 27 5M17 32h20M13 48l14 11" />
             </svg>
-          </div>
+          </p>
         </section>
 
         <section className="health__goals" aria-labelledby="health-goals">
           <h2 className="ladder-card__title health__title" id="health-goals">
             Mark today’s goals!
           </h2>
-          <ul className="health__goal-list">
+          <ul className="health__goal-list" role="list">
             {HEALTH_GOALS.map(({ id, label }) => (
               <li className="health__goal" key={id}>
                 <label className="ladder-card health__goal-label">
@@ -52,7 +54,7 @@ export default function Health() {
           </ul>
         </section>
 
-        <div className={`ladder-card health__streak ${toneClass}`}>
+        <p className={`ladder-card health__streak ${toneClass}`}>
           <svg
             aria-hidden="true"
             viewBox="0 0 24 24"
@@ -65,30 +67,34 @@ export default function Health() {
             <path d="M12 22a7 7 0 0 0 7-7c0-3-2-5-4-7 .3 2-.6 3.2-2 4 .6-4-1.4-7-3-9 .1 4-1.4 6-3.2 8.1A6.7 6.7 0 0 0 5 15a7 7 0 0 0 7 7Z" />
             <path d="M12 22a3 3 0 0 0 3-3c0-1.5-1.2-2.7-3-4-1.8 1.3-3 2.5-3 4a3 3 0 0 0 3 3Z" />
           </svg>
-          <p>
+          <span>
             <strong>
               {streakEligible
                 ? 'Your health is on track!'
                 : 'Your streak is at risk!'}
             </strong>
-            <span>Be honest with yourself.</span>
-          </p>
-        </div>
+            <span className="health__streak-detail">
+              Be honest with yourself.
+            </span>
+          </span>
+        </p>
 
-        <div className="ladder-card health__legend-card">
-          <ul className="health__legend" aria-label="Goal status guide">
-            {HEALTH_STATUS_LEGEND.map(({ tone, message }) => (
-              <li
-                key={tone}
-                className={`health__legend-item ladder-health-tone--${tone}`}
-                aria-current={tone === status.tone ? true : undefined}
-              >
-                <span className="health__light" aria-hidden="true" />
-                <span className="health__description">{message}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul
+          className="ladder-card health__legend"
+          role="list"
+          aria-label="Goal status guide"
+        >
+          {HEALTH_STATUS_LEGEND.map(({ tone, message }) => (
+            <li
+              key={tone}
+              className={`health__legend-item ladder-health-tone--${tone}`}
+              aria-current={tone === status.tone ? true : undefined}
+            >
+              <span className="health__light" aria-hidden="true" />
+              <span className="health__description">{message}</span>
+            </li>
+          ))}
+        </ul>
 
         <LadderArtwork />
         <Link className="ladder-card health__back" to="/life">

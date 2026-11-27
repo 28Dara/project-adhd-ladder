@@ -30,15 +30,12 @@
 }
 
 .site-header__account {
+  display: flex;
   min-width: 0;
   max-width: 100%;
-  text-align: center;
-}
-
-.site-header__identity {
-  display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .site-header__name {

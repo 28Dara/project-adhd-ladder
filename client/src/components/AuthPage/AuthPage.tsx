@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, type SubmitEvent } from 'react'
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type SubmitEvent,
+} from 'react'
 import { Link } from 'react-router'
 import { useAuth } from '../../hooks/useAuth'
 import Header from '../Header/Header'
@@ -60,6 +66,7 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
     text: string
     field?: 'passwordConfirmation'
   } | null>(null)
+  const confirmationInput = useRef<HTMLInputElement>(null)
   const mounted = useRef(false)
   const isSignUp = mode === 'signup'
 
@@ -69,6 +76,12 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
       mounted.current = false
     }
   }, [])
+
+  useLayoutEffect(() => {
+    if (feedback?.field === 'passwordConfirmation') {
+      confirmationInput.current?.focus()
+    }
+  }, [feedback])
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -206,6 +219,7 @@ export default function AuthPage({ mode }: { mode: 'signup' | 'login' }) {
                   <div className="auth-page__input">
                     {passwordIcon}
                     <input
+                      ref={confirmationInput}
                       id="auth-password-confirmation"
                       name="passwordConfirmation"
                       type={showPasswordConfirmation ? 'text' : 'password'}

@@ -41,30 +41,31 @@ export default function LadderSelector() {
     return null
 
   return (
-    <details
-      key={slug}
-      ref={selectorRef}
-      className="ladder-selector"
-      onKeyDown={(event) => {
-        const selector = event.currentTarget
-        if (event.key === 'Escape' && selector.open) {
-          selector.open = false
-          selector.querySelector('summary')?.focus()
-        }
-      }}
-    >
-      <summary className="ladder-selector__summary">
-        {destinations[slug]}
-      </summary>
-      <ul className="ladder-selector__options">
-        {Object.entries(destinations)
-          .filter(([destination]) => destination !== slug)
-          .map(([destination, label]) => (
-            <li key={destination}>
-              <Link to={`/${destination}`}>{label}</Link>
-            </li>
-          ))}
-      </ul>
-    </details>
+    <nav className="ladder-selector" aria-label="Ladder selection">
+      <details
+        key={slug}
+        ref={selectorRef}
+        onKeyDown={(event) => {
+          const selector = event.currentTarget
+          if (event.key === 'Escape' && selector.open) {
+            selector.open = false
+            selector.querySelector('summary')?.focus()
+          }
+        }}
+      >
+        <summary className="ladder-selector__summary">
+          {destinations[slug]}
+        </summary>
+        <ul className="ladder-selector__options">
+          {Object.entries(destinations)
+            .filter(([destination]) => destination !== slug)
+            .map(([destination, label]) => (
+              <li key={destination}>
+                <Link to={`/${destination}`}>{label}</Link>
+              </li>
+            ))}
+        </ul>
+      </details>
+    </nav>
   )
 }

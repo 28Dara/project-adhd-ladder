@@ -57,6 +57,7 @@
 
 .life__today-count {
   display: flex;
+  margin: 0;
   align-items: center;
   justify-content: center;
   gap: clamp(0.45rem, 1.4vw, 1.3rem);
@@ -179,6 +180,10 @@
 
 .life__quote .ladder-card__title {
   font-size: clamp(1.4rem, 2.15vw, 2.15rem);
+}
+
+.life__quote blockquote {
+  margin: 0;
 }
 
 .life__quote p {

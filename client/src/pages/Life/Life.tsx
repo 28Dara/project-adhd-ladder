@@ -58,7 +58,7 @@ export default function Life() {
             <h1 id="life-today" className="ladder-card__title">
               Your steps today
             </h1>
-            <div className="life__today-count">
+            <p className="life__today-count">
               <svg aria-hidden="true" viewBox="0 0 42 65">
                 <path d="M33 16 15 5M25 32H5M29 48 14 59" />
               </svg>
@@ -66,7 +66,7 @@ export default function Life() {
               <svg aria-hidden="true" viewBox="0 0 42 65">
                 <path d="M9 16 27 5M17 32h20M13 48l15 11" />
               </svg>
-            </div>
+            </p>
             <p className="ladder-card__pill">You have a {streak}-day streak</p>
           </section>
 
@@ -127,13 +127,15 @@ export default function Life() {
             </ul>
           </nav>
 
-          <section
+          <aside
             className="ladder-card life__card life__quote"
             aria-label="Motivational quote"
             aria-live="polite"
           >
             {quoteState.status === 'success' ? (
-              <p>{quoteState.quote.text}</p>
+              <blockquote>
+                <p>{quoteState.quote.text}</p>
+              </blockquote>
             ) : (
               <>
                 <h2 className="ladder-card__title">
@@ -154,7 +156,7 @@ export default function Life() {
                 </button>
               </>
             )}
-          </section>
+          </aside>
         </div>
 
         <LadderArtwork />

@@ -86,27 +86,16 @@ export default function TaskCard({
 
         {popup === 'settings' && (
           <LadderPopup {...popupProps}>
-            <div className="ladder-popup__options task-card__options">
-              <button
-                type="button"
-                onClick={() => onOpenPopup('rename')}
-                data-popup-focus
-              >
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+            <ul
+              className="ladder-popup__options task-card__options"
+              role="list"
+            >
+              <li>
+                <button
+                  type="button"
+                  onClick={() => onOpenPopup('rename')}
+                  data-popup-focus
                 >
-                  <path d="m14 6 4 4M3 21l4.5-1 12-12a2.8 2.8 0 0 0-4-4l-12 12L3 21Z" />
-                </svg>
-                Change Name
-              </button>
-              {canArchive && (
-                <button type="button" onClick={() => onOpenPopup('archive')}>
                   <svg
                     aria-hidden="true"
                     viewBox="0 0 24 24"
@@ -116,12 +105,30 @@ export default function TaskCard({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path d="M3 6h18M9 6V3h6v3m4 0-1 15H6L5 6m5 4v7m4-7v7" />
+                    <path d="m14 6 4 4M3 21l4.5-1 12-12a2.8 2.8 0 0 0-4-4l-12 12L3 21Z" />
                   </svg>
-                  Delete Card
+                  Change Name
                 </button>
+              </li>
+              {canArchive && (
+                <li>
+                  <button type="button" onClick={() => onOpenPopup('archive')}>
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 6h18M9 6V3h6v3m4 0-1 15H6L5 6m5 4v7m4-7v7" />
+                    </svg>
+                    Delete Card
+                  </button>
+                </li>
               )}
-            </div>
+            </ul>
           </LadderPopup>
         )}
         {popup === 'rename' && (

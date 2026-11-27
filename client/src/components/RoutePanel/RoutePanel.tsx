@@ -15,8 +15,8 @@ export default function RoutePanel({
   return (
     <main className="route-panel">
       <section className="route-panel__card" aria-labelledby={titleId}>
-        <h1 id={titleId} role={busy ? 'status' : undefined}>
-          {title}
+        <h1 id={titleId}>
+          {busy ? <span role="status">{title}</span> : title}
         </h1>
         {children}
       </section>
